@@ -1,0 +1,19 @@
+{
+  "name": "chameleon-chess-logic",
+  "version": "1.0.0",
+  "description": "The game logic engine for the board game Chameleon Chess. Enables you to play a game of chameleon chess.",
+  "main": "build/main.js",
+  "scripts": {
+    "start": "tsc && node ./build/main.js",
+    "test": "tsc && mocha"
+  },
+  "author": "Hannes Dröse",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "mocha": "^6.2.0",
+    "typescript": "^3.5.3"
+  },
+  "dependencies": {
+    "hd-neural-net": "file:../hd-neural-net"
+  }
+}
