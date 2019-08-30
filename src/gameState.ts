@@ -1,8 +1,9 @@
-import { IMeeple, nextMoves, findMeepleAtPosition } from "./meeples"
+import { deepClone } from "./helper";
+import { EColors, IPosition, BOARD, isInPositions } from "./basic"
 import { ILimits, calcLimits } from "./limits"
-import { EColors, IPosition, BOARD, isWithinMoves } from "./basic"
+import { IMeeple, nextMoves, findMeepleAtPosition } from "./meeples"
 
-/*********************************** Public ***********************************/
+/* --------------------------------- Public --------------------------------- */
 
 export interface IGameState {
     limits: ILimits
@@ -10,7 +11,7 @@ export interface IGameState {
     whoseTurn: EColors
 }
 
-export function advanceGame(move :IPosition, meeple :number, gs :IGameState)
+export function advanceGame(newPosOfMeeple :IPosition, meeple :number, gs :IGameState)
     :IGameState|null
 {
     // check if game is still on
@@ -23,17 +24,17 @@ export function advanceGame(move :IPosition, meeple :number, gs :IGameState)
 
     // calc possible moves and check if move is part of them
     let possibleMoves = nextMoves(meeple, gs.meeples, gs.limits, BOARD)
-    if (!isWithinMoves(move, possibleMoves))
+    if (!isInPositions(newPosOfMeeple, possibleMoves))
         return null
 
     // now create next gameState by copying the old one
-    let result :IGameState = JSON.parse(JSON.stringify(gs))
+    let result :IGameState = deepClone(gs)
 
     // move meeple
-    result.meeples[meeple].position = move
+    result.meeples[meeple].position = newPosOfMeeple
 
     // if an opponents meeple is beaten, remove it
-    let meepleOnField = findMeepleAtPosition(move, gs.meeples)
+    let meepleOnField = findMeepleAtPosition(newPosOfMeeple, gs.meeples)
     result.meeples = gs.meeples.filter(meeple => meeple !== meepleOnField)
 
     // update limits
@@ -45,6 +46,15 @@ export function advanceGame(move :IPosition, meeple :number, gs :IGameState)
     return result
 }
 
+export function letComputerAdvanceGame(gs :IGameState) :IGameState|null {
+    if (!isGameStillOn(gs))
+        return null
+
+    // TODO: Computergegner!!!
+
+    return gs
+}
+
 export function isGameStillOn(gs :IGameState) :boolean {
     let players :any = {}
 
@@ -53,10 +63,18 @@ export function isGameStillOn(gs :IGameState) :boolean {
             players[meeple.player] = true
     })
 
-    return players.length >= 2 && players[gs.whoseTurn]
+    return Object.keys(players).length >= 2 && players[gs.whoseTurn]
 }
 
-/*********************************** Intern ***********************************/
+export function isPlayerAlive(player :EColors, allMeeples :IMeeple[]) :boolean {
+    for (let i = 0, ie = allMeeples.length; i < ie; i++) {
+        if (allMeeples[i].player === player)
+            return true
+    }
+    return false
+}
+
+/* --------------------------------- Intern --------------------------------- */
 
 // usage: TURN_ORDER[ currentPlayerColor ]
 //      -> nextPlayerColor
@@ -77,12 +95,4 @@ function nextPlayer(currentPlayer :EColors, meeples :IMeeple[]) :EColors {
     while(nextPlayer !== currentPlayer && !isPlayerAlive(nextPlayer, meeples))
 
     return nextPlayer
-}
-
-function isPlayerAlive(player :EColors, allMeeples :IMeeple[]) :boolean {
-    for (let i = 0, ie = allMeeples.length; i < ie; i++) {
-        if (allMeeples[i].player === player)
-            return true
-    }
-    return false
 }

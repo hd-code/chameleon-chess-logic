@@ -1,7 +1,7 @@
 import { IPosition } from "./basic";
 import { IMeeple } from "./meeples";
 
-/*********************************** Public ***********************************/
+/* --------------------------------- Public --------------------------------- */
 
 export interface ILimits {
     lower: IPosition
@@ -39,7 +39,7 @@ export function calcLimits(meeples:IMeeple[], oldLimits:ILimits) :ILimits {
     return result
 }
 
-/*********************************** Intern ***********************************/
+/* --------------------------------- Intern --------------------------------- */
 
 const SMALLEST_FIELD_SIZE :IPosition = {
     row: 3,

@@ -1,7 +1,7 @@
-import { IGameState, advanceGame, isGameStillOn } from "./gameState";
 import { IPosition, BOARD } from "./basic";
-import { nextMoves, findMeepleAtPosition, MEEPLES_STARTING_GRID } from "./meeples";
 import { STARTING_LIMITS } from "./limits";
+import { nextMoves, findMeepleAtPosition, MEEPLES_STARTING_GRID, IMove } from "./meeples";
+import { IGameState, advanceGame, isGameStillOn } from "./gameState";
 
 export class Game {
 
@@ -11,9 +11,7 @@ export class Game {
         this.nextMoves = []
     }
 
-    init(numOfPlayers :number) {
-
-    }
+    init(numOfPlayers :number) {  }
 
     play(clickPos :IPosition) :IGameState|null {
         let newGameState = advanceGame(clickPos, this.selectedMeeple, this.gameState)
@@ -40,13 +38,13 @@ export class Game {
 
     getGameState() :IGameState { return this.gameState }
     getSelectedMeeple() :number { return this.selectedMeeple }
-    getNextMoves() :IPosition[] { return this.nextMoves }
+    getNextMoves() :IMove[] { return this.nextMoves }
 
-    // private: ----------------------------------------------------------------
+    /* ------------------------------ Private ------------------------------- */
 
     private gameState :IGameState
     private selectedMeeple :number
-    private nextMoves :IPosition[]
+    private nextMoves :IMove[]
 
     private selectMeeple(meepleIndex :number) :void {
         this.selectedMeeple = meepleIndex

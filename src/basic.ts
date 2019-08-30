@@ -22,9 +22,14 @@ export interface IPosition {
     col: number
 }
 
-export function isWithinMoves(move :IPosition, moves :IPosition[]) :boolean {
-    for (var i = 0, ie = moves.length; i < ie; i++) {
-        if (move.row === moves[i].row && move.col === moves[i].col)
+/** Returns true if a position is also found in the position array.
+ * 
+ * Hint: It is possible to pass both IPosition or IMove as IMoves is just a
+ * specialization of IPosition.
+ */
+export function isInPositions(position :IPosition, positions :IPosition[]) :boolean {
+    for (let i = 0, ie = positions.length; i < ie; i++) {
+        if (position.row === positions[i].row && position.col === positions[i].col)
             return true
     }
     return false

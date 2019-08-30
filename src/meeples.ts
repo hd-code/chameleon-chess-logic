@@ -1,7 +1,7 @@
 import { EColors, IPosition, ERoles } from "./basic";
 import { ILimits, isWithinLimits } from "./limits";
 
-/*********************************** Public ***********************************/
+/* --------------------------------- Public --------------------------------- */
 
 export interface IMeeple {
     player: EColors
@@ -43,10 +43,16 @@ export const MEEPLES_STARTING_GRID :IMeeple[][] = [
     ],
 ]
 
+export enum EMoveType { INVALID, NORMAL, BEATING }
+
+export interface IMove extends IPosition {
+    moveType: EMoveType
+}
+
 // meeple is the index in allMeeples. Therefore it is just a number. This avoids
 // redundance. After all, the meeple always has to be part of allMeeples.
 export function nextMoves(meeple :number, allMeeples :IMeeple[], limits :ILimits,
-    board :EColors[][]) :IPosition[] 
+    board :EColors[][]) :IMove[] 
 {
     switch ( getCurrentRole(allMeeples[meeple], board) ) {
         case ERoles.KNIGHT:
@@ -56,20 +62,21 @@ export function nextMoves(meeple :number, allMeeples :IMeeple[], limits :ILimits
         case ERoles.ROOK:
             return rookMoves(meeple, allMeeples, limits)
         case ERoles.QUEEN:
-            let result :IPosition[] = bishopMoves(meeple, allMeeples, limits)
-            return result.concat( rookMoves(meeple, allMeeples, limits) )
+            return bishopMoves(meeple, allMeeples, limits)
+                .concat( rookMoves(meeple, allMeeples, limits) )
     }
 }
 
-export function findMeepleAtPosition(position :IPosition, allMeeples :IMeeple[]) :IMeeple {
-    let result = allMeeples.filter(meeple => {
-        return position.row === meeple.position.row && position.col === meeple.position.col
-    })
-
-    return result[0]
+export function findMeepleAtPosition(position :IPosition, allMeeples :IMeeple[]) :IMeeple|null {
+    for (let i = 0, ie = allMeeples.length; i < ie; i++) {
+        if (   position.row === allMeeples[i].position.row
+            && position.col === allMeeples[i].position.col)
+                return allMeeples[i]
+    }
+    return null
 }
 
-/*********************************** Intern ***********************************/
+/* --------------------------------- Intern --------------------------------- */
 
 // usage: KNIGHT_COLOR_COLOR_ROLE_MAP[ knightColor ] [ fieldColor ]
 //          result -> ERole
@@ -88,7 +95,7 @@ function getCurrentRole(meeple :IMeeple, board :EColors[][]) :ERoles {
     return KNIGHT_COLOR_COLOR_ROLE_MAP[meeple.knightColor][fieldColor]
 }
 
-function knightMoves(meeple :number, allMeeples :IMeeple[], limits :ILimits) :IPosition[] {
+function knightMoves(meeple :number, allMeeples :IMeeple[], limits :ILimits) :IMove[] {
     let currentPos :IPosition = allMeeples[meeple].position
 
     let offsets :IPosition[] = [
@@ -98,22 +105,25 @@ function knightMoves(meeple :number, allMeeples :IMeeple[], limits :ILimits) :IP
         {row:-2, col:-1}, {row:-1, col:-2},
     ]
 
-    let result = offsets.map(offset => {
+    let positions = offsets.map(offset => {
         return {
             row: currentPos.row + offset.row,
             col: currentPos.col + offset.col
         }
     })
 
-    // only return move if it is within limits and if field is free or an opponent
-    // is on that field
+    let result = positions.map(position => {
+        return {...position, moveType: getMoveType(position, limits, allMeeples, meeple)}
+    })
+
+    // only return move if it is not INVALID
     return result.filter(move => {
-        return getMoveType(move, limits, allMeeples, meeple)
+        return move.moveType
     })
 }
 
-function bishopMoves(meeple :number, allMeeples :IMeeple[], limits :ILimits) :IPosition[] {
-    let result :IPosition[] = []
+function bishopMoves(meeple :number, allMeeples :IMeeple[], limits :ILimits) :IMove[] {
+    let result :IMove[] = []
     
     let startingPos = allMeeples[meeple].position
     result.concat( moveGenerator(startingPos, 1, 1, limits, allMeeples, meeple) )
@@ -124,8 +134,8 @@ function bishopMoves(meeple :number, allMeeples :IMeeple[], limits :ILimits) :IP
     return result
 }
 
-function rookMoves(meeple :number, allMeeples :IMeeple[], limits :ILimits) :IPosition[] {
-    let result :IPosition[] = []
+function rookMoves(meeple :number, allMeeples :IMeeple[], limits :ILimits) :IMove[] {
+    let result :IMove[] = []
     
     let startingPos = allMeeples[meeple].position
     result.concat( moveGenerator(startingPos, 1, 0, limits, allMeeples, meeple) )
@@ -135,8 +145,6 @@ function rookMoves(meeple :number, allMeeples :IMeeple[], limits :ILimits) :IPos
 
     return result
 }
-
-enum EMoveType { INVALID, NORMAL, BEATING }
 
 function getMoveType(move :IPosition, limits :ILimits, allMeeples :IMeeple[], meeple :number) :EMoveType {
     let meepleToMove  = allMeeples[meeple]
@@ -155,19 +163,21 @@ function getMoveType(move :IPosition, limits :ILimits, allMeeples :IMeeple[], me
 }
 
 function moveGenerator(startingPos :IPosition, rowOffset :number, colOffset :number,
-    limits :ILimits, allMeeples :IMeeple[], meeple :number) :IPosition[] 
+    limits :ILimits, allMeeples :IMeeple[], meeple :number) :IMove[] 
 {
-    let result :IPosition[] = []
+    let result :IMove[] = []
     let tmpPos :IPosition = {...startingPos}
 
     while (true) {
         tmpPos.row += rowOffset
         tmpPos.col += colOffset
-
         let moveType = getMoveType(tmpPos, limits, allMeeples, meeple)
-        if (moveType !== EMoveType.INVALID)
-            result.push({...tmpPos})
 
+        // don't add move if it's invalid
+        if (moveType !== EMoveType.INVALID)
+            result.push({...tmpPos, moveType})
+
+        // stop generator if invalid or beating was encountered
         if (moveType !== EMoveType.NORMAL)
             break;
     }
