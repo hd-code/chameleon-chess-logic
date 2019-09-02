@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "The game logic engine for the board game Chameleon Chess",
   "files": ["build"],
-  "main": "build/main.js",
+  "main": "build/gameState.js",
   "scripts": {
-    "prepublish": "npm run ts",
+    "prepare": "npm run ts",
     "start": "npm test",
     "test": "npm run ts && mocha",
     "ts": "rm -rf build && tsc",
@@ -16,8 +16,5 @@
   "devDependencies": {
     "mocha": "^6.2.0",
     "typescript": "^3.5.3"
-  },
-  "dependencies": {
-    "hd-neural-net": "file:../hd-neural-net"
   }
 }

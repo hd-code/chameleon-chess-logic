@@ -1,4 +1,4 @@
-import { IPosition } from "./basic";
+import { IPosition, isPosition } from "./basic";
 import { IMeeple } from "./meeples";
 
 /* --------------------------------- Public --------------------------------- */
@@ -6,6 +6,11 @@ import { IMeeple } from "./meeples";
 export interface ILimits {
     lower: IPosition
     upper: IPosition
+}
+
+export function isLimits(limits :ILimits) :limits is ILimits {
+    return 'lower' in limits && isPosition(limits.lower)
+        && 'upper' in limits && isPosition(limits.upper)
 }
 
 export const STARTING_LIMITS :ILimits = {

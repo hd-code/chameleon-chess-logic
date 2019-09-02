@@ -1,5 +1,11 @@
+import { isNumber } from "./helper";
+
 export enum EColors { RED,  GREEN,  YELLOW,  BLUE }
 export enum ERoles  { KNIGHT,  QUEEN,  BISHOP,  ROOK }
+
+export function isColor(color :EColors) :color is EColors {
+    return isNumber(color) && EColors[color] === 'string'
+}
 
 const R = EColors.RED
 const G = EColors.GREEN
@@ -22,7 +28,12 @@ export interface IPosition {
     col: number
 }
 
-/** Returns true if a position is also found in the position array.
+export function isPosition(pos :IPosition) :pos is IPosition {
+    return 'row' in pos && isNumber(pos.row)
+        && 'col' in pos && isNumber(pos.col)
+}
+
+/** Returns true if position can be found in the positions array.
  * 
  * Hint: It is possible to pass both IPosition or IMove as IMoves is just a
  * specialization of IPosition.

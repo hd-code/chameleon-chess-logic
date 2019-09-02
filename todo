@@ -1,0 +1,37 @@
+[x] Public interface:
+    - initGame (numOfPlayers or which player) -> gs
+    - advanceGame (destination, meepleIndex, gs) -> gs
+    - letComputerAdvanceGame (gs, difficulty) -> gs
+    - isGameStillOn(gs) -> bool
+    - getMoves(meepleIndex, gs) -> moves(pos + moveType)
+
+Maybe:
+- getCurrentPlayer
+- getPlayer
+
+[x] Type Check for all values
+[ ] JSDoc for all important interfaces
+[ ] README.md
+
+Unit Tests:
+- initGame: 2Players, 3Players, 4Players check if all is there
+- advanceGame: just 2 players and 2 meeples, some moves
+    - invalid moves
+    - moves that shrink the field
+    - moves that shrink the field to its smallest
+    - normal moves
+    - beating moves
+- letComputerAdvanceGame: check if correct meeple moved, if it moved correctly
+                        check if next players turn
+        check end turn, where just has to win in the next turn, if it plays wisely
+- isGameStillOn: yes, no, one game last move, first yes then no
+- getMoves: Knight, Queen, Bishop, Rook all move kinds: invalid, beating, normal
+
+
+
+Computer opponent:
+- MiniMax implementation
+    - recursive function -> gameState + weightsPerPlayer
+    - only recursion for the best getMoves
+    - max depth? periodic max depth?
+- structure for neural net?

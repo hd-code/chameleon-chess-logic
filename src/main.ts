@@ -1,58 +1,65 @@
 import { IPosition, BOARD } from "./basic";
-import { STARTING_LIMITS } from "./limits";
-import { nextMoves, findMeepleAtPosition, MEEPLES_STARTING_GRID, IMove } from "./meeples";
-import { IGameState, advanceGame, isGameStillOn } from "./gameState";
+import * as MP from "./meeples";
+import * as GS from "./gameState";
+import { isNumber } from "./helper";
 
-export class Game {
+/**
+ * Initializes a game.
+ * @param numOfPlayers How many players should be playing? 2-4 DEFAULT: 2
+ */
+export function initGame(numOfPlayers ?:number) :GS.IGameState {
+    return GS.init(numOfPlayers)
+}
 
-    constructor() {
-        this.gameState = {limits: STARTING_LIMITS, meeples: MEEPLES_STARTING_GRID[0], whoseTurn: 0}
-        this.selectedMeeple = -1
-        this.nextMoves = []
-    }
+/**
+ * Advances the game by one turn. It moves the meeple to the destination and
+ * returns the updated game state. If anything is wrong, it returns null.
+ * 
+ * Possible errors:
+ * - wrong game state, 
+ * - meeple doesn't exist or doesn't belong to the player whose turn it is 
+ * - destination is not available to the meeple right now
+ * 
+ * @param destination The destination where meeple should go to
+ * @param meeple The index of the meeple in the meeples array in the game state
+ * @param gs The current game state.
+ */
+export function advanceGame(destination :IPosition, meeple :number, gs :GS.IGameState) 
+    :GS.IGameState|null
+{
+    return GS.isGameState(gs) ? GS.advance(destination, meeple, gs) : null
+}
 
-    init(numOfPlayers :number) {  }
+/**
+ * Advances the game automatically by one turn. If an invalid game state was 
+ * passed, it returns null.
+ * @param gs  The current game state
+ * @param difficulty not yet implemented
+ */
+export function letComputerAdvanceGame(gs :GS.IGameState, difficulty ?:number) :GS.IGameState|null {
+    return GS.isGameState(gs) ? GS.letComputerAdvanceGame(gs) : null
+}
 
-    play(clickPos :IPosition) :IGameState|null {
-        let newGameState = advanceGame(clickPos, this.selectedMeeple, this.gameState)
+/**
+ * Returns true if the game is still on, false if not.
+ * @param gs The current game state
+ */
+export function isGameStillOn(gs :GS.IGameState) :boolean {
+    return GS.isGameState(gs) && GS.isGameStillOn(gs)
+}
 
-        if (newGameState === null) {
-            let meeple = findMeepleAtPosition(clickPos, this.gameState.meeples)
-
-            if (!meeple) {
-                this.unselectMeeple()
-            } else {
-                let meepleIndex = this.gameState.meeples.indexOf(meeple)
-                this.selectMeeple(meepleIndex)
-            }
-
-            return null
-        }
-
-        this.unselectMeeple()
-        this.gameState = newGameState
-        return newGameState
-    }
-
-    isGameRunning() :boolean { return isGameStillOn(this.gameState) }
-
-    getGameState() :IGameState { return this.gameState }
-    getSelectedMeeple() :number { return this.selectedMeeple }
-    getNextMoves() :IMove[] { return this.nextMoves }
-
-    /* ------------------------------ Private ------------------------------- */
-
-    private gameState :IGameState
-    private selectedMeeple :number
-    private nextMoves :IMove[]
-
-    private selectMeeple(meepleIndex :number) :void {
-        this.selectedMeeple = meepleIndex
-        this.nextMoves = nextMoves(meepleIndex, this.gameState.meeples, this.gameState.limits, BOARD)
-    }
-
-    private unselectMeeple() :void {
-        this.selectedMeeple = -1
-        this.nextMoves = []
-    }
+/**
+ * Returns an array of possible moves for the given meeple.
+ * 
+ * If there are errors (invalid game state, meeple doesn't exist) it returns an
+ * empty array.
+ * 
+ * @param meeple The index of the meeple in the meeple array of the game state
+ *               whose moves should be calculated.
+ * @param gs The current game state
+ */
+export function getMoves(meeple :number, gs :GS.IGameState) :MP.IMove[] {
+    return isNumber(meeple) && GS.isGameState(gs) && gs.meeples[meeple]
+        ? MP.nextMoves(meeple, gs.meeples, gs.limits, BOARD)
+        : []
 }

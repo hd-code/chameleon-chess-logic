@@ -1,4 +1,4 @@
-import { EColors, IPosition, ERoles } from "./basic";
+import { EColors, IPosition, ERoles, isColor, isPosition } from "./basic";
 import { ILimits, isWithinLimits } from "./limits";
 
 /* --------------------------------- Public --------------------------------- */
@@ -7,6 +7,12 @@ export interface IMeeple {
     player: EColors
     knightColor: EColors
     position: IPosition
+}
+
+export function isMeeple(meeple :IMeeple) :meeple is IMeeple {
+    return 'player'      in meeple && isColor(meeple.player)
+        && 'knightColor' in meeple && isColor(meeple.knightColor)
+        && 'position'    in meeple && isPosition(meeple.position)
 }
 
 /** usage: MEEPLES_STARTING_GRID[ playerColor ] 
