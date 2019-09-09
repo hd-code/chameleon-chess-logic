@@ -72,7 +72,7 @@ export function makeMove(destination :IPosition, meeple :number, gs :IGameState)
 }
 
 export function isGameOn(gs :IGameState) :boolean {
-    let players :{[player:number]:boolean} = {}
+    let players :{[player: number]:boolean} = {}
 
     gs.meeples.forEach(meeple => {
         if (!players[meeple.player])
@@ -86,16 +86,12 @@ export function isGameOn(gs :IGameState) :boolean {
 
 // usage: TURN_ORDER[ currentPlayerColor ]
 //      -> nextPlayerColor
-const TURN_ORDER = [
-    // RED:
-    EColors.BLUE,
-    // GREEN:
-    EColors.RED,
-    // YELLOW:
-    EColors.GREEN,
-    // BLUE:
-    EColors.YELLOW
-]
+const TURN_ORDER :{[player in EColors]: EColors} = {
+    [EColors.RED]: EColors.BLUE,
+    [EColors.GREEN]: EColors.RED,
+    [EColors.YELLOW]: EColors.GREEN,
+    [EColors.BLUE]: EColors.YELLOW
+}
 function nextPlayer(currentPlayer :EColors, meeples :IMeeple[]) :EColors {
     let nextPlayer :EColors = currentPlayer
 

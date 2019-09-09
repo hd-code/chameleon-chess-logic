@@ -13,7 +13,7 @@ export function isMeeple(meeple :IMeeple) :meeple is IMeeple {
 /** usage: MEEPLES_STARTING_GRID[ playerColor ] 
  * returns: all meeples for that player 
  */
-export const MEEPLES_STARTING_GRID = {
+export const MEEPLES_STARTING_GRID :{[player in EColors]: IMeeple[]} = {
     [EColors.RED]: [
         {player: EColors.RED, knightColor: EColors.RED,    position: {row: 7, col: 0}},
         {player: EColors.RED, knightColor: EColors.GREEN,  position: {row: 7, col: 1}},
@@ -62,7 +62,7 @@ export function nextMoves(meeple :number, allMeeples :IMeeple[], limits :ILimits
 
 export function getCurrentRole(meeple :IMeeple, board :EColors[][]) :ERoles {
     let fieldColor = board[meeple.position.row][meeple.position.col]
-    return KNIGHT_COLOR_COLOR_ROLE_MAP[meeple.knightColor][fieldColor]
+    return KNIGHT_COLOR_FIELD_COLOR_ROLE_MAP[meeple.knightColor][fieldColor]
 }
 
 export function getIOfMeepleAtPosition(position :IPosition, allMeeples :IMeeple[]) :number {
@@ -76,16 +76,15 @@ export function getIOfMeepleAtPosition(position :IPosition, allMeeples :IMeeple[
 
 /* --------------------------------- Intern --------------------------------- */
 
-/** usage: KNIGHT_COLOR_COLOR_ROLE_MAP[ knightColor ] [ fieldColor ]
- * returns ERole
+/** usage: KNIGHT_COLOR_FIELD_COLOR_ROLE_MAP[ knightColor ] [ fieldColor ]
  * 
- *  {
- *      [knightColor in EColors]: {
- *          [fieldColor in EColors]: ERoles
- *      }
- *  }
+ * returns ERole
  */
-const KNIGHT_COLOR_COLOR_ROLE_MAP = {
+const KNIGHT_COLOR_FIELD_COLOR_ROLE_MAP :{
+    [knightColor in EColors]: {
+        [fieldColor in EColors]: ERoles
+    }
+} = {
     [EColors.RED]: {
         [EColors.RED]:    ERoles.KNIGHT,
         [EColors.GREEN]:  ERoles.QUEEN,
