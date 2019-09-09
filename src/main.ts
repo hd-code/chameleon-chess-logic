@@ -1,15 +1,16 @@
+import { IGameState, IPosition, IMove, IMeeple } from "./types";
 import { isNumber } from "./helper";
-import { IPosition, BOARD } from "./basic";
+import { BOARD } from "./basic";
 import * as MP from "./meeples";
-import * as GS from "./gameState";
+import { init, isGameState, checkAndMakeMove, isGameOn } from "./gameState";
 import { makeAGoodMove } from "./ai";
 
 /**
  * Initializes a game.
  * @param numOfPlayers How many players should be playing? 2-4 DEFAULT: 2
  */
-export function initGame(numOfPlayers ?:number) :GS.IGameState {
-    return GS.init(numOfPlayers)
+export function initGame(numOfPlayers ?:number) :IGameState {
+    return init(numOfPlayers)
 }
 
 /**
@@ -25,10 +26,10 @@ export function initGame(numOfPlayers ?:number) :GS.IGameState {
  * @param meeple The index of the meeple in the meeples array in the game state
  * @param gs The current game state.
  */
-export function advanceGame(destination :IPosition, meeple :number, gs :GS.IGameState) 
-    :GS.IGameState|null
+export function advanceGame(destination :IPosition, meeple :number, gs :IGameState) 
+    :IGameState|null
 {
-    return GS.isGameState(gs) ? GS.checkAndMakeMove(destination, meeple, gs) : null
+    return isGameState(gs) ? checkAndMakeMove(destination, meeple, gs) : null
 }
 
 /**
@@ -37,16 +38,16 @@ export function advanceGame(destination :IPosition, meeple :number, gs :GS.IGame
  * @param gs  The current game state
  * @param difficulty not yet implemented
  */
-export function letComputerAdvanceGame(gs :GS.IGameState, difficulty ?:number) :GS.IGameState|null {
-    return GS.isGameState(gs) ? makeAGoodMove(gs) : null
+export function letComputerAdvanceGame(gs :IGameState, difficulty ?:number) :IGameState|null {
+    return isGameState(gs) ? makeAGoodMove(gs) : null
 }
 
 /**
  * Returns true if the game is still on, false if not.
  * @param gs The current game state
  */
-export function isGameStillOn(gs :GS.IGameState) :boolean {
-    return GS.isGameState(gs) && GS.isGameStillOn(gs)
+export function isGameStillOn(gs :IGameState) :boolean {
+    return isGameState(gs) && isGameOn(gs)
 }
 
 /**
@@ -59,8 +60,13 @@ export function isGameStillOn(gs :GS.IGameState) :boolean {
  *               whose moves should be calculated.
  * @param gs The current game state
  */
-export function getMoves(meeple :number, gs :GS.IGameState) :MP.IMove[] {
-    return isNumber(meeple) && GS.isGameState(gs) && gs.meeples[meeple]
+export function getMoves(meeple :number, gs :IGameState) :IMove[] {
+    return isNumber(meeple) && isGameState(gs) && gs.meeples[meeple]
         ? MP.nextMoves(meeple, gs.meeples, gs.limits, BOARD)
         : []
+}
+
+export function getMeepleAtPosition(position :IPosition, gs :IGameState) :IMeeple|null {
+    let index = MP.getIOfMeepleAtPosition(position, gs.meeples)
+    return gs.meeples[index] || null
 }

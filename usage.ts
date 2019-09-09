@@ -1,23 +1,16 @@
-import { IPosition, BOARD } from "./basic";
-import { STARTING_LIMITS } from "./limits";
-import { nextMoves, findMeepleAtPosition, MEEPLES_STARTING_GRID, IMove } from "./meeples";
-import { IGameState, advanceGame, isGameStillOn } from "./gameState";
+import * as CCL from "./build/main";
 
 export class Game {
 
-    constructor() {
-        this.gameState = {limits: STARTING_LIMITS, meeples: MEEPLES_STARTING_GRID[0], whoseTurn: 0}
-        this.selectedMeeple = -1
-        this.nextMoves = []
+    init(numOfPlayers :number) {
+        this.gameState = CCL.initGame(numOfPlayers)
     }
 
-    init(numOfPlayers :number) {  }
-
-    play(clickPos :IPosition) :IGameState|null {
-        let newGameState = advanceGame(clickPos, this.selectedMeeple, this.gameState)
+    play(clickPos :CCL.IPosition) :CCL.IGameState|null {
+        let newGameState = CCL.advanceGame(clickPos, this.selectedMeeple, this.gameState)
 
         if (newGameState === null) {
-            let meeple = findMeepleAtPosition(clickPos, this.gameState.meeples)
+            let meeple = CCL.getMeepleAtPosition(clickPos, this.gameState)
 
             if (!meeple) {
                 this.unselectMeeple()
@@ -34,21 +27,21 @@ export class Game {
         return newGameState
     }
 
-    isGameRunning() :boolean { return isGameStillOn(this.gameState) }
+    isGameRunning() :boolean { return CCL.isGameStillOn(this.gameState) }
 
-    getGameState() :IGameState { return this.gameState }
+    getGameState() :CCL.IGameState { return this.gameState }
     getSelectedMeeple() :number { return this.selectedMeeple }
-    getNextMoves() :IMove[] { return this.nextMoves }
+    getNextMoves() :CCL.IMove[] { return this.nextMoves }
 
     /* ------------------------------ Private ------------------------------- */
 
-    private gameState :IGameState
+    private gameState :CCL.IGameState
     private selectedMeeple :number
-    private nextMoves :IMove[]
+    private nextMoves :CCL.IMove[]
 
     private selectMeeple(meepleIndex :number) :void {
         this.selectedMeeple = meepleIndex
-        this.nextMoves = nextMoves(meepleIndex, this.gameState.meeples, this.gameState.limits, BOARD)
+        this.nextMoves = CCL.getMoves(meepleIndex, this.gameState)
     }
 
     private unselectMeeple() :void {

@@ -1,6 +1,6 @@
+import { EColors } from "./types";
 import { initGame, letComputerAdvanceGame, advanceGame } from "./main";
 import { STARTING_LIMITS } from "./limits";
-import { EColors } from "./basic";
 
 
 

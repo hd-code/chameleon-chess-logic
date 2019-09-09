@@ -1,21 +1,10 @@
+import { IGameState, IPosition, EColors, IMeeple } from "./types";
 import { deepClone, isArrayOf } from "./helper";
-import { EColors, IPosition, BOARD, isInPositions, isColor } from "./basic"
-import { ILimits, STARTING_LIMITS, calcLimits, isLimits } from "./limits"
-import { IMeeple, isMeeple, MEEPLES_STARTING_GRID, nextMoves, getIOfMeepleAtPosition } from "./meeples"
+import { BOARD, isInPositions, isColor } from "./basic"
+import { STARTING_LIMITS, calcLimits, isLimits } from "./limits"
+import { isMeeple, MEEPLES_STARTING_GRID, nextMoves, getIOfMeepleAtPosition } from "./meeples"
 
 /* --------------------------------- Public --------------------------------- */
-
-/**
- * @typedef {Object} IGameState
- * @property {ILimits} limits
- * @property {IMeeple[]} meeples
- * @property {number} whoseTurn
- */
-export interface IGameState {
-    limits: ILimits
-    meeples: IMeeple[]
-    whoseTurn: EColors
-}
 
 export function isGameState(gs :IGameState) :gs is IGameState {
     return 'limits'    in gs && isLimits(gs.limits)
@@ -45,7 +34,7 @@ export function checkAndMakeMove(destination :IPosition, meeple :number, gs :IGa
     :IGameState|null
 {
     // check if game is still on
-    if (!isGameStillOn(gs))
+    if (!isGameOn(gs))
         return null
 
     // check if selectedMeeple exists and if it is of current players color
@@ -82,7 +71,7 @@ export function makeMove(destination :IPosition, meeple :number, gs :IGameState)
     return result
 }
 
-export function isGameStillOn(gs :IGameState) :boolean {
+export function isGameOn(gs :IGameState) :boolean {
     let players :{[player:number]:boolean} = {}
 
     gs.meeples.forEach(meeple => {

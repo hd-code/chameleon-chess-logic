@@ -1,10 +1,18 @@
-import { BOARD, EColors, ERoles } from "./basic";
-import { IMove, nextMoves, EMoveType, getCurrentRole } from "./meeples";
-import { IGameState, isGameStillOn, makeMove } from "./gameState";
+import { IGameState, EColors, IMove, EMoveType, ERoles } from "./types";
+import { BOARD } from "./basic";
+import { nextMoves, getCurrentRole } from "./meeples";
+import { isGameOn, makeMove } from "./gameState";
 import { deepClone } from "./helper";
 
+/* --------------------------------- Public --------------------------------- */
+
 export function makeAGoodMove(gs :IGameState) :IGameState {
-    let initWeights = [0,0,0,0]
+    let initWeights = {
+        [EColors.RED]: 0,
+        [EColors.GREEN]: 0,
+        [EColors.YELLOW]: 0,
+        [EColors.BLUE]: 0
+    }
     let wgs = {gameState: gs, weights: initWeights}
     let depth = RECURSION_DEPTH
 
@@ -17,6 +25,22 @@ export function makeAGoodMove(gs :IGameState) :IGameState {
     return result.gameState
 }
 
+/* --------------------------------- Intern --------------------------------- */
+
+type TWeights = {[player in EColors]: number}
+
+interface IWeightedState {
+    gameState: IGameState
+    weights: {[player in EColors]: number}
+}
+
+interface IMeepleMove {
+    meeple: number
+    move: IMove
+    weights: {[player in EColors]: number}
+    evaluated: boolean
+}
+
 const RECURSION_DEPTH = 6
 
 const WEIGHT_BOOST_VICTORY = 1000
@@ -26,24 +50,12 @@ const WEIGHT_BOOST_QUEEN   = 10
 const WEIGHT_BOOST_BISHOP  = 3
 const WEIGHT_BOOST_ROOK    = 5
 
-interface IWeightedState {
-    gameState: IGameState
-    weights: number[] // RED, GREEN, YELLOW, BLUE
-}
-
-interface IMeepleMove {
-    meeple: number
-    move: IMove
-    weights: number[] // RED, GREEN, YELLOW, BLUE
-    evaluated: boolean
-}
-
 function calcMove(_wgs :IWeightedState, depth :number) :IWeightedState {
-    let wgs = deepClone(_wgs)
+    let wgs = deepClone<IWeightedState>(_wgs)
 
     // if game is no longer on, that means that the previous move rendered
     // a victory. Boost victors weights accordingly.
-    if (!isGameStillOn(wgs.gameState)) {
+    if (!isGameOn(wgs.gameState)) {
         wgs.weights[wgs.gameState.whoseTurn] += WEIGHT_BOOST_VICTORY
         return wgs
     }
@@ -94,7 +106,7 @@ function calcMove(_wgs :IWeightedState, depth :number) :IWeightedState {
     }
 }
 
-function calcWeights(move :IMove, meeple :number, wgs :IWeightedState) :number[]
+function calcWeights(move :IMove, meeple :number, wgs :IWeightedState) :TWeights
 {
     let result = deepClone(wgs.weights)
     const thisPlayer = wgs.gameState.whoseTurn
@@ -124,8 +136,10 @@ function calcWeights(move :IMove, meeple :number, wgs :IWeightedState) :number[]
     return result
 }
 
-function calcWeightTotal(whose :EColors, weights :number[]) :number {
-    return weights.reduce((result, _, i) => {
-        return result + weights[i] * (whose === i ? 1 : -1)
-    })
+function calcWeightTotal(whose :EColors, weights :TWeights) :number {
+    let result = 0
+    for (const player in weights) {
+        result += weights[<EColors><unknown>player] * (whose.toString() === player ? 1 : -1)
+    }
+    return result
 }
