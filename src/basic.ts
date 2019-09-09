@@ -4,7 +4,7 @@ export enum EColors { RED,  GREEN,  YELLOW,  BLUE }
 export enum ERoles  { KNIGHT,  QUEEN,  BISHOP,  ROOK }
 
 export function isColor(color :EColors) :color is EColors {
-    return isNumber(color) && EColors[color] === 'string'
+    return isNumber(color) && EColors[color] !== undefined
 }
 
 const R = EColors.RED

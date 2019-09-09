@@ -1,7 +1,8 @@
+import { isNumber } from "./helper";
 import { IPosition, BOARD } from "./basic";
 import * as MP from "./meeples";
 import * as GS from "./gameState";
-import { isNumber } from "./helper";
+import { makeAGoodMove } from "./ai";
 
 /**
  * Initializes a game.
@@ -27,7 +28,7 @@ export function initGame(numOfPlayers ?:number) :GS.IGameState {
 export function advanceGame(destination :IPosition, meeple :number, gs :GS.IGameState) 
     :GS.IGameState|null
 {
-    return GS.isGameState(gs) ? GS.advance(destination, meeple, gs) : null
+    return GS.isGameState(gs) ? GS.checkAndMakeMove(destination, meeple, gs) : null
 }
 
 /**
@@ -37,7 +38,7 @@ export function advanceGame(destination :IPosition, meeple :number, gs :GS.IGame
  * @param difficulty not yet implemented
  */
 export function letComputerAdvanceGame(gs :GS.IGameState, difficulty ?:number) :GS.IGameState|null {
-    return GS.isGameState(gs) ? GS.letComputerAdvanceGame(gs) : null
+    return GS.isGameState(gs) ? makeAGoodMove(gs) : null
 }
 
 /**

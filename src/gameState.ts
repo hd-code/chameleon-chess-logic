@@ -1,10 +1,16 @@
 import { deepClone, isArrayOf } from "./helper";
 import { EColors, IPosition, BOARD, isInPositions, isColor } from "./basic"
 import { ILimits, STARTING_LIMITS, calcLimits, isLimits } from "./limits"
-import { IMeeple, isMeeple, MEEPLES_STARTING_GRID, nextMoves, findMeepleAtPosition } from "./meeples"
+import { IMeeple, isMeeple, MEEPLES_STARTING_GRID, nextMoves, getIOfMeepleAtPosition } from "./meeples"
 
 /* --------------------------------- Public --------------------------------- */
 
+/**
+ * @typedef {Object} IGameState
+ * @property {ILimits} limits
+ * @property {IMeeple[]} meeples
+ * @property {number} whoseTurn
+ */
 export interface IGameState {
     limits: ILimits
     meeples: IMeeple[]
@@ -34,7 +40,8 @@ export function init(numOfPlayers ?:number): IGameState {
     }
 }
 
-export function advance(destination :IPosition, meeple :number, gs :IGameState)
+/** Checks validity of the move, then makes the move. */
+export function checkAndMakeMove(destination :IPosition, meeple :number, gs :IGameState)
     :IGameState|null
 {
     // check if game is still on
@@ -50,15 +57,21 @@ export function advance(destination :IPosition, meeple :number, gs :IGameState)
     if (!isInPositions(destination, possibleMoves))
         return null
 
-    // now create next gameState by copying the old one
+    return makeMove(destination, meeple, gs)
+}
+
+/** Just makes the move. No validity check! Handle with care! */
+export function makeMove(destination :IPosition, meeple :number, gs :IGameState)
+    :IGameState
+{
     let result :IGameState = deepClone(gs)
 
     // move meeple
     result.meeples[meeple].position = destination
 
     // if an opponents meeple is beaten, remove it
-    let meepleOnField = findMeepleAtPosition(destination, gs.meeples)
-    result.meeples = gs.meeples.filter(meeple => meeple !== meepleOnField)
+    let meepleOnField = getIOfMeepleAtPosition(destination, gs.meeples)
+    result.meeples = result.meeples.filter((_,i) => i !== meepleOnField)
 
     // update limits
     result.limits = calcLimits(result.meeples, gs.limits)
@@ -69,17 +82,8 @@ export function advance(destination :IPosition, meeple :number, gs :IGameState)
     return result
 }
 
-export function letComputerAdvanceGame(gs :IGameState) :IGameState|null {
-    if (!isGameStillOn(gs))
-        return null
-
-    // TODO: Computergegner!!!
-
-    return gs
-}
-
 export function isGameStillOn(gs :IGameState) :boolean {
-    let players :any = {}
+    let players :{[player:number]:boolean} = {}
 
     gs.meeples.forEach(meeple => {
         if (!players[meeple.player])

@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "The game logic engine for the board game Chameleon Chess",
   "files": ["build"],
-  "main": "build/gameState.js",
+  "main": "build/main.js",
   "scripts": {
     "prepare": "npm run ts",
-    "start": "npm test",
+    "start": "npm run ts && node build/test",
     "test": "npm run ts && mocha",
     "ts": "rm -rf build && tsc",
     "ts:debug": "rm -rf build && tsc --sourceMap"

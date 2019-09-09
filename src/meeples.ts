@@ -73,13 +73,18 @@ export function nextMoves(meeple :number, allMeeples :IMeeple[], limits :ILimits
     }
 }
 
-export function findMeepleAtPosition(position :IPosition, allMeeples :IMeeple[]) :IMeeple|null {
+export function getCurrentRole(meeple :IMeeple, board :EColors[][]) :ERoles {
+    let fieldColor = board[meeple.position.row][meeple.position.col]
+    return KNIGHT_COLOR_COLOR_ROLE_MAP[meeple.knightColor][fieldColor]
+}
+
+export function getIOfMeepleAtPosition(position :IPosition, allMeeples :IMeeple[]) :number {
     for (let i = 0, ie = allMeeples.length; i < ie; i++) {
         if (   position.row === allMeeples[i].position.row
             && position.col === allMeeples[i].position.col)
-                return allMeeples[i]
+                return i
     }
-    return null
+    return -1
 }
 
 /* --------------------------------- Intern --------------------------------- */
@@ -96,10 +101,6 @@ const KNIGHT_COLOR_COLOR_ROLE_MAP :ERoles[][] = [
     // BLUE:
     [ ERoles.QUEEN, ERoles.BISHOP, ERoles.ROOK, ERoles.KNIGHT ]
 ]
-function getCurrentRole(meeple :IMeeple, board :EColors[][]) :ERoles {
-    let fieldColor = board[meeple.position.row][meeple.position.col]
-    return KNIGHT_COLOR_COLOR_ROLE_MAP[meeple.knightColor][fieldColor]
-}
 
 function knightMoves(meeple :number, allMeeples :IMeeple[], limits :ILimits) :IMove[] {
     let currentPos :IPosition = allMeeples[meeple].position
@@ -128,33 +129,29 @@ function knightMoves(meeple :number, allMeeples :IMeeple[], limits :ILimits) :IM
     })
 }
 
-function bishopMoves(meeple :number, allMeeples :IMeeple[], limits :ILimits) :IMove[] {
-    let result :IMove[] = []
-    
+function bishopMoves(meeple :number, allMeeples :IMeeple[], limits :ILimits) :IMove[] {    
     let startingPos = allMeeples[meeple].position
-    result.concat( moveGenerator(startingPos, 1, 1, limits, allMeeples, meeple) )
-    result.concat( moveGenerator(startingPos,-1, 1, limits, allMeeples, meeple) )
-    result.concat( moveGenerator(startingPos, 1,-1, limits, allMeeples, meeple) )
-    result.concat( moveGenerator(startingPos,-1,-1, limits, allMeeples, meeple) )
-
-    return result
+    return [
+        ...moveGenerator(startingPos, 1, 1, limits, allMeeples, meeple),
+        ...moveGenerator(startingPos,-1, 1, limits, allMeeples, meeple),
+        ...moveGenerator(startingPos, 1,-1, limits, allMeeples, meeple),
+        ...moveGenerator(startingPos,-1,-1, limits, allMeeples, meeple),
+    ]
 }
 
 function rookMoves(meeple :number, allMeeples :IMeeple[], limits :ILimits) :IMove[] {
-    let result :IMove[] = []
-    
     let startingPos = allMeeples[meeple].position
-    result.concat( moveGenerator(startingPos, 1, 0, limits, allMeeples, meeple) )
-    result.concat( moveGenerator(startingPos,-1, 0, limits, allMeeples, meeple) )
-    result.concat( moveGenerator(startingPos, 0, 1, limits, allMeeples, meeple) )
-    result.concat( moveGenerator(startingPos, 0,-1, limits, allMeeples, meeple) )
-
-    return result
+    return [
+        ...moveGenerator(startingPos, 1, 0, limits, allMeeples, meeple),
+        ...moveGenerator(startingPos,-1, 0, limits, allMeeples, meeple),
+        ...moveGenerator(startingPos, 0, 1, limits, allMeeples, meeple),
+        ...moveGenerator(startingPos, 0,-1, limits, allMeeples, meeple),
+    ]
 }
 
 function getMoveType(move :IPosition, limits :ILimits, allMeeples :IMeeple[], meeple :number) :EMoveType {
     let meepleToMove  = allMeeples[meeple]
-    let meepleOnField = findMeepleAtPosition(move, allMeeples)
+    let meepleOnField = allMeeples[getIOfMeepleAtPosition(move, allMeeples)]
 
     if (!isWithinLimits(move, limits))
         return EMoveType.INVALID
