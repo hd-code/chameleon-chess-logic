@@ -1,9 +1,15 @@
-import { IGameState, IPosition, IMove, IMeeple } from "./types";
 import { isNumber } from "./helper";
-import { BOARD } from "./basic";
+import { BOARD, IPosition, IMove } from "./basic";
 import * as MP from "./meeples";
-import { init, isGameState, checkAndMakeMove, isGameOn } from "./gameState";
+import { init, IGameState, isGameState, checkAndMakeMove, isGameOn } from "./gameState";
 import { makeAGoodMove } from "./ai";
+
+/* --------------------------------- Types ---------------------------------- */
+
+export { IGameState } from './gameState'
+// export { ILimits } from './limits'
+// export { IMeeple } from './meeples'
+export { BOARD, IPosition } from './basic'
 
 /**
  * Initializes a game.
@@ -66,7 +72,7 @@ export function getMoves(meeple :number, gs :IGameState) :IMove[] {
         : []
 }
 
-export function getMeepleAtPosition(position :IPosition, gs :IGameState) :IMeeple|null {
+export function getMeepleAtPosition(position :IPosition, gs :IGameState) :MP.IMeeple|null {
     let index = MP.getIOfMeepleAtPosition(position, gs.meeples)
     return gs.meeples[index] || null
 }

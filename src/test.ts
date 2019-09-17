@@ -1,6 +1,7 @@
-import { EColors } from "./types";
-import { initGame, letComputerAdvanceGame, advanceGame } from "./main";
+import { EColors, ERoles } from "./basic";
 import { STARTING_LIMITS } from "./limits";
+import { IMeeple } from "./meeples";
+import { initGame, letComputerAdvanceGame, advanceGame } from "./main";
 
 
 
@@ -8,11 +9,47 @@ import { STARTING_LIMITS } from "./limits";
 
 let gs = {
     limits: STARTING_LIMITS,
-    meeples: [
-        {player: EColors.RED,    knightColor: EColors.RED,    position: {row: 7, col: 0}},
-        {player: EColors.YELLOW, knightColor: EColors.BLUE, position: {row: 0, col: 7}},
-        {player: EColors.YELLOW, knightColor: EColors.YELLOW, position: {row: 0, col: 6}},
-        {player: EColors.YELLOW, knightColor: EColors.RED, position: {row: 1, col: 3}},
+    meeples: <IMeeple[]>[
+        {
+            player: EColors.RED,
+            roles: {
+                [EColors.RED]:    ERoles.KNIGHT,
+                [EColors.GREEN]:  ERoles.QUEEN,
+                [EColors.YELLOW]: ERoles.BISHOP,
+                [EColors.BLUE]:   ERoles.ROOK
+            },
+            position: {row: 7, col: 0}
+        },
+        {
+            player: EColors.YELLOW,
+            roles: {
+                [EColors.RED]:    ERoles.QUEEN,
+                [EColors.GREEN]:  ERoles.BISHOP,
+                [EColors.YELLOW]: ERoles.ROOK,
+                [EColors.BLUE]:   ERoles.KNIGHT
+            },
+            position: {row: 0, col: 7}
+        },
+        {
+            player: EColors.YELLOW,
+            roles: {
+                [EColors.RED]:    ERoles.BISHOP,
+                [EColors.GREEN]:  ERoles.ROOK,
+                [EColors.YELLOW]: ERoles.KNIGHT,
+                [EColors.BLUE]:   ERoles.QUEEN
+            },
+            position: {row: 0, col: 6}
+        },
+        {
+            player: EColors.YELLOW,
+            roles: {
+                [EColors.RED]:    ERoles.KNIGHT,
+                [EColors.GREEN]:  ERoles.QUEEN,
+                [EColors.YELLOW]: ERoles.BISHOP,
+                [EColors.BLUE]:   ERoles.ROOK
+            },
+            position: {row: 1, col: 3}
+        },
     ],
     whoseTurn: EColors.RED
 }

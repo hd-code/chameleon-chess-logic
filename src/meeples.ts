@@ -1,43 +1,22 @@
-import { IMeeple, ILimits, EColors, ERoles, IPosition, IMove, EMoveType } from "./types";
-import { isColor, isPosition } from "./basic";
-import { isWithinLimits } from "./limits";
+import { ERoles, isRole, EColors, isColor, IPosition, isPosition, IMove, EMoveType } from "./basic";
+import { ILimits, isWithinLimits } from "./limits";
 
 /* --------------------------------- Public --------------------------------- */
 
-export function isMeeple(meeple :IMeeple) :meeple is IMeeple {
-    return 'player'      in meeple && isColor(meeple.player)
-        && 'knightColor' in meeple && isColor(meeple.knightColor)
-        && 'position'    in meeple && isPosition(meeple.position)
+export interface IMeeple {
+    player: EColors
+    roles: {[fieldColor in EColors]: ERoles}
+    position: IPosition
 }
 
-/** usage: MEEPLES_STARTING_GRID[ playerColor ] 
- * returns: all meeples for that player 
- */
-export const MEEPLES_STARTING_GRID :{[player in EColors]: IMeeple[]} = {
-    [EColors.RED]: [
-        {player: EColors.RED, knightColor: EColors.RED,    position: {row: 7, col: 0}},
-        {player: EColors.RED, knightColor: EColors.GREEN,  position: {row: 7, col: 1}},
-        {player: EColors.RED, knightColor: EColors.YELLOW, position: {row: 7, col: 2}},
-        {player: EColors.RED, knightColor: EColors.BLUE,   position: {row: 7, col: 3}},
-    ],
-    [EColors.GREEN]: [
-        {player: EColors.GREEN, knightColor: EColors.GREEN,  position: {row: 7, col: 7}},
-        {player: EColors.GREEN, knightColor: EColors.YELLOW, position: {row: 6, col: 7}},
-        {player: EColors.GREEN, knightColor: EColors.BLUE,   position: {row: 5, col: 7}},
-        {player: EColors.GREEN, knightColor: EColors.RED,    position: {row: 4, col: 7}},
-    ],
-    [EColors.YELLOW]: [
-        {player: EColors.YELLOW, knightColor: EColors.YELLOW, position: {row: 0, col: 7}},
-        {player: EColors.YELLOW, knightColor: EColors.BLUE,   position: {row: 0, col: 6}},
-        {player: EColors.YELLOW, knightColor: EColors.RED,    position: {row: 0, col: 5}},
-        {player: EColors.YELLOW, knightColor: EColors.GREEN,  position: {row: 0, col: 4}},
-    ],
-    [EColors.BLUE]: [
-        {player: EColors.BLUE, knightColor: EColors.BLUE,   position: {row: 0, col: 0}},
-        {player: EColors.BLUE, knightColor: EColors.RED,    position: {row: 1, col: 0}},
-        {player: EColors.BLUE, knightColor: EColors.GREEN,  position: {row: 2, col: 0}},
-        {player: EColors.BLUE, knightColor: EColors.YELLOW, position: {row: 3, col: 0}},
-    ],
+export function isMeeple(meeple :IMeeple) :meeple is IMeeple {
+    return 'player'   in meeple && isColor(meeple.player)
+        && 'roles'    in meeple && isMeepleRoles(meeple.roles)
+        && 'position' in meeple && isPosition(meeple.position)
+}
+
+export function getDefaultMeeplesForPlayer(player :EColors) :IMeeple[] {
+    return getDefaultMeeples(player)
 }
 
 // meeple is the index in allMeeples. Therefore it is just a number. This avoids
@@ -62,7 +41,7 @@ export function nextMoves(meeple :number, allMeeples :IMeeple[], limits :ILimits
 
 export function getCurrentRole(meeple :IMeeple, board :EColors[][]) :ERoles {
     let fieldColor = board[meeple.position.row][meeple.position.col]
-    return KNIGHT_COLOR_FIELD_COLOR_ROLE_MAP[meeple.knightColor][fieldColor]
+    return meeple.roles[fieldColor]
 }
 
 export function getIOfMeepleAtPosition(position :IPosition, allMeeples :IMeeple[]) :number {
@@ -76,15 +55,21 @@ export function getIOfMeepleAtPosition(position :IPosition, allMeeples :IMeeple[
 
 /* --------------------------------- Intern --------------------------------- */
 
-/** usage: KNIGHT_COLOR_FIELD_COLOR_ROLE_MAP[ knightColor ] [ fieldColor ]
- * 
- * returns ERole
- */
-const KNIGHT_COLOR_FIELD_COLOR_ROLE_MAP :{
-    [knightColor in EColors]: {
-        [fieldColor in EColors]: ERoles
-    }
-} = {
+function isMeepleRoles(r:any): r is {[fieldColor in EColors]: ERoles} {
+    let keys = Object.keys(r)
+    if (!keys)
+        return false
+
+    let nkeys = keys.map(key => parseInt(key))
+    return nkeys.reduce((result, key) => {
+        if (!isColor(key) || !isRole(r[key]))
+            return false
+
+        return result
+    }, <boolean>true)
+}
+
+const DEFAULT_ROLES : {[knightColor in EColors]: {[fieldColor in EColors]: ERoles}} = {
     [EColors.RED]: {
         [EColors.RED]:    ERoles.KNIGHT,
         [EColors.GREEN]:  ERoles.QUEEN,
@@ -109,6 +94,103 @@ const KNIGHT_COLOR_FIELD_COLOR_ROLE_MAP :{
         [EColors.YELLOW]: ERoles.ROOK,
         [EColors.BLUE]:   ERoles.KNIGHT
     }
+}
+function getDefaultRoles(knightColor: EColors): {[fieldColor in EColors]: ERoles} {
+    return DEFAULT_ROLES[knightColor]
+}
+
+const DEFAULT_MEEPLES :{[player in EColors]: IMeeple[]} = {
+    [EColors.RED]: [
+        {
+            player: EColors.RED,
+            roles: getDefaultRoles(EColors.RED),
+            position: {row: 7, col: 0}
+        },
+        {
+            player: EColors.RED,
+            roles: getDefaultRoles(EColors.GREEN),
+            position: {row: 7, col: 1}
+        },
+        {
+            player: EColors.RED,
+            roles: getDefaultRoles(EColors.YELLOW),
+            position: {row: 7, col: 2}
+        },
+        {
+            player: EColors.RED,
+            roles: getDefaultRoles(EColors.BLUE),
+            position: {row: 7, col: 3}
+        },
+    ],
+    [EColors.GREEN]: [
+        {
+            player: EColors.GREEN,
+            roles: getDefaultRoles(EColors.GREEN),
+            position: {row: 7, col: 7}
+        },
+        {
+            player: EColors.GREEN,
+            roles: getDefaultRoles(EColors.YELLOW),
+            position: {row: 6, col: 7}
+        },
+        {
+            player: EColors.GREEN,
+            roles: getDefaultRoles(EColors.BLUE),
+            position: {row: 5, col: 7}
+        },
+        {
+            player: EColors.GREEN,
+            roles: getDefaultRoles(EColors.RED),
+            position: {row: 4, col: 7}
+        },
+    ],
+    [EColors.YELLOW]: [
+        {
+            player: EColors.YELLOW,
+            roles: getDefaultRoles(EColors.YELLOW),
+            position: {row: 0, col: 7}
+        },
+        {
+            player: EColors.YELLOW,
+            roles: getDefaultRoles(EColors.BLUE),
+            position: {row: 0, col: 6}
+        },
+        {
+            player: EColors.YELLOW,
+            roles: getDefaultRoles(EColors.RED),
+            position: {row: 0, col: 5}
+        },
+        {
+            player: EColors.YELLOW,
+            roles: getDefaultRoles(EColors.GREEN),
+            position: {row: 0, col: 4}
+        },
+    ],
+    [EColors.BLUE]: [
+        {
+            player: EColors.BLUE,
+            roles: getDefaultRoles(EColors.BLUE),
+            position: {row: 0, col: 0}
+        },
+        {
+            player: EColors.BLUE,
+            roles: getDefaultRoles(EColors.RED),
+            position: {row: 1, col: 0}
+        },
+        {
+            player: EColors.BLUE,
+            roles: getDefaultRoles(EColors.GREEN),
+            position: {row: 2, col: 0}
+        },
+        {
+            player: EColors.BLUE,
+            roles: getDefaultRoles(EColors.YELLOW),
+            position: {row: 3, col: 0}
+        },
+    ],
+}
+function getDefaultMeeples(player :EColors) :IMeeple[] {
+    return DEFAULT_MEEPLES[player]
 }
 
 function knightMoves(meeple :number, allMeeples :IMeeple[], limits :ILimits) :IMove[] {

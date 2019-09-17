@@ -1,7 +1,6 @@
-import { IGameState, EColors, IMove, EMoveType, ERoles } from "./types";
-import { BOARD } from "./basic";
+import { BOARD, EColors, ERoles, EMoveType, IMove } from "./basic";
 import { nextMoves, getCurrentRole } from "./meeples";
-import { isGameOn, makeMove } from "./gameState";
+import { IGameState, isGameOn, makeMove } from "./gameState";
 import { deepClone } from "./helper";
 
 /* --------------------------------- Public --------------------------------- */

@@ -1,10 +1,15 @@
-import { IGameState, IPosition, EColors, IMeeple } from "./types";
 import { deepClone, isArrayOf } from "./helper";
-import { BOARD, isInPositions, isColor } from "./basic"
-import { STARTING_LIMITS, calcLimits, isLimits } from "./limits"
-import { isMeeple, MEEPLES_STARTING_GRID, nextMoves, getIOfMeepleAtPosition } from "./meeples"
+import { BOARD, EColors, IPosition, isInPositions, isColor } from "./basic"
+import { ILimits, STARTING_LIMITS, calcLimits, isLimits } from "./limits"
+import { IMeeple, isMeeple, getDefaultMeeplesForPlayer, nextMoves, getIOfMeepleAtPosition } from "./meeples"
 
 /* --------------------------------- Public --------------------------------- */
+
+export interface IGameState {
+    limits: ILimits
+    meeples: IMeeple[]
+    whoseTurn: EColors
+}
 
 export function isGameState(gs :IGameState) :gs is IGameState {
     return 'limits'    in gs && isLimits(gs.limits)
@@ -15,11 +20,11 @@ export function isGameState(gs :IGameState) :gs is IGameState {
 export function init(numOfPlayers ?:number): IGameState {
     let meeples :IMeeple[] = []
     switch (numOfPlayers) {
-        case 4: meeples.unshift(...MEEPLES_STARTING_GRID[EColors.BLUE])
-        case 3: meeples.unshift(...MEEPLES_STARTING_GRID[EColors.GREEN])
+        case 4: meeples.unshift(...getDefaultMeeplesForPlayer(EColors.BLUE))
+        case 3: meeples.unshift(...getDefaultMeeplesForPlayer(EColors.GREEN))
         default:
-            meeples.unshift(...MEEPLES_STARTING_GRID[EColors.YELLOW])
-            meeples.unshift(...MEEPLES_STARTING_GRID[EColors.RED])
+            meeples.unshift(...getDefaultMeeplesForPlayer(EColors.YELLOW))
+            meeples.unshift(...getDefaultMeeplesForPlayer(EColors.RED))
     }
 
     return {
