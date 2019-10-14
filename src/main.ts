@@ -1,22 +1,58 @@
-import { isNumber } from "./helper";
-import { BOARD, IPosition, IMove } from "./basic";
-import * as MP from "./meeples";
-import { init, IGameState, isGameState, checkAndMakeMove, isGameOn } from "./gameState";
-import { makeAGoodMove } from "./ai";
+import { isNumber } from "./helper"
+import { isPosition } from "./helperAdv";
+import { nextMoves, getIOfMeepleAtPosition } from "./meeples"
+import { init, isGameState, checkAndMakeMove, isGameOn } from "./gameState"
 
 /* --------------------------------- Types ---------------------------------- */
 
-export { IGameState } from './gameState'
-// export { ILimits } from './limits'
-// export { IMeeple } from './meeples'
-export { BOARD, IPosition } from './basic'
+export enum Role { KNIGHT, QUEEN, BISHOP, ROOK }
 
-/**
- * Initializes a game.
- * @param numOfPlayers How many players should be playing? 2-4 DEFAULT: 2
- */
-export function initGame(numOfPlayers ?:number) :IGameState {
-    return init(numOfPlayers)
+export enum Color { RED, GREEN, YELLOW, BLUE }
+
+export interface Position {
+    row: number
+    col: number
+}
+
+export interface Limits {
+    lower: Position
+    upper: Position
+}
+
+export interface Meeple {
+    player: Color
+    roles: {[fieldColor in Color]: Role}
+    position: Position
+}
+
+export interface GameState {
+    limits: Limits
+    meeples: Meeple[]
+    whoseTurn: Color
+}
+
+/* ------------------------------- Functions -------------------------------- */
+
+export function getBoard(): Color[][] {
+    const R = Color.RED
+    const G = Color.GREEN
+    const Y = Color.YELLOW
+    const B = Color.BLUE
+
+    return [
+        [B, R, B, Y, G, R, B, Y],
+        [R, G, R, B, Y, G, R, B],
+        [G, Y, R, G, R, B, B, Y],
+        [Y, B, G, Y, G, R, Y, G],
+        [B, R, Y, B, R, B, G, R],
+        [R, G, G, Y, B, Y, R, B],
+        [G, Y, B, R, G, Y, B, Y],
+        [R, G, Y, B, R, G, Y, G]
+    ]
+}
+
+export function initGame(players: {[player in Color]: boolean}): GameState {
+    return init(players)
 }
 
 /**
@@ -32,10 +68,8 @@ export function initGame(numOfPlayers ?:number) :IGameState {
  * @param meeple The index of the meeple in the meeples array in the game state
  * @param gs The current game state.
  */
-export function advanceGame(destination :IPosition, meeple :number, gs :IGameState) 
-    :IGameState|null
-{
-    return isGameState(gs) ? checkAndMakeMove(destination, meeple, gs) : null
+export function advanceGame(gs: GameState, meepleIndex: number, destination: Position): GameState|null {
+    return isGameState(gs) ? checkAndMakeMove(gs, meepleIndex, destination) : null
 }
 
 /**
@@ -44,16 +78,8 @@ export function advanceGame(destination :IPosition, meeple :number, gs :IGameSta
  * @param gs  The current game state
  * @param difficulty not yet implemented
  */
-export function letComputerAdvanceGame(gs :IGameState, difficulty ?:number) :IGameState|null {
-    return isGameState(gs) ? makeAGoodMove(gs) : null
-}
-
-/**
- * Returns true if the game is still on, false if not.
- * @param gs The current game state
- */
-export function isGameStillOn(gs :IGameState) :boolean {
-    return isGameState(gs) && isGameOn(gs)
+export function letAIadvanceGame(gs: GameState): GameState|null {
+    return isGameState(gs) ? gs : null
 }
 
 /**
@@ -62,17 +88,22 @@ export function isGameStillOn(gs :IGameState) :boolean {
  * If there are errors (invalid game state, meeple doesn't exist) it returns an
  * empty array.
  * 
+ * @param gs     The current game state
  * @param meeple The index of the meeple in the meeple array of the game state
  *               whose moves should be calculated.
- * @param gs The current game state
  */
-export function getMoves(meeple :number, gs :IGameState) :IMove[] {
-    return isNumber(meeple) && isGameState(gs) && gs.meeples[meeple]
-        ? MP.nextMoves(meeple, gs.meeples, gs.limits, BOARD)
+export function getPossibleMoves(gs: GameState, meepleIndex: number): Position[] {
+    return isGameState(gs) && isNumber(meepleIndex) && gs.meeples[meepleIndex]
+        ? nextMoves(meepleIndex, gs.meeples, gs.limits, getBoard())
         : []
 }
 
-export function getMeepleAtPosition(position :IPosition, gs :IGameState) :MP.IMeeple|null {
-    let index = MP.getIOfMeepleAtPosition(position, gs.meeples)
-    return gs.meeples[index] || null
+export function getMeepleOnField(gs: GameState, field: Position): number|null {
+    return isGameState(gs) && isPosition(field)
+        ? getIOfMeepleAtPosition(field, gs.meeples)
+        : null
+}
+
+export function isGameOver(gs: GameState): boolean|null {
+    return isGameState(gs) ? !isGameOn(gs) : null
 }

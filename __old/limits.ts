@@ -1,24 +1,29 @@
-import { Limits, Position, Meeple } from "./main";
-import { isPosition } from "./helperAdv";
+import { IPosition, isPosition } from "./basic";
+import { IMeeple } from "./meeples";
 
 /* --------------------------------- Public --------------------------------- */
 
-export function isLimits(limits :Limits) :limits is Limits {
+export interface ILimits {
+    lower: IPosition
+    upper: IPosition
+}
+
+export function isLimits(limits :ILimits) :limits is ILimits {
     return 'lower' in limits && isPosition(limits.lower)
         && 'upper' in limits && isPosition(limits.upper)
 }
 
-export const STARTING_LIMITS :Limits = {
+export const STARTING_LIMITS :ILimits = {
     lower: {row: 0, col: 0},
     upper: {row: 7, col: 7}
 }
 
-export function isWithinLimits(pos :Position, limits :Limits) :boolean {
+export function isWithinLimits(pos :IPosition, limits :ILimits) :boolean {
     return limits.lower.row <= pos.row &&  pos.row <= limits.upper.row
         && limits.lower.col <= pos.col &&  pos.col <= limits.upper.col
 }
 
-export function calcLimits(meeples:Meeple[], oldLimits:Limits) :Limits {
+export function calcLimits(meeples:IMeeple[], oldLimits:ILimits) :ILimits {
     if (isSmallestFieldSize(oldLimits))
         return oldLimits
 
@@ -41,19 +46,19 @@ export function calcLimits(meeples:Meeple[], oldLimits:Limits) :Limits {
 
 /* --------------------------------- Intern --------------------------------- */
 
-const SMALLEST_FIELD_SIZE :Position = {
+const SMALLEST_FIELD_SIZE :IPosition = {
     row: 3,
     col: 3
 }
 
-function isSmallestFieldSize(limits :Limits) :boolean {
+function isSmallestFieldSize(limits :ILimits) :boolean {
     return limits.upper.row - limits.lower.row + 1 === SMALLEST_FIELD_SIZE.row
         && limits.upper.col - limits.lower.col + 1 === SMALLEST_FIELD_SIZE.col
 }
 
-function calcPureLimits(meeples :Meeple[]) :Limits {
+function calcPureLimits(meeples :IMeeple[]) :ILimits {
     let firstPos = meeples[0].position
-    let initVal:Limits = {
+    let initVal:ILimits = {
         lower: {row: firstPos.row, col: firstPos.col},
         upper: {row: firstPos.row, col: firstPos.col}
     }
@@ -70,14 +75,14 @@ function calcPureLimits(meeples :Meeple[]) :Limits {
     }, initVal)
 }
 
-function isFieldSmallerThanAllowed(limits :Limits) :boolean {
+function isFieldSmallerThanAllowed(limits :ILimits) :boolean {
     return areRowsSmallerThanAllowed(limits) || areColsSmallerThanAllowed(limits)
 }
 
-function areRowsSmallerThanAllowed(limits :Limits) :boolean {
+function areRowsSmallerThanAllowed(limits :ILimits) :boolean {
     return limits.upper.row - limits.lower.row + 1 < SMALLEST_FIELD_SIZE.row
 }
 
-function areColsSmallerThanAllowed(limits :Limits) :boolean {
+function areColsSmallerThanAllowed(limits :ILimits) :boolean {
     return limits.upper.col - limits.lower.col + 1 < SMALLEST_FIELD_SIZE.col
 }
