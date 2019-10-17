@@ -2,42 +2,43 @@ import { isNumber } from "./helper"
 import { isPosition } from "./helperAdv";
 import { nextMoves, getIOfMeepleAtPosition } from "./meeples"
 import { init, isGameState, checkAndMakeMove, isGameOn } from "./gameState"
+import { makeBestMove } from "./ai";
 
 /* --------------------------------- Types ---------------------------------- */
 
-export enum Role { KNIGHT, QUEEN, BISHOP, ROOK }
+export enum ERole { KNIGHT, QUEEN, BISHOP, ROOK }
 
-export enum Color { RED, GREEN, YELLOW, BLUE }
+export enum EColor { RED, GREEN, YELLOW, BLUE }
 
-export interface Position {
+export interface IPosition {
     row: number
     col: number
 }
 
-export interface Limits {
-    lower: Position
-    upper: Position
+export interface ILimits {
+    lower: IPosition
+    upper: IPosition
 }
 
-export interface Meeple {
-    player: Color
-    roles: {[fieldColor in Color]: Role}
-    position: Position
+export interface IMeeple {
+    player: EColor
+    roles: {[fieldColor in EColor]: ERole}
+    position: IPosition
 }
 
-export interface GameState {
-    limits: Limits
-    meeples: Meeple[]
-    whoseTurn: Color
+export interface IGameState {
+    limits: ILimits
+    meeples: IMeeple[]
+    whoseTurn: EColor
 }
 
 /* ------------------------------- Functions -------------------------------- */
 
-export function getBoard(): Color[][] {
-    const R = Color.RED
-    const G = Color.GREEN
-    const Y = Color.YELLOW
-    const B = Color.BLUE
+export function getBoard(): EColor[][] {
+    const R = EColor.RED
+    const G = EColor.GREEN
+    const Y = EColor.YELLOW
+    const B = EColor.BLUE
 
     return [
         [B, R, B, Y, G, R, B, Y],
@@ -51,7 +52,7 @@ export function getBoard(): Color[][] {
     ]
 }
 
-export function initGame(players: {[player in Color]: boolean}): GameState {
+export function initGame(players: {[player in EColor]: boolean}): IGameState {
     return init(players)
 }
 
@@ -68,7 +69,7 @@ export function initGame(players: {[player in Color]: boolean}): GameState {
  * @param meeple The index of the meeple in the meeples array in the game state
  * @param gs The current game state.
  */
-export function advanceGame(gs: GameState, meepleIndex: number, destination: Position): GameState|null {
+export function advanceGame(gs: IGameState, meepleIndex: number, destination: IPosition): IGameState|null {
     return isGameState(gs) ? checkAndMakeMove(gs, meepleIndex, destination) : null
 }
 
@@ -78,8 +79,8 @@ export function advanceGame(gs: GameState, meepleIndex: number, destination: Pos
  * @param gs  The current game state
  * @param difficulty not yet implemented
  */
-export function letAIadvanceGame(gs: GameState): GameState|null {
-    return isGameState(gs) ? gs : null
+export function letAIadvanceGame(gs: IGameState): IGameState|null {
+    return isGameState(gs) ? makeBestMove(gs) : null
 }
 
 /**
@@ -92,18 +93,18 @@ export function letAIadvanceGame(gs: GameState): GameState|null {
  * @param meeple The index of the meeple in the meeple array of the game state
  *               whose moves should be calculated.
  */
-export function getPossibleMoves(gs: GameState, meepleIndex: number): Position[] {
+export function getPossibleMoves(gs: IGameState, meepleIndex: number): IPosition[] {
     return isGameState(gs) && isNumber(meepleIndex) && gs.meeples[meepleIndex]
         ? nextMoves(meepleIndex, gs.meeples, gs.limits, getBoard())
         : []
 }
 
-export function getMeepleOnField(gs: GameState, field: Position): number|null {
+export function getMeepleOnField(gs: IGameState, field: IPosition): number|null {
     return isGameState(gs) && isPosition(field)
         ? getIOfMeepleAtPosition(field, gs.meeples)
         : null
 }
 
-export function isGameOver(gs: GameState): boolean|null {
+export function isGameOver(gs: IGameState): boolean|null {
     return isGameState(gs) ? !isGameOn(gs) : null
 }

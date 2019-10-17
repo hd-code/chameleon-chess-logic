@@ -1,32 +1,32 @@
-import { Meeple, Color, Limits, Role, Position } from "./main";
+import { IMeeple, EColor, ILimits, ERole, IPosition } from "./main";
 import { isColor, isRole, isPosition } from "./helperAdv";
 import { isWithinLimits } from "./limits";
 
 /* --------------------------------- Public --------------------------------- */
 
-export function isMeeple(meeple :Meeple) :meeple is Meeple {
+export function isMeeple(meeple :IMeeple) :meeple is IMeeple {
     return 'player'   in meeple && isColor(meeple.player)
         && 'roles'    in meeple && isMeepleRoles(meeple.roles)
         && 'position' in meeple && isPosition(meeple.position)
 }
 
-export function getDefaultMeeplesForPlayer(player :Color) :Meeple[] {
+export function getDefaultMeeplesForPlayer(player :EColor) :IMeeple[] {
     return getDefaultMeeples(player)
 }
 
 // meeple is the index in allMeeples. Therefore it is just a number. This avoids
 // redundance. After all, the meeple always has to be part of allMeeples.
-export function nextMoves(meeple :number, allMeeples :Meeple[], limits :Limits,
-    board :Color[][]) :Position[]
+export function nextMoves(meeple :number, allMeeples :IMeeple[], limits :ILimits,
+    board :EColor[][]) :IPosition[]
 {
     switch ( getCurrentRole(allMeeples[meeple], board) ) {
-        case Role.KNIGHT:
+        case ERole.KNIGHT:
             return knightMoves(meeple, allMeeples, limits)
-        case Role.BISHOP:
+        case ERole.BISHOP:
             return bishopMoves(meeple, allMeeples, limits)
-        case Role.ROOK:
+        case ERole.ROOK:
             return rookMoves(meeple, allMeeples, limits)
-        case Role.QUEEN:
+        case ERole.QUEEN:
             return bishopMoves(meeple, allMeeples, limits)
                 .concat( rookMoves(meeple, allMeeples, limits) )
         default:
@@ -34,7 +34,7 @@ export function nextMoves(meeple :number, allMeeples :Meeple[], limits :Limits,
     }
 }
 
-export function getIOfMeepleAtPosition(position :Position, allMeeples :Meeple[]) :number {
+export function getIOfMeepleAtPosition(position :IPosition, allMeeples :IMeeple[]) :number {
     for (let i = 0, ie = allMeeples.length; i < ie; i++) {
         if (   position.row === allMeeples[i].position.row
             && position.col === allMeeples[i].position.col)
@@ -45,7 +45,7 @@ export function getIOfMeepleAtPosition(position :Position, allMeeples :Meeple[])
 
 /* --------------------------------- Intern --------------------------------- */
 
-function isMeepleRoles(r:any): r is {[fieldColor in Color]: Role} {
+function isMeepleRoles(r:any): r is {[fieldColor in EColor]: ERole} {
     let keys = Object.keys(r)
     if (!keys)
         return false
@@ -59,135 +59,135 @@ function isMeepleRoles(r:any): r is {[fieldColor in Color]: Role} {
     }, <boolean>true)
 }
 
-const DEFAULT_ROLES : {[knightColor in Color]: {[fieldColor in Color]: Role}} = {
-    [Color.RED]: {
-        [Color.RED]:    Role.KNIGHT,
-        [Color.GREEN]:  Role.QUEEN,
-        [Color.YELLOW]: Role.BISHOP,
-        [Color.BLUE]:   Role.ROOK
+const DEFAULT_ROLES : {[knightColor in EColor]: {[fieldColor in EColor]: ERole}} = {
+    [EColor.RED]: {
+        [EColor.RED]:    ERole.KNIGHT,
+        [EColor.GREEN]:  ERole.QUEEN,
+        [EColor.YELLOW]: ERole.BISHOP,
+        [EColor.BLUE]:   ERole.ROOK
     },
-    [Color.GREEN]: {
-        [Color.RED]:    Role.ROOK,
-        [Color.GREEN]:  Role.KNIGHT,
-        [Color.YELLOW]: Role.QUEEN,
-        [Color.BLUE]:   Role.BISHOP
+    [EColor.GREEN]: {
+        [EColor.RED]:    ERole.ROOK,
+        [EColor.GREEN]:  ERole.KNIGHT,
+        [EColor.YELLOW]: ERole.QUEEN,
+        [EColor.BLUE]:   ERole.BISHOP
     },
-    [Color.YELLOW]: {
-        [Color.RED]:    Role.BISHOP,
-        [Color.GREEN]:  Role.ROOK,
-        [Color.YELLOW]: Role.KNIGHT,
-        [Color.BLUE]:   Role.QUEEN
+    [EColor.YELLOW]: {
+        [EColor.RED]:    ERole.BISHOP,
+        [EColor.GREEN]:  ERole.ROOK,
+        [EColor.YELLOW]: ERole.KNIGHT,
+        [EColor.BLUE]:   ERole.QUEEN
     },
-    [Color.BLUE]: {
-        [Color.RED]:    Role.QUEEN,
-        [Color.GREEN]:  Role.BISHOP,
-        [Color.YELLOW]: Role.ROOK,
-        [Color.BLUE]:   Role.KNIGHT
+    [EColor.BLUE]: {
+        [EColor.RED]:    ERole.QUEEN,
+        [EColor.GREEN]:  ERole.BISHOP,
+        [EColor.YELLOW]: ERole.ROOK,
+        [EColor.BLUE]:   ERole.KNIGHT
     }
 }
-const DEFAULT_MEEPLES :{[player in Color]: Meeple[]} = {
-    [Color.RED]: [
+const DEFAULT_MEEPLES :{[player in EColor]: IMeeple[]} = {
+    [EColor.RED]: [
         {
-            player: Color.RED,
-            roles: DEFAULT_ROLES[Color.RED],
+            player: EColor.RED,
+            roles: DEFAULT_ROLES[EColor.RED],
             position: {row: 7, col: 0}
         },
         {
-            player: Color.RED,
-            roles: DEFAULT_ROLES[Color.GREEN],
+            player: EColor.RED,
+            roles: DEFAULT_ROLES[EColor.GREEN],
             position: {row: 7, col: 1}
         },
         {
-            player: Color.RED,
-            roles: DEFAULT_ROLES[Color.YELLOW],
+            player: EColor.RED,
+            roles: DEFAULT_ROLES[EColor.YELLOW],
             position: {row: 7, col: 2}
         },
         {
-            player: Color.RED,
-            roles: DEFAULT_ROLES[Color.BLUE],
+            player: EColor.RED,
+            roles: DEFAULT_ROLES[EColor.BLUE],
             position: {row: 7, col: 3}
         },
     ],
-    [Color.GREEN]: [
+    [EColor.GREEN]: [
         {
-            player: Color.GREEN,
-            roles: DEFAULT_ROLES[Color.GREEN],
+            player: EColor.GREEN,
+            roles: DEFAULT_ROLES[EColor.GREEN],
             position: {row: 7, col: 7}
         },
         {
-            player: Color.GREEN,
-            roles: DEFAULT_ROLES[Color.YELLOW],
+            player: EColor.GREEN,
+            roles: DEFAULT_ROLES[EColor.YELLOW],
             position: {row: 6, col: 7}
         },
         {
-            player: Color.GREEN,
-            roles: DEFAULT_ROLES[Color.BLUE],
+            player: EColor.GREEN,
+            roles: DEFAULT_ROLES[EColor.BLUE],
             position: {row: 5, col: 7}
         },
         {
-            player: Color.GREEN,
-            roles: DEFAULT_ROLES[Color.RED],
+            player: EColor.GREEN,
+            roles: DEFAULT_ROLES[EColor.RED],
             position: {row: 4, col: 7}
         },
     ],
-    [Color.YELLOW]: [
+    [EColor.YELLOW]: [
         {
-            player: Color.YELLOW,
-            roles: DEFAULT_ROLES[Color.YELLOW],
+            player: EColor.YELLOW,
+            roles: DEFAULT_ROLES[EColor.YELLOW],
             position: {row: 0, col: 7}
         },
         {
-            player: Color.YELLOW,
-            roles: DEFAULT_ROLES[Color.BLUE],
+            player: EColor.YELLOW,
+            roles: DEFAULT_ROLES[EColor.BLUE],
             position: {row: 0, col: 6}
         },
         {
-            player: Color.YELLOW,
-            roles: DEFAULT_ROLES[Color.RED],
+            player: EColor.YELLOW,
+            roles: DEFAULT_ROLES[EColor.RED],
             position: {row: 0, col: 5}
         },
         {
-            player: Color.YELLOW,
-            roles: DEFAULT_ROLES[Color.GREEN],
+            player: EColor.YELLOW,
+            roles: DEFAULT_ROLES[EColor.GREEN],
             position: {row: 0, col: 4}
         },
     ],
-    [Color.BLUE]: [
+    [EColor.BLUE]: [
         {
-            player: Color.BLUE,
-            roles: DEFAULT_ROLES[Color.BLUE],
+            player: EColor.BLUE,
+            roles: DEFAULT_ROLES[EColor.BLUE],
             position: {row: 0, col: 0}
         },
         {
-            player: Color.BLUE,
-            roles: DEFAULT_ROLES[Color.RED],
+            player: EColor.BLUE,
+            roles: DEFAULT_ROLES[EColor.RED],
             position: {row: 1, col: 0}
         },
         {
-            player: Color.BLUE,
-            roles: DEFAULT_ROLES[Color.GREEN],
+            player: EColor.BLUE,
+            roles: DEFAULT_ROLES[EColor.GREEN],
             position: {row: 2, col: 0}
         },
         {
-            player: Color.BLUE,
-            roles: DEFAULT_ROLES[Color.YELLOW],
+            player: EColor.BLUE,
+            roles: DEFAULT_ROLES[EColor.YELLOW],
             position: {row: 3, col: 0}
         },
     ],
 }
-function getDefaultMeeples(player: Color): Meeple[] {
+function getDefaultMeeples(player: EColor): IMeeple[] {
     return DEFAULT_MEEPLES[player]
 }
 
-function getCurrentRole(meeple :Meeple, board :Color[][]) :Role {
+function getCurrentRole(meeple :IMeeple, board :EColor[][]) :ERole {
     let fieldColor = board[meeple.position.row][meeple.position.col]
     return meeple.roles[fieldColor]
 }
 
-function knightMoves(meeple :number, allMeeples :Meeple[], limits :Limits) :Position[] {
-    let currentPos :Position = allMeeples[meeple].position
+function knightMoves(meeple :number, allMeeples :IMeeple[], limits :ILimits) :IPosition[] {
+    let currentPos :IPosition = allMeeples[meeple].position
 
-    let offsets :Position[] = [
+    let offsets :IPosition[] = [
         {row: 2, col: 1}, {row: 1, col: 2},
         {row:-2, col: 1}, {row:-1, col: 2},
         {row: 2, col:-1}, {row: 1, col:-2},
@@ -207,7 +207,7 @@ function knightMoves(meeple :number, allMeeples :Meeple[], limits :Limits) :Posi
     })
 }
 
-function bishopMoves(meeple :number, allMeeples :Meeple[], limits :Limits) :Position[] {    
+function bishopMoves(meeple :number, allMeeples :IMeeple[], limits :ILimits) :IPosition[] {    
     let startingPos = allMeeples[meeple].position
     return [
         ...moveGenerator(startingPos, 1, 1, limits, allMeeples, meeple),
@@ -217,7 +217,7 @@ function bishopMoves(meeple :number, allMeeples :Meeple[], limits :Limits) :Posi
     ]
 }
 
-function rookMoves(meeple :number, allMeeples :Meeple[], limits :Limits) :Position[] {
+function rookMoves(meeple :number, allMeeples :IMeeple[], limits :ILimits) :IPosition[] {
     let startingPos = allMeeples[meeple].position
     return [
         ...moveGenerator(startingPos, 1, 0, limits, allMeeples, meeple),
@@ -229,7 +229,7 @@ function rookMoves(meeple :number, allMeeples :Meeple[], limits :Limits) :Positi
 
 enum MoveType { INVALID, NORMAL, BEATING }
 
-function getMoveType(move :Position, limits :Limits, allMeeples :Meeple[], meeple :number) :MoveType {
+function getMoveType(move :IPosition, limits :ILimits, allMeeples :IMeeple[], meeple :number) :MoveType {
     let meepleToMove  = allMeeples[meeple]
     let meepleOnField = allMeeples[getIOfMeepleAtPosition(move, allMeeples)]
 
@@ -245,11 +245,11 @@ function getMoveType(move :Position, limits :Limits, allMeeples :Meeple[], meepl
     return MoveType.INVALID
 }
 
-function moveGenerator(startingPos :Position, rowOffset :number, colOffset :number,
-    limits :Limits, allMeeples :Meeple[], meeple :number) :Position[] 
+function moveGenerator(startingPos :IPosition, rowOffset :number, colOffset :number,
+    limits :ILimits, allMeeples :IMeeple[], meeple :number) :IPosition[] 
 {
-    let result :Position[] = []
-    let tmpPos :Position = {...startingPos}
+    let result :IPosition[] = []
+    let tmpPos :IPosition = {...startingPos}
 
     while (true) {
         tmpPos.row += rowOffset

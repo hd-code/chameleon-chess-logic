@@ -1,4 +1,4 @@
-import { GameState, Position, getBoard, Color, Meeple } from "./main";
+import { IGameState, IPosition, getBoard, EColor, IMeeple } from "./main";
 import { isArrayOf, deepClone } from "./helper";
 import { isColor, isInPositions } from "./helperAdv";
 import { isLimits, calcLimits, STARTING_LIMITS } from "./limits";
@@ -6,28 +6,28 @@ import { isMeeple, nextMoves, getIOfMeepleAtPosition, getDefaultMeeplesForPlayer
 
 /* --------------------------------- Public --------------------------------- */
 
-export function isGameState(gs :GameState) :gs is GameState {
+export function isGameState(gs :IGameState) :gs is IGameState {
     return 'limits'    in gs && isLimits(gs.limits)
         && 'meeples'   in gs && isArrayOf(gs.meeples, isMeeple)
         && 'whoseTurn' in gs && isColor(gs.whoseTurn)
 }
 
-export function init(players: {[player in Color]: boolean}): GameState {
-    let meeples :Meeple[] = []
-    players[Color.RED] && meeples.push(...getDefaultMeeplesForPlayer(Color.RED))
-    players[Color.GREEN] && meeples.push(...getDefaultMeeplesForPlayer(Color.GREEN))
-    players[Color.YELLOW] && meeples.push(...getDefaultMeeplesForPlayer(Color.YELLOW))
-    players[Color.BLUE] && meeples.push(...getDefaultMeeplesForPlayer(Color.BLUE))
+export function init(players: {[player in EColor]: boolean}): IGameState {
+    let meeples :IMeeple[] = []
+    players[EColor.RED] && meeples.push(...getDefaultMeeplesForPlayer(EColor.RED))
+    players[EColor.GREEN] && meeples.push(...getDefaultMeeplesForPlayer(EColor.GREEN))
+    players[EColor.YELLOW] && meeples.push(...getDefaultMeeplesForPlayer(EColor.YELLOW))
+    players[EColor.BLUE] && meeples.push(...getDefaultMeeplesForPlayer(EColor.BLUE))
 
     return {
         limits: calcLimits(meeples, STARTING_LIMITS),
         meeples: meeples,
-        whoseTurn: nextPlayer(Color.GREEN, meeples)
+        whoseTurn: nextPlayer(EColor.GREEN, meeples)
     }
 }
 
 /** Checks validity of the move, then makes the move. */
-export function checkAndMakeMove(gs: GameState, meeple: number, destination: Position): GameState|null {
+export function checkAndMakeMove(gs: IGameState, meeple: number, destination: IPosition): IGameState|null {
     // check if game is still on
     if (!isGameOn(gs))
         return null
@@ -45,8 +45,8 @@ export function checkAndMakeMove(gs: GameState, meeple: number, destination: Pos
 }
 
 /** Just makes the move. No validity check! Handle with care! */
-export function makeMove(gs: GameState, meeple: number, destination: Position): GameState {
-    let result :GameState = deepClone(gs)
+export function makeMove(gs: IGameState, meeple: number, destination: IPosition): IGameState {
+    let result :IGameState = deepClone(gs)
 
     // move meeple
     result.meeples[meeple].position = destination
@@ -64,7 +64,7 @@ export function makeMove(gs: GameState, meeple: number, destination: Position): 
     return result
 }
 
-export function isGameOn(gs: GameState): boolean {
+export function isGameOn(gs: IGameState): boolean {
     let players: {[player: number]:boolean} = {}
 
     gs.meeples.forEach(meeple => {
@@ -79,14 +79,14 @@ export function isGameOn(gs: GameState): boolean {
 
 // usage: TURN_ORDER[ currentPlayerColor ]
 //      -> nextPlayerColor
-const TURN_ORDER :{[player in Color]: Color} = {
-    [Color.RED]:    Color.BLUE,
-    [Color.GREEN]:  Color.RED,
-    [Color.YELLOW]: Color.GREEN,
-    [Color.BLUE]:   Color.YELLOW
+const TURN_ORDER :{[player in EColor]: EColor} = {
+    [EColor.RED]:    EColor.BLUE,
+    [EColor.GREEN]:  EColor.RED,
+    [EColor.YELLOW]: EColor.GREEN,
+    [EColor.BLUE]:   EColor.YELLOW
 }
-function nextPlayer(currentPlayer: Color, meeples: Meeple[]): Color {
-    let nextPlayer: Color = currentPlayer
+function nextPlayer(currentPlayer: EColor, meeples: IMeeple[]): EColor {
+    let nextPlayer: EColor = currentPlayer
 
     do { nextPlayer = TURN_ORDER[nextPlayer] }
     while(nextPlayer !== currentPlayer && !isPlayerAlive(nextPlayer, meeples))
@@ -94,7 +94,7 @@ function nextPlayer(currentPlayer: Color, meeples: Meeple[]): Color {
     return nextPlayer
 }
 
-function isPlayerAlive(player :Color, allMeeples :Meeple[]) :boolean {
+function isPlayerAlive(player :EColor, allMeeples :IMeeple[]) :boolean {
     for (let i = 0, ie = allMeeples.length; i < ie; i++) {
         if (allMeeples[i].player === player)
             return true

@@ -1,22 +1,22 @@
-import { GameState, Position, Color, Meeple } from "./main";
+import { IGameState, IPosition, EColor, IMeeple } from "./main";
 import { makeMove, isGameOn } from "./gameState";
 
-export function makeBestMove(gs: GameState): GameState {
+export function makeBestMove(gs: IGameState): IGameState {
     return gs
 }
 
 interface Move {
     meeple: number
-    destination: Position
+    destination: IPosition
 }
 
-type Score = {[player in Color]: number}
+type Score = {[player in EColor]: number}
 
-function calcBestMove(gs: GameState): Move {
+function calcBestMove(gs: IGameState): Move {
     return {meeple: 2, destination: {row: 0, col: 0}}
 }
 
-function evalMove(gs: GameState, move: Move, depth: number, score?: Score, formerPlayer?: Color): Score {
+function evalMove(gs: IGameState, move: Move, depth: number, score?: Score, formerPlayer?: EColor): Score {
     const newGS = makeMove(gs, move.meeple, move.destination)
     if (!depth || !isGameOn(newGS))
         return evalGS(newGS)
@@ -31,16 +31,16 @@ function evalMove(gs: GameState, move: Move, depth: number, score?: Score, forme
     }
 }
 
-function evalGS(gs: GameState): Score {
+function evalGS(gs: IGameState): Score {
     return {
-        [Color.RED]: countMeeples(gs.meeples, Color.RED),
-        [Color.GREEN]: countMeeples(gs.meeples, Color.GREEN),
-        [Color.YELLOW]: countMeeples(gs.meeples, Color.YELLOW),
-        [Color.BLUE]: countMeeples(gs.meeples, Color.BLUE),
+        [EColor.RED]: countMeeples(gs.meeples, EColor.RED),
+        [EColor.GREEN]: countMeeples(gs.meeples, EColor.GREEN),
+        [EColor.YELLOW]: countMeeples(gs.meeples, EColor.YELLOW),
+        [EColor.BLUE]: countMeeples(gs.meeples, EColor.BLUE),
     }
 }
 
-function countMeeples(meeples: Meeple[], player: Color): number {
+function countMeeples(meeples: IMeeple[], player: EColor): number {
     return meeples.reduce((result, meeple) => {
         return (meeple.player === player ? 1 : -1) + result
     }, 0)
