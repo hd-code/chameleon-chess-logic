@@ -1,17 +1,7 @@
-[x] Public interface:
-    - initGame (numOfPlayers or which player) -> gs
-    - advanceGame (destination, meepleIndex, gs) -> gs
-    - letComputerAdvanceGame (gs, difficulty) -> gs
-    - isGameStillOn(gs) -> bool
-    - getMoves(meepleIndex, gs) -> moves(pos + moveType)
-
-Maybe:
-- getCurrentPlayer
-- getPlayer
-
 [x] Type Check for all values
 [ ] JSDoc for all important interfaces
 [ ] README.md
+
 
 Unit Tests:
 - initGame: 2Players, 3Players, 4Players check if all is there

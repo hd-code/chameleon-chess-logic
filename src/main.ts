@@ -1,55 +1,20 @@
 import { isNumber } from "./helper"
-import { isPosition } from "./helperAdv";
+import { EColor, IPosition, isPosition, BOARD } from "./basic";
 import { nextMoves, getIOfMeepleAtPosition } from "./meeples"
-import { init, isGameState, checkAndMakeMove, isGameOn } from "./gameState"
+import { IGameState, isGameState, init, checkAndMakeMove, isGameOn } from "./gameState"
 import { makeBestMove } from "./ai";
 
 /* --------------------------------- Types ---------------------------------- */
 
-export enum ERole { KNIGHT, QUEEN, BISHOP, ROOK }
-
-export enum EColor { RED, GREEN, YELLOW, BLUE }
-
-export interface IPosition {
-    row: number
-    col: number
-}
-
-export interface ILimits {
-    lower: IPosition
-    upper: IPosition
-}
-
-export interface IMeeple {
-    player: EColor
-    roles: {[fieldColor in EColor]: ERole}
-    position: IPosition
-}
-
-export interface IGameState {
-    limits: ILimits
-    meeples: IMeeple[]
-    whoseTurn: EColor
-}
+export { ERole, EColor, IPosition } from "./basic";
+export { ILimits } from "./limits";
+export { IMeeple } from "./meeples";
+export { IGameState } from "./gameState";
 
 /* ------------------------------- Functions -------------------------------- */
 
 export function getBoard(): EColor[][] {
-    const R = EColor.RED
-    const G = EColor.GREEN
-    const Y = EColor.YELLOW
-    const B = EColor.BLUE
-
-    return [
-        [B, R, B, Y, G, R, B, Y],
-        [R, G, R, B, Y, G, R, B],
-        [G, Y, R, G, R, B, B, Y],
-        [Y, B, G, Y, G, R, Y, G],
-        [B, R, Y, B, R, B, G, R],
-        [R, G, G, Y, B, Y, R, B],
-        [G, Y, B, R, G, Y, B, Y],
-        [R, G, Y, B, R, G, Y, G]
-    ]
+    return BOARD
 }
 
 export function initGame(players: {[player in EColor]: boolean}): IGameState {
@@ -90,8 +55,7 @@ export function letAIadvanceGame(gs: IGameState): IGameState|null {
  * empty array.
  * 
  * @param gs     The current game state
- * @param meeple The index of the meeple in the meeple array of the game state
- *               whose moves should be calculated.
+ * @param meeple The index of the meeple in the meeple array of the game state whose moves should be calculated.
  */
 export function getPossibleMoves(gs: IGameState, meepleIndex: number): IPosition[] {
     return isGameState(gs) && isNumber(meepleIndex) && gs.meeples[meepleIndex]

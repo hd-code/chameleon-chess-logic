@@ -1,5 +1,6 @@
-import { IGameState, IPosition, EColor, IMeeple } from "./main";
-import { makeMove, isGameOn } from "./gameState";
+import { EColor, IPosition } from "./basic";
+import { IMeeple } from "./meeples";
+import { IGameState, makeMove, isGameOn } from "./gameState";
 
 export function makeBestMove(gs: IGameState): IGameState {
     return gs

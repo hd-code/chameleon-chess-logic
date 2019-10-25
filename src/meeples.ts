@@ -1,8 +1,13 @@
-import { IMeeple, EColor, ILimits, ERole, IPosition } from "./main";
-import { isColor, isRole, isPosition } from "./helperAdv";
-import { isWithinLimits } from "./limits";
+import { EColor, isColor, ERole, isRole, IPosition, isPosition } from "./basic";
+import { ILimits, isWithinLimits } from "./limits";
 
 /* --------------------------------- Public --------------------------------- */
+
+export interface IMeeple {
+    player: EColor
+    roles: {[fieldColor in EColor]: ERole}
+    position: IPosition
+}
 
 export function isMeeple(meeple :IMeeple) :meeple is IMeeple {
     return 'player'   in meeple && isColor(meeple.player)

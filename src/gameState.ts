@@ -1,10 +1,15 @@
-import { IGameState, IPosition, getBoard, EColor, IMeeple } from "./main";
 import { isArrayOf, deepClone } from "./helper";
-import { isColor, isInPositions } from "./helperAdv";
-import { isLimits, calcLimits, STARTING_LIMITS } from "./limits";
-import { isMeeple, nextMoves, getIOfMeepleAtPosition, getDefaultMeeplesForPlayer } from "./meeples";
+import { EColor, isColor, BOARD, IPosition, isInPositions } from "./basic";
+import { ILimits, isLimits, calcLimits, STARTING_LIMITS } from "./limits";
+import { IMeeple, isMeeple, nextMoves, getIOfMeepleAtPosition, getDefaultMeeplesForPlayer } from "./meeples";
 
 /* --------------------------------- Public --------------------------------- */
+
+export interface IGameState {
+    limits: ILimits
+    meeples: IMeeple[]
+    whoseTurn: EColor
+}
 
 export function isGameState(gs :IGameState) :gs is IGameState {
     return 'limits'    in gs && isLimits(gs.limits)
@@ -37,7 +42,7 @@ export function checkAndMakeMove(gs: IGameState, meeple: number, destination: IP
         return null
 
     // calc possible moves and check if move is part of them
-    let possibleMoves = nextMoves(meeple, gs.meeples, gs.limits, getBoard())
+    let possibleMoves = nextMoves(meeple, gs.meeples, gs.limits, BOARD)
     if (!isInPositions(destination, possibleMoves))
         return null
 

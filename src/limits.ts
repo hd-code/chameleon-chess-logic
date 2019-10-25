@@ -1,7 +1,12 @@
-import { ILimits, IPosition, IMeeple } from "./main";
-import { isPosition } from "./helperAdv";
+import { IPosition, isPosition } from "./basic";
+import { IMeeple } from "./meeples";
 
 /* --------------------------------- Public --------------------------------- */
+
+export interface ILimits {
+    lower: IPosition
+    upper: IPosition
+}
 
 export function isLimits(limits :ILimits) :limits is ILimits {
     return 'lower' in limits && isPosition(limits.lower)
