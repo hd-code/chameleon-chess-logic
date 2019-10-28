@@ -1,27 +1,27 @@
 [x] Type Check for all values
+[x] README.md
+
 [ ] JSDoc for all important interfaces
-[ ] README.md
+[ ] JSDoc for all functions in main.ts
 
+[ ] Unit Tests:
+    [ ] getBoard - not needed ?!
+    [ ] initGame - 2, 3, 4 players -> check standard constellation
+    [ ] advanceGame
+        [ ] invalid move - wrong pawn, wrong position
+        [ ] move that shrinks the field
+        [ ] move that shrinks the field to its minimum
+        [ ] normal move
+        [ ] beating move - normal, shrinking
+    [ ] letComputerAdvanceGame - 3 end game situations
+    [ ] getPossibleMoves - wrong pawn, knight, bishop, rook, queen
+    [ ] getIndexOfPawnOnField - no pawn, correct pawn
+    [ ] isGameOver - yes, no, one move -> before no, after yes
 
-Unit Tests:
-- initGame: 2Players, 3Players, 4Players check if all is there
-- advanceGame: just 2 players and 2 meeples, some moves
-    - invalid moves
-    - moves that shrink the field
-    - moves that shrink the field to its smallest
-    - normal moves
-    - beating moves
-- letComputerAdvanceGame: check if correct meeple moved, if it moved correctly
-                        check if next players turn
-        check end turn, where just has to win in the next turn, if it plays wisely
-- isGameStillOn: yes, no, one game last move, first yes then no
-- getMoves: Knight, Queen, Bishop, Rook all move kinds: invalid, beating, normal
-
-
-
-Computer opponent:
-- MiniMax implementation
-    - recursive function -> gameState + weightsPerPlayer
-    - only recursion for the best getMoves
-    - max depth? periodic max depth?
-- structure for neural net?
+[ ] Computer opponent:
+    [ ] MiniMax implementation
+        [x] recursive function, evalFunction
+        [x] random choice when there are several best moves (same score)
+        [ ] pruning - even possible ?
+        [x] depth gets higher as the game nears its end
+    [ ] AI implementation - neural net? reinforced learning?

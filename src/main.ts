@@ -1,6 +1,6 @@
 import { isNumber } from "./helper"
-import { EColor, IPosition, isPosition, BOARD } from "./basic";
-import { nextMoves, getIOfMeepleAtPosition } from "./meeples"
+import { EColor, IPosition, isPosition, Board, BOARD } from "./basic";
+import { nextMoves, getIOfPawnAtPosition } from "./pawns"
 import { IGameState, isGameState, init, checkAndMakeMove, isGameOn } from "./gameState"
 import { makeBestMove } from "./ai";
 
@@ -8,12 +8,12 @@ import { makeBestMove } from "./ai";
 
 export { ERole, EColor, IPosition } from "./basic";
 export { ILimits } from "./limits";
-export { IMeeple } from "./meeples";
+export { IPawn } from "./pawns";
 export { IGameState } from "./gameState";
 
 /* ------------------------------- Functions -------------------------------- */
 
-export function getBoard(): EColor[][] {
+export function getBoard(): Board {
     return BOARD
 }
 
@@ -23,20 +23,20 @@ export function initGame(players: {[player in EColor]: boolean}): IGameState {
 }
 
 /**
- * Advances the game by one turn. It moves the meeple to the destination and
+ * Advances the game by one turn. It moves the pawn to the destination and
  * returns the updated game state. If anything is wrong, it returns null.
  * 
  * Possible errors:
  * - wrong game state, 
- * - meeple doesn't exist or doesn't belong to the player whose turn it is 
- * - destination is not available to the meeple right now
+ * - pawn doesn't exist or doesn't belong to the player whose turn it is 
+ * - destination is not available to the pawn right now
  * 
- * @param destination The destination where meeple should go to
- * @param meeple The index of the meeple in the meeples array in the game state
+ * @param destination The destination where the pawn should go to
+ * @param pawnIndex The index of the pawn in the pawns array in the game state
  * @param gs The current game state.
  */
-export function advanceGame(gs: IGameState, meepleIndex: number, destination: IPosition): IGameState|null {
-    return isGameState(gs) ? checkAndMakeMove(gs, meepleIndex, destination) : null
+export function advanceGame(gs: IGameState, pawnIndex: number, destination: IPosition): IGameState|null {
+    return isGameState(gs) ? checkAndMakeMove(gs, pawnIndex, destination) : null
 }
 
 /**
@@ -45,28 +45,28 @@ export function advanceGame(gs: IGameState, meepleIndex: number, destination: IP
  * @param gs  The current game state
  * @param difficulty not yet implemented
  */
-export function letAIadvanceGame(gs: IGameState): IGameState|null {
+export function letComputerAdvanceGame(gs: IGameState): IGameState|null {
     return isGameState(gs) ? makeBestMove(gs) : null
 }
 
 /**
- * Returns an array of possible moves for the given meeple.
+ * Returns an array of possible moves for the given pawn.
  * 
- * If there are errors (invalid game state, meeple doesn't exist) it returns an
+ * If there are errors (invalid game state, pawn doesn't exist) it returns an
  * empty array.
  * 
  * @param gs     The current game state
- * @param meeple The index of the meeple in the meeple array of the game state whose moves should be calculated.
+ * @param pawnIndex The index of the pawn in the pawns array of the game state whose moves should be calculated.
  */
-export function getPossibleMoves(gs: IGameState, meepleIndex: number): IPosition[] {
-    return isGameState(gs) && isNumber(meepleIndex) && gs.meeples[meepleIndex]
-        ? nextMoves(meepleIndex, gs.meeples, gs.limits, getBoard())
+export function getPossibleMoves(gs: IGameState, pawnIndex: number): IPosition[] {
+    return isGameState(gs) && isNumber(pawnIndex) && gs.pawns[pawnIndex]
+        ? nextMoves(pawnIndex, gs.pawns, gs.limits, getBoard())
         : []
 }
 
-export function getMeepleOnField(gs: IGameState, field: IPosition): number|null {
+export function getIndexOfPawnOnField(gs: IGameState, field: IPosition): number|null {
     return isGameState(gs) && isPosition(field)
-        ? getIOfMeepleAtPosition(field, gs.meeples)
+        ? getIOfPawnAtPosition(field, gs.pawns)
         : null
 }
 

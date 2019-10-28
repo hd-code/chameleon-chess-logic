@@ -4,7 +4,6 @@
   "description": "The game logic engine for the board game Chameleon Chess",
   "files": ["build"],
   "main": "build/main.js",
-  "types": "",
   "scripts": {
     "prepare": "npm run ts",
     "start": "npm run ts && node test",
@@ -15,7 +14,7 @@
   "author": "Hannes Dröse",
   "license": "UNLICENSED",
   "devDependencies": {
-    "mocha": "^6.2.0",
-    "typescript": "^3.5.3"
+    "mocha": "^6.2.2",
+    "typescript": "^3.6.4"
   }
 }

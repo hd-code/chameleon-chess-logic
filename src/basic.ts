@@ -1,14 +1,18 @@
 import { isNumber } from "./helper";
 
+/* --------------------------------- Types ---------------------------------- */
+
 export enum ERole { KNIGHT, QUEEN, BISHOP, ROOK }
 
 export enum EColor { RED, GREEN, YELLOW, BLUE }
+
+export type Board = EColor[][]
 
 const R = EColor.RED
 const G = EColor.GREEN
 const Y = EColor.YELLOW
 const B = EColor.BLUE
-export const BOARD: EColor[][] = [
+export const BOARD: Board = [
     [B, R, B, Y, G, R, B, Y],
     [R, G, R, B, Y, G, R, B],
     [G, Y, R, G, R, B, B, Y],
@@ -24,22 +28,23 @@ export interface IPosition {
     col: number
 }
 
-export function isRole(role :ERole) :role is ERole {
+/* ------------------------------ Type Guards ------------------------------- */
+
+export function isRole(role: ERole): role is ERole {
     return isNumber(role) && ERole[role] !== undefined
 }
 
-export function isColor(color :EColor) :color is EColor {
+export function isColor(color: EColor): color is EColor {
     return isNumber(color) && EColor[color] !== undefined
 }
 
-export function isPosition(pos :IPosition) :pos is IPosition {
+export function isPosition(pos: IPosition): pos is IPosition {
     return 'row' in pos && isNumber(pos.row)
         && 'col' in pos && isNumber(pos.col)
 }
 
-/** Returns true if position can be found in the positions array.
- */
-export function isInPositions(position :IPosition, positions :IPosition[]) :boolean {
+/** Returns true if position can be found in the positions array. */
+export function isInPositions(position: IPosition, positions: IPosition[]): boolean {
     for (let i = 0, ie = positions.length; i < ie; i++) {
         if (position.row === positions[i].row && position.col === positions[i].col)
             return true

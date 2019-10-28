@@ -1,61 +1,60 @@
-import { EColor, isColor, ERole, isRole, IPosition, isPosition } from "./basic";
+import { EColor, isColor, ERole, isRole, IPosition, isPosition, Board } from "./basic";
 import { ILimits, isWithinLimits } from "./limits";
 import { deepClone } from "./helper";
 
 /* --------------------------------- Public --------------------------------- */
 
-export interface IMeeple {
-    player: EColor
-    roles: {[fieldColor in EColor]: ERole}
-    position: IPosition
+export interface IPawn {
+    player:  EColor
+    roles:   {[fieldColor in EColor]: ERole}
+    position:IPosition
 }
 
-export function isMeeple(meeple :IMeeple) :meeple is IMeeple {
-    return 'player'   in meeple && isColor(meeple.player)
-        && 'roles'    in meeple && isMeepleRoles(meeple.roles)
-        && 'position' in meeple && isPosition(meeple.position)
+export function isPawn(pawn: IPawn): pawn is IPawn {
+    return 'player'   in pawn && isColor(pawn.player)
+        && 'roles'    in pawn && isPawnRoles(pawn.roles)
+        && 'position' in pawn && isPosition(pawn.position)
 }
 
-export function getDefaultMeeplesForPlayer(player :EColor) :IMeeple[] {
-    return getDefaultMeeples(player)
+export function getDefaultPawnsForPlayer(player: EColor): IPawn[] {
+    return getDefaultPawns(player)
 }
 
-// meeple is the index in allMeeples. Therefore it is just a number. This avoids
-// redundance. After all, the meeple always has to be part of allMeeples.
-export function nextMoves(meeple :number, allMeeples :IMeeple[], limits :ILimits,
-    board :EColor[][]) :IPosition[]
+// pawnI is the index in pawns. Therefore it is just a number. This avoids
+// redundance. After all, the pawn always has to be part of pawns.
+export function nextMoves(pawnI: number, pawns: IPawn[], limits: ILimits, board: Board): IPosition[]
 {
-    switch ( getCurrentRole(allMeeples[meeple], board) ) {
+    switch ( getCurrentRole(pawns[pawnI], board) ) {
         case ERole.KNIGHT:
-            return knightMoves(meeple, allMeeples, limits)
+            return knightMoves(pawnI, pawns, limits)
         case ERole.BISHOP:
-            return bishopMoves(meeple, allMeeples, limits)
+            return bishopMoves(pawnI, pawns, limits)
         case ERole.ROOK:
-            return rookMoves(meeple, allMeeples, limits)
+            return rookMoves(pawnI, pawns, limits)
         case ERole.QUEEN:
-            return bishopMoves(meeple, allMeeples, limits)
-                .concat( rookMoves(meeple, allMeeples, limits) )
+            return bishopMoves(pawnI, pawns, limits)
+                .concat( rookMoves(pawnI, pawns, limits) )
         default:
             return []
     }
 }
 
-export function getIOfMeepleAtPosition(position :IPosition, allMeeples :IMeeple[]) :number {
-    for (let i = 0, ie = allMeeples.length; i < ie; i++) {
-        if (   position.row === allMeeples[i].position.row
-            && position.col === allMeeples[i].position.col)
+export function getIOfPawnAtPosition(position: IPosition, pawns: IPawn[]): number {
+    for (let i = 0, ie = pawns.length; i < ie; i++) {
+        if (   position.row === pawns[i].position.row
+            && position.col === pawns[i].position.col)
                 return i
     }
     return -1
 }
 
-export function getIofMeeple(meeple: IMeeple, meeples: IMeeple[]): number {
-    return meeples.indexOf(meeple)
+export function getIOfPawn(pawn: IPawn, pawns: IPawn[]): number {
+    return pawns.indexOf(pawn)
 }
 
 /* --------------------------------- Intern --------------------------------- */
 
-function isMeepleRoles(r:any): r is {[fieldColor in EColor]: ERole} {
+function isPawnRoles(r:any): r is {[fieldColor in EColor]: ERole} {
     let keys = Object.keys(r)
     if (!keys)
         return false
@@ -69,7 +68,7 @@ function isMeepleRoles(r:any): r is {[fieldColor in EColor]: ERole} {
     }, <boolean>true)
 }
 
-const DEFAULT_ROLES : {[knightColor in EColor]: {[fieldColor in EColor]: ERole}} = {
+const DEFAULT_ROLES: {[knightColor in EColor]: {[fieldColor in EColor]: ERole}} = {
     [EColor.RED]: {
         [EColor.RED]:    ERole.KNIGHT,
         [EColor.GREEN]:  ERole.QUEEN,
@@ -95,7 +94,7 @@ const DEFAULT_ROLES : {[knightColor in EColor]: {[fieldColor in EColor]: ERole}}
         [EColor.BLUE]:   ERole.KNIGHT
     }
 }
-const DEFAULT_MEEPLES :{[player in EColor]: IMeeple[]} = {
+const DEFAULT_PAWNS: {[player in EColor]: IPawn[]} = {
     [EColor.RED]: [
         {
             player: EColor.RED,
@@ -185,19 +184,19 @@ const DEFAULT_MEEPLES :{[player in EColor]: IMeeple[]} = {
         },
     ],
 }
-function getDefaultMeeples(player: EColor): IMeeple[] {
-    return DEFAULT_MEEPLES[player]
+function getDefaultPawns(player: EColor): IPawn[] {
+    return DEFAULT_PAWNS[player]
 }
 
-function getCurrentRole(meeple :IMeeple, board :EColor[][]) :ERole {
-    let fieldColor = board[meeple.position.row][meeple.position.col]
-    return meeple.roles[fieldColor]
+function getCurrentRole(pawn: IPawn, board: Board): ERole {
+    let fieldColor = board[pawn.position.row][pawn.position.col]
+    return pawn.roles[fieldColor]
 }
 
-function knightMoves(meeple :number, allMeeples :IMeeple[], limits :ILimits) :IPosition[] {
-    const currentPos :IPosition = allMeeples[meeple].position
+function knightMoves(pawnI: number, pawns: IPawn[], limits: ILimits): IPosition[] {
+    const currentPos: IPosition = pawns[pawnI].position
 
-    const offsets :IPosition[] = [
+    const offsets: IPosition[] = [
         {row: 2, col: 1}, {row: 1, col: 2},
         {row:-2, col: 1}, {row:-1, col: 2},
         {row: 2, col:-1}, {row: 1, col:-2},
@@ -213,50 +212,49 @@ function knightMoves(meeple :number, allMeeples :IMeeple[], limits :ILimits) :IP
 
     // only return move if it is not INVALID
     return result.filter(position => {
-        return getMoveType(position, limits, allMeeples, meeple)
+        return getMoveType(position, limits, pawns, pawnI)
     })
 }
 
-function bishopMoves(meeple :number, allMeeples :IMeeple[], limits :ILimits) :IPosition[] {    
-    let startingPos = allMeeples[meeple].position
+function bishopMoves(pawnI: number, pawns: IPawn[], limits: ILimits): IPosition[] {    
+    let startingPos = pawns[pawnI].position
     return [
-        ...moveGenerator(startingPos, 1, 1, limits, allMeeples, meeple),
-        ...moveGenerator(startingPos,-1, 1, limits, allMeeples, meeple),
-        ...moveGenerator(startingPos, 1,-1, limits, allMeeples, meeple),
-        ...moveGenerator(startingPos,-1,-1, limits, allMeeples, meeple),
+        ...moveGenerator(startingPos, 1, 1, limits, pawns, pawnI),
+        ...moveGenerator(startingPos,-1, 1, limits, pawns, pawnI),
+        ...moveGenerator(startingPos, 1,-1, limits, pawns, pawnI),
+        ...moveGenerator(startingPos,-1,-1, limits, pawns, pawnI),
     ]
 }
 
-function rookMoves(meeple :number, allMeeples :IMeeple[], limits :ILimits) :IPosition[] {
-    let startingPos = allMeeples[meeple].position
+function rookMoves(pawnI: number, pawns: IPawn[], limits: ILimits): IPosition[] {
+    let startingPos = pawns[pawnI].position
     return [
-        ...moveGenerator(startingPos, 1, 0, limits, allMeeples, meeple),
-        ...moveGenerator(startingPos,-1, 0, limits, allMeeples, meeple),
-        ...moveGenerator(startingPos, 0, 1, limits, allMeeples, meeple),
-        ...moveGenerator(startingPos, 0,-1, limits, allMeeples, meeple),
+        ...moveGenerator(startingPos, 1, 0, limits, pawns, pawnI),
+        ...moveGenerator(startingPos,-1, 0, limits, pawns, pawnI),
+        ...moveGenerator(startingPos, 0, 1, limits, pawns, pawnI),
+        ...moveGenerator(startingPos, 0,-1, limits, pawns, pawnI),
     ]
 }
 
 enum MoveType { INVALID, NORMAL, BEATING }
 
-function getMoveType(move :IPosition, limits :ILimits, allMeeples :IMeeple[], meeple :number) :MoveType {
-    let meepleToMove  = allMeeples[meeple]
-    let meepleOnField = allMeeples[getIOfMeepleAtPosition(move, allMeeples)]
+function getMoveType(move: IPosition, limits: ILimits, pawns: IPawn[], pawnI: number): MoveType {
+    const pawnToMove  = pawns[pawnI]
+    const pawnOnField = pawns[getIOfPawnAtPosition(move, pawns)]
 
     if (!isWithinLimits(move, limits))
         return MoveType.INVALID
 
-    if (!meepleOnField)
+    if (!pawnOnField)
         return MoveType.NORMAL
 
-    if (meepleOnField.player !== meepleToMove.player)
+    if (pawnOnField.player !== pawnToMove.player)
         return MoveType.BEATING
 
     return MoveType.INVALID
 }
 
-function moveGenerator(startingPos :IPosition, rowOffset :number, colOffset :number,
-    limits :ILimits, allMeeples :IMeeple[], meeple :number) :IPosition[] 
+function moveGenerator(startingPos: IPosition, rowOffset: number, colOffset: number, limits: ILimits, pawns: IPawn[], pawnI: number): IPosition[] 
 {
     let result :IPosition[] = []
     let tmpPos :IPosition = {...startingPos}
@@ -264,7 +262,7 @@ function moveGenerator(startingPos :IPosition, rowOffset :number, colOffset :num
     while (true) {
         tmpPos.row += rowOffset
         tmpPos.col += colOffset
-        let moveType = getMoveType(tmpPos, limits, allMeeples, meeple)
+        let moveType = getMoveType(tmpPos, limits, pawns, pawnI)
 
         // don't add move if it's invalid
         if (moveType !== MoveType.INVALID)

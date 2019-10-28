@@ -1,5 +1,5 @@
 import { EColor, BOARD } from "./basic";
-import { IMeeple, nextMoves, getIofMeeple } from "./meeples";
+import { nextMoves, getIOfPawn } from "./pawns";
 import { IGameState, isGameOn, getNextPossibleGameStates } from "./gameState";
 import { deepClone } from "./helper";
 
@@ -35,10 +35,10 @@ const DEFAULT_SCORE = {
 }
 
 function setRecursion(gs: IGameState): number {
-    const numOfMeeples = gs.meeples.length
-    return numOfMeeples <=  2 ? 6
-        :  numOfMeeples <=  3 ? 4
-        :  numOfMeeples <=  6 ? 2
+    const numOfPawns = gs.pawns.length
+    return numOfPawns <=  2 ? 6
+        :  numOfPawns <=  3 ? 4
+        :  numOfPawns <=  6 ? 2
         :  1
 }
 
@@ -76,15 +76,18 @@ function getScore(gs:IGameState): Score {
     }
 }
 
-// counts the number of moves all meeples of a player can do
+// counts the number of moves all pawns of a player can do
 function evalPlayer(gs: IGameState, player: EColor): number {
-    const meeples = gs.meeples.filter(meeple => meeple.player === player)
-    return meeples.reduce((result, meeple) => {
-        const meepleI = getIofMeeple(meeple, gs.meeples)
-        return result + nextMoves(meepleI, gs.meeples, gs.limits, BOARD).length
+    const pawns = gs.pawns.filter(pawn => pawn.player === player)
+    return pawns.reduce((result, pawn) => {
+        const pawnI = getIOfPawn(pawn, gs.pawns)
+        return result + nextMoves(pawnI, gs.pawns, gs.limits, BOARD).length
     }, 0)
 }
 
+//       scoreOfPlayer - scoresOfOpponents
+// =     scoreOfPlayer - scoresOfAllPlayers + scoreOfPlayer
+// = 2 * scoreOfPlayer - scoresOfAllPlayers
 function calcPlayerScore(score: Score, player: EColor): number {
     return 2 * score[player] - calcScoreTotal(score)
 }
