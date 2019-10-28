@@ -1,48 +1,94 @@
-import { EColor, IPosition } from "./basic";
-import { IMeeple } from "./meeples";
-import { IGameState, makeMove, isGameOn } from "./gameState";
+import { EColor, BOARD } from "./basic";
+import { IMeeple, nextMoves, getIofMeeple } from "./meeples";
+import { IGameState, isGameOn, getNextPossibleGameStates } from "./gameState";
+import { deepClone } from "./helper";
+
+/* --------------------------------- Public --------------------------------- */
 
 export function makeBestMove(gs: IGameState): IGameState {
-    return gs
+    const nextGSs = getNextPossibleGameStates(gs)
+
+    const recursionDepth = setRecursion(gs)
+
+    const weightedGSs = nextGSs.map(cGS => ({
+        gs: cGS,
+        score: evalGS(cGS, recursionDepth, DEFAULT_SCORE)
+    }))
+
+    const orderedGSs = weightedGSs.sort((a,b) => {
+        const diff =  calcPlayerScore(b.score, gs.whoseTurn)
+                    - calcPlayerScore(a.score, gs.whoseTurn)
+        return diff === 0 ? Math.random() * 2 - 1 : diff
+    })
+
+    return orderedGSs[0].gs
 }
 
-interface Move {
-    meeple: number
-    destination: IPosition
+/* --------------------------------- Intern --------------------------------- */
+
+const DEFAULT_SCORE_VAL = 1000
+const DEFAULT_SCORE = {
+    [EColor.RED]:    DEFAULT_SCORE_VAL,
+    [EColor.GREEN]:  DEFAULT_SCORE_VAL,
+    [EColor.YELLOW]: DEFAULT_SCORE_VAL,
+    [EColor.BLUE]:   DEFAULT_SCORE_VAL
+}
+
+function setRecursion(gs: IGameState): number {
+    const numOfMeeples = gs.meeples.length
+    return numOfMeeples <=  2 ? 6
+        :  numOfMeeples <=  3 ? 4
+        :  numOfMeeples <=  6 ? 2
+        :  1
 }
 
 type Score = {[player in EColor]: number}
 
-function calcBestMove(gs: IGameState): Move {
-    return {meeple: 2, destination: {row: 0, col: 0}}
+function evalGS(gs: IGameState, depth: number, _score: Score): Score {
+    // if gameOver or depth = 0, getScore -> recursion anchor
+    if (!isGameOn(gs) || !depth)
+        return getScore(gs)
+
+    // init result score and get all possible moves/their corresponding GameStates
+    let score = deepClone(_score)
+    const moves = getNextPossibleGameStates(gs)
+
+    // loop through all moves, take the best move's score
+    for (let i = 0, ie = moves.length; i < ie; i++) {
+        const moveScore = evalGS(moves[i], depth - 1, score)
+
+        const playerScore = calcPlayerScore(score, gs.whoseTurn)
+        const playerMoveScore = calcPlayerScore(moveScore, gs.whoseTurn)
+
+        if (playerMoveScore > playerScore)
+            score = moveScore
+    }
+
+    return score
 }
 
-function evalMove(gs: IGameState, move: Move, depth: number, score?: Score, formerPlayer?: EColor): Score {
-    const newGS = makeMove(gs, move.meeple, move.destination)
-    if (!depth || !isGameOn(newGS))
-        return evalGS(newGS)
-
-    // TODO!!!...
-
+function getScore(gs:IGameState): Score {
     return {
-        0: 0,
-        1: 1,
-        2: 2,
-        3: 3
+        [EColor.RED]:   evalPlayer(gs, EColor.RED),
+        [EColor.GREEN]: evalPlayer(gs, EColor.GREEN),
+        [EColor.YELLOW]:evalPlayer(gs, EColor.YELLOW),
+        [EColor.BLUE]:  evalPlayer(gs, EColor.BLUE)
     }
 }
 
-function evalGS(gs: IGameState): Score {
-    return {
-        [EColor.RED]: countMeeples(gs.meeples, EColor.RED),
-        [EColor.GREEN]: countMeeples(gs.meeples, EColor.GREEN),
-        [EColor.YELLOW]: countMeeples(gs.meeples, EColor.YELLOW),
-        [EColor.BLUE]: countMeeples(gs.meeples, EColor.BLUE),
-    }
-}
-
-function countMeeples(meeples: IMeeple[], player: EColor): number {
+// counts the number of moves all meeples of a player can do
+function evalPlayer(gs: IGameState, player: EColor): number {
+    const meeples = gs.meeples.filter(meeple => meeple.player === player)
     return meeples.reduce((result, meeple) => {
-        return (meeple.player === player ? 1 : -1) + result
+        const meepleI = getIofMeeple(meeple, gs.meeples)
+        return result + nextMoves(meepleI, gs.meeples, gs.limits, BOARD).length
     }, 0)
+}
+
+function calcPlayerScore(score: Score, player: EColor): number {
+    return 2 * score[player] - calcScoreTotal(score)
+}
+
+function calcScoreTotal(score: Score): number {
+    return score[EColor.RED] + score[EColor.GREEN] + score[EColor.YELLOW] + score[EColor.BLUE]
 }

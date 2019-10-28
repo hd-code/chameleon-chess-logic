@@ -1,7 +1,7 @@
-import { isArrayOf, deepClone } from "./helper";
+import { isArrayOf, deepClone, flattenArray } from "./helper";
 import { EColor, isColor, BOARD, IPosition, isInPositions } from "./basic";
 import { ILimits, isLimits, calcLimits, STARTING_LIMITS } from "./limits";
-import { IMeeple, isMeeple, nextMoves, getIOfMeepleAtPosition, getDefaultMeeplesForPlayer } from "./meeples";
+import { IMeeple, isMeeple, nextMoves, getIOfMeepleAtPosition, getDefaultMeeplesForPlayer, getIofMeeple } from "./meeples";
 
 /* --------------------------------- Public --------------------------------- */
 
@@ -78,6 +78,18 @@ export function isGameOn(gs: IGameState): boolean {
     })
 
     return Object.keys(players).length >= 2 && players[gs.whoseTurn]
+}
+
+export function getNextPossibleGameStates(gs: IGameState): IGameState[] {
+    const meeples = gs.meeples.filter(meeple => meeple.player === gs.whoseTurn)
+
+    const resultArr = meeples.map(meeple => {
+        const meepleI = getIofMeeple(meeple, gs.meeples)
+        const moves = nextMoves(meepleI, gs.meeples, gs.limits, BOARD)
+        return moves.map(move => makeMove(gs, meepleI, move))
+    })
+
+    return flattenArray(resultArr)
 }
 
 /* --------------------------------- Intern --------------------------------- */

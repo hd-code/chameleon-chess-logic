@@ -17,6 +17,7 @@ export function getBoard(): EColor[][] {
     return BOARD
 }
 
+// TODO: optional and return null for less than two players
 export function initGame(players: {[player in EColor]: boolean}): IGameState {
     return init(players)
 }

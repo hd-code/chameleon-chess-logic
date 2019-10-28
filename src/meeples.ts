@@ -1,5 +1,6 @@
 import { EColor, isColor, ERole, isRole, IPosition, isPosition } from "./basic";
 import { ILimits, isWithinLimits } from "./limits";
+import { deepClone } from "./helper";
 
 /* --------------------------------- Public --------------------------------- */
 
@@ -46,6 +47,10 @@ export function getIOfMeepleAtPosition(position :IPosition, allMeeples :IMeeple[
                 return i
     }
     return -1
+}
+
+export function getIofMeeple(meeple: IMeeple, meeples: IMeeple[]): number {
+    return meeples.indexOf(meeple)
 }
 
 /* --------------------------------- Intern --------------------------------- */
@@ -190,16 +195,16 @@ function getCurrentRole(meeple :IMeeple, board :EColor[][]) :ERole {
 }
 
 function knightMoves(meeple :number, allMeeples :IMeeple[], limits :ILimits) :IPosition[] {
-    let currentPos :IPosition = allMeeples[meeple].position
+    const currentPos :IPosition = allMeeples[meeple].position
 
-    let offsets :IPosition[] = [
+    const offsets :IPosition[] = [
         {row: 2, col: 1}, {row: 1, col: 2},
         {row:-2, col: 1}, {row:-1, col: 2},
         {row: 2, col:-1}, {row: 1, col:-2},
         {row:-2, col:-1}, {row:-1, col:-2},
     ]
 
-    let result = offsets.map(offset => {
+    const result = offsets.map(offset => {
         return {
             row: currentPos.row + offset.row,
             col: currentPos.col + offset.col
@@ -263,7 +268,7 @@ function moveGenerator(startingPos :IPosition, rowOffset :number, colOffset :num
 
         // don't add move if it's invalid
         if (moveType !== MoveType.INVALID)
-            result.push(tmpPos)
+            result.push(deepClone(tmpPos))
 
         // stop generator if invalid or beating was encountered
         if (moveType !== MoveType.NORMAL)

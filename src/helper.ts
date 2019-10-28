@@ -3,6 +3,10 @@ export function deepClone<T>(original: T): T {
     return JSON.parse(JSON.stringify(original))
 }
 
+export function flattenArray<T>(original: T[][]): T[] {
+    return original.reduce((result, item) => result.concat(item), [])
+}
+
 /* ----------------------------- Type Checking ------------------------------ */
 
 export function isNumber(n:any): n is number {
