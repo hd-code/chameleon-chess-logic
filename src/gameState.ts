@@ -17,7 +17,9 @@ export function isGameState(gs: IGameState): gs is IGameState {
         && 'whoseTurn' in gs && isColor(gs.whoseTurn)
 }
 
-export function init(players: {[player in EColor]: boolean}): IGameState {
+export type TPlayerConfig = {[player in EColor]: boolean}
+
+export function init(players: TPlayerConfig): IGameState {
     let pawns = <IPawn[]>[]
     players[EColor.RED] && pawns.push(...getDefaultPawnsForPlayer(EColor.RED))
     players[EColor.GREEN] && pawns.push(...getDefaultPawnsForPlayer(EColor.GREEN))

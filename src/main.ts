@@ -1,7 +1,7 @@
 import { isNumber } from "./helper"
-import { EColor, IPosition, isPosition, Board, BOARD } from "./basic";
+import { IPosition, isPosition, Board, BOARD } from "./basic";
 import { nextMoves, getIOfPawnAtPosition } from "./pawns"
-import { IGameState, isGameState, init, checkAndMakeMove, isGameOn } from "./gameState"
+import { IGameState, isGameState, init, checkAndMakeMove, isGameOn, TPlayerConfig } from "./gameState"
 import { makeBestMove } from "./ai";
 
 /* --------------------------------- Types ---------------------------------- */
@@ -18,7 +18,7 @@ export function getBoard(): Board {
 }
 
 // TODO: optional and return null for less than two players
-export function initGame(players: {[player in EColor]: boolean}): IGameState {
+export function initGame(players: TPlayerConfig): IGameState {
     return init(players)
 }
 
