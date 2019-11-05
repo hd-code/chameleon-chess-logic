@@ -1,6 +1,6 @@
 import { isArrayOf, deepClone, flattenArray } from "./helper";
 import { EColor, isColor, BOARD, IPosition, isInPositions } from "./basic";
-import { ILimits, isLimits, calcLimits, STARTING_LIMITS } from "./limits";
+import { ILimits, isLimits, calcLimits, STARTING_LIMITS, isWithinLimits } from "./limits";
 import { IPawn, isPawn, nextMoves, getIOfPawnAtPosition, getDefaultPawnsForPlayer, getIOfPawn } from "./pawns";
 
 /* --------------------------------- Public --------------------------------- */
@@ -14,7 +14,9 @@ export interface IGameState {
 export function isGameState(gs: IGameState): gs is IGameState {
     return 'limits'    in gs && isLimits(gs.limits)
         && 'pawns'     in gs && isArrayOf(gs.pawns, isPawn)
+        && gs.pawns.filter(pawn => !isWithinLimits(pawn.position, gs.limits)).length === 0
         && 'whoseTurn' in gs && isColor(gs.whoseTurn)
+        && isPlayerAlive(gs.whoseTurn, gs.pawns)
 }
 
 export type TPlayerConfig = {[player in EColor]: boolean}

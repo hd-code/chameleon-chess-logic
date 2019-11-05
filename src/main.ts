@@ -1,7 +1,6 @@
-import { isNumber } from "./helper"
-import { IPosition, isPosition, Board, BOARD } from "./basic";
+import { IPosition, Board, BOARD } from "./basic";
 import { nextMoves, getIOfPawnAtPosition } from "./pawns"
-import { IGameState, isGameState, init, checkAndMakeMove, isGameOn, TPlayerConfig } from "./gameState"
+import { IGameState, init, checkAndMakeMove, isGameOn, TPlayerConfig, isGameState } from "./gameState"
 import { makeBestMove } from "./ai";
 
 /* --------------------------------- Types ---------------------------------- */
@@ -36,42 +35,39 @@ export function initGame(players: TPlayerConfig): IGameState {
  * @param gs The current game state.
  */
 export function advanceGame(gs: IGameState, pawnIndex: number, destination: IPosition): IGameState|null {
-    return isGameState(gs) ? checkAndMakeMove(gs, pawnIndex, destination) : null
+    return checkAndMakeMove(gs, pawnIndex, destination)
 }
 
 /**
- * Advances the game automatically by one turn. If an invalid game state was 
- * passed, it returns null.
+ * Advances the game automatically by one turn.
  * @param gs  The current game state
  * @param difficulty not yet implemented
  */
-export function letComputerAdvanceGame(gs: IGameState): IGameState|null {
-    return isGameState(gs) ? makeBestMove(gs) : null
+export function letComputerAdvanceGame(gs: IGameState): IGameState {
+    return makeBestMove(gs)
 }
 
 /**
  * Returns an array of possible moves for the given pawn.
  * 
- * If there are errors (invalid game state, pawn doesn't exist) it returns an
- * empty array.
+ * If the pawn doesn't exist, an empty array is returned
  * 
  * @param gs     The current game state
  * @param pawnIndex The index of the pawn in the pawns array of the game state whose moves should be calculated.
  */
 export function getPossibleMoves(gs: IGameState, pawnIndex: number): IPosition[] {
-    return isGameState(gs) && isNumber(pawnIndex) && gs.pawns[pawnIndex]
-        ? nextMoves(pawnIndex, gs.pawns, gs.limits, getBoard())
-        : []
+    return nextMoves(pawnIndex, gs.pawns, gs.limits, BOARD)
 }
 
 export function getIndexOfPawnOnField(gs: IGameState, field: IPosition): number|null {
-    if (!isGameState(gs) || !isPosition(field))
-        return null
-
     const index = getIOfPawnAtPosition(field, gs.pawns)
     return index !== -1 ? index : null
 }
 
-export function isGameOver(gs: IGameState): boolean|null {
-    return isGameState(gs) ? !isGameOn(gs) : null
+export function isGameOver(gs: IGameState): boolean {
+    return !isGameOn(gs)
+}
+
+export function isValidGameState(gs: any): gs is IGameState {
+    return isGameState(gs)
 }
