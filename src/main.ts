@@ -65,9 +65,11 @@ export function getPossibleMoves(gs: IGameState, pawnIndex: number): IPosition[]
 }
 
 export function getIndexOfPawnOnField(gs: IGameState, field: IPosition): number|null {
-    return isGameState(gs) && isPosition(field)
-        ? getIOfPawnAtPosition(field, gs.pawns)
-        : null
+    if (!isGameState(gs) || !isPosition(field))
+        return null
+
+    const index = getIOfPawnAtPosition(field, gs.pawns)
+    return index !== -1 ? index : null
 }
 
 export function isGameOver(gs: IGameState): boolean|null {

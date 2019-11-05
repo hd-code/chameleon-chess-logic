@@ -33,6 +33,7 @@ const DEFAULT_SCORE = {
     [EColor.YELLOW]: DEFAULT_SCORE_VAL,
     [EColor.BLUE]:   DEFAULT_SCORE_VAL
 }
+const PAWN_VALUE = 100
 
 function setRecursion(gs: IGameState): number {
     const numOfPawns = gs.pawns.length
@@ -76,10 +77,11 @@ function getScore(gs:IGameState): Score {
     }
 }
 
-// counts the number of moves all pawns of a player can do
+//   counts pawns (-> PAWN_VALUE)
+// + counts the number of moves all pawns of a player can do
 function evalPlayer(gs: IGameState, player: EColor): number {
     const pawns = gs.pawns.filter(pawn => pawn.player === player)
-    return pawns.reduce((result, pawn) => {
+    return pawns.length * PAWN_VALUE + pawns.reduce((result, pawn) => {
         const pawnI = getIOfPawn(pawn, gs.pawns)
         return result + nextMoves(pawnI, gs.pawns, gs.limits, BOARD).length
     }, 0)
