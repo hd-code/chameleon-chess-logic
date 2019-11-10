@@ -2,7 +2,7 @@
 [x] README.md
 
 [ ] JSDoc for all important interfaces
-[ ] JSDoc for all functions in main.ts
+[x] JSDoc for all functions in main.ts
 
 [ ] Unit Tests:
     [ ] getBoard - not needed ?!

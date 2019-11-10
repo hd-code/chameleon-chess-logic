@@ -87,8 +87,8 @@ function getDefaultRoles(knightColor: EColor): {[fieldColor in EColor]: ERole} {
     const colors = [EColor.RED, EColor.GREEN, EColor.YELLOW, EColor.BLUE]
 
     const result = roles.map((_,i) => {
-        const tmp = i + knightColor
-        const index = tmp > EColor.BLUE ? tmp - roles.length : tmp
+        const tmp = i - knightColor
+        const index = tmp < EColor.RED ? tmp + roles.length : tmp
         return roles[index]
     })
 

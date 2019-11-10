@@ -7,11 +7,11 @@ import { deepClone } from "./helper";
 
 export function makeBestMove(gs: IGameState): IGameState {
     const nextGSs = getNextPossibleGameStates(gs)
-    const recursionDepth = setRecursion(gs)
+    const recursionDepth = getRecurtionDepth(gs)
 
     const weightedGSs = nextGSs.map(cGS => ({
         gs: cGS,
-        score: evalGS(cGS, RECURSION_DEPTH)
+        score: evalGS(cGS, recursionDepth)
     }))
     const orderedGSs = deepClone(weightedGSs).sort((a,b) => {
         return calcPlayerScore(b.score, gs.whoseTurn)
@@ -23,22 +23,20 @@ export function makeBestMove(gs: IGameState): IGameState {
 
 /* --------------------------------- Intern --------------------------------- */
 
-const PAWN_VALUE = 1000
-const RECURSION_DEPTH = 12
-
-function setRecursion(gs: IGameState): number {
+const PAWN_VALUE = 100
+function getRecurtionDepth(gs: IGameState): number {
     const numOfPawns = gs.pawns.length
-    return numOfPawns <=  2 ? 6
-        // :  numOfPawns <=  3 ? 4
-        // :  numOfPawns <=  6 ? 2
-        :  3
+    return numOfPawns < 3 ? 5
+         : numOfPawns < 5 ? 3
+         : numOfPawns < 7 ? 2
+         : 1
 }
 
 type Score = {[player in EColor]: number}
 
 function evalGS(gs: IGameState, depth: number): Score {
     // if gameOver or depth = 0, getScore -> recursion anchor
-    if (!isGameOver(gs.pawns) || depth <= 0)
+    if (isGameOver(gs.pawns) || depth <= 0)
         return getScore(gs)
 
     const moves = getNextPossibleGameStates(gs)
@@ -63,10 +61,17 @@ function getScore(gs:IGameState): Score {
 // + counts the number of moves all pawns of a player can do
 function evalPlayer(gs: IGameState, player: EColor): number {
     const pawns = gs.pawns.filter(pawn => pawn.player === player)
-    return pawns.length * PAWN_VALUE + pawns.reduce((result, pawn) => {
-        const pawnI = getIOfPawn(pawn, gs.pawns)
-        return result + getNextMoves(pawnI, gs.pawns, gs.limits, getBoard()).length
-    }, 0)
+    return pawns.length * PAWN_VALUE + countMovesOfAllPawns(player, gs)
+}
+
+function countMovesOfAllPawns(player: EColor, gs: IGameState): number {
+    const pawns = gs.pawns.filter(pawn => pawn.player === player)
+    const pawnsI = pawns.map(pawn => getIOfPawn(pawn, gs.pawns))
+    return pawnsI.reduce((result, pawn) => result + countMovesOfPawn(pawn, gs), 0)
+}
+
+function countMovesOfPawn(pawnI: number, gs: IGameState): number {
+    return getNextMoves(pawnI, gs.pawns, gs.limits, getBoard()).length
 }
 
 //       scoreOfPlayer - scoresOfOpponents
