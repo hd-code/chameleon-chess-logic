@@ -1,4 +1,4 @@
-import { EColor, isColor, ERole, isRole, IPosition, isPosition, Board } from "./basic";
+import { EColor, isColor, ERole, isRole, IPosition, isPosition, TBoard } from "./basic";
 import { ILimits, isWithinLimits } from "./limits";
 import { deepClone } from "./helper";
 
@@ -22,7 +22,7 @@ export function getDefaultPawnsForPlayer(player: EColor): IPawn[] {
 
 // pawnI is the index in pawns. Therefore it is just a number. This avoids
 // redundance. After all, the pawn always has to be part of pawns.
-export function nextMoves(pawnI: number, pawns: IPawn[], limits: ILimits, board: Board): IPosition[]
+export function getNextMoves(pawnI: number, pawns: IPawn[], limits: ILimits, board: TBoard): IPosition[]
 {
     switch ( getCurrentRole(pawns[pawnI], board) ) {
         case ERole.KNIGHT:
@@ -52,145 +52,88 @@ export function getIOfPawn(pawn: IPawn, pawns: IPawn[]): number {
     return pawns.indexOf(pawn)
 }
 
+export function getCurrentRole(pawn: IPawn, board: TBoard): ERole {
+    let fieldColor = board[pawn.position.row][pawn.position.col]
+    return pawn.roles[fieldColor]
+}
+
 /* --------------------------------- Intern --------------------------------- */
 
 function isPawnRoles(r:any): r is {[fieldColor in EColor]: ERole} {
-    let keys = Object.keys(r)
+    const keys = Object.keys(r)
     if (!keys)
         return false
 
-    let nkeys = keys.map(key => parseInt(key))
-    return nkeys.reduce((result, key) => {
-        if (!isColor(key) || !isRole(r[key]))
-            return false
+    const nkeys = keys.map(key => parseInt(key))
+    const correctRoles = nkeys.filter(key => isColor(key) && isRole(r[key]))
 
-        return result
-    }, <boolean>true)
+    return nkeys.length === correctRoles.length
 }
 
-const DEFAULT_ROLES: {[knightColor in EColor]: {[fieldColor in EColor]: ERole}} = {
-    [EColor.RED]: {
-        [EColor.RED]:    ERole.KNIGHT,
-        [EColor.GREEN]:  ERole.QUEEN,
-        [EColor.YELLOW]: ERole.BISHOP,
-        [EColor.BLUE]:   ERole.ROOK
-    },
-    [EColor.GREEN]: {
-        [EColor.RED]:    ERole.ROOK,
-        [EColor.GREEN]:  ERole.KNIGHT,
-        [EColor.YELLOW]: ERole.QUEEN,
-        [EColor.BLUE]:   ERole.BISHOP
-    },
-    [EColor.YELLOW]: {
-        [EColor.RED]:    ERole.BISHOP,
-        [EColor.GREEN]:  ERole.ROOK,
-        [EColor.YELLOW]: ERole.KNIGHT,
-        [EColor.BLUE]:   ERole.QUEEN
-    },
-    [EColor.BLUE]: {
-        [EColor.RED]:    ERole.QUEEN,
-        [EColor.GREEN]:  ERole.BISHOP,
-        [EColor.YELLOW]: ERole.ROOK,
-        [EColor.BLUE]:   ERole.KNIGHT
+/*
+Basic Order:
+KNIGHT, QUEEN, BISHOP, ROOK
+  RED,  GREEN, YELLOW, BLUE
+
+Arrangement switches through.
+
+knightColor -> offset of role in color array
+
+knightColor = 0 (RED)   -> no offset, standard mapping as above
+knightColor = 1 (GREEN) -> offset of 1, all roles move to the right by one spot
+*/
+function getDefaultRoles(knightColor: EColor): {[fieldColor in EColor]: ERole} {
+    const roles = [ERole.KNIGHT, ERole.QUEEN, ERole.BISHOP, ERole.ROOK]
+    const colors = [EColor.RED, EColor.GREEN, EColor.YELLOW, EColor.BLUE]
+
+    const result = roles.map((_,i) => {
+        const tmp = i + knightColor
+        const index = tmp > EColor.BLUE ? tmp - roles.length : tmp
+        return roles[index]
+    })
+
+    return {
+        [EColor.RED]: result[EColor.RED],
+        [EColor.GREEN]: result[EColor.GREEN],
+        [EColor.YELLOW]: result[EColor.YELLOW],
+        [EColor.BLUE]: result[EColor.BLUE],
+    }
+}
+function createPawn(player: EColor, knightColor: EColor, row: number, col: number): IPawn {
+    return {
+        player,
+        roles: getDefaultRoles(knightColor),
+        position: { row, col }
     }
 }
 const DEFAULT_PAWNS: {[player in EColor]: IPawn[]} = {
     [EColor.RED]: [
-        {
-            player: EColor.RED,
-            roles: DEFAULT_ROLES[EColor.RED],
-            position: {row: 7, col: 0}
-        },
-        {
-            player: EColor.RED,
-            roles: DEFAULT_ROLES[EColor.GREEN],
-            position: {row: 7, col: 1}
-        },
-        {
-            player: EColor.RED,
-            roles: DEFAULT_ROLES[EColor.YELLOW],
-            position: {row: 7, col: 2}
-        },
-        {
-            player: EColor.RED,
-            roles: DEFAULT_ROLES[EColor.BLUE],
-            position: {row: 7, col: 3}
-        },
+        createPawn(EColor.RED, EColor.RED,    7, 0),
+        createPawn(EColor.RED, EColor.GREEN,  7, 1),
+        createPawn(EColor.RED, EColor.YELLOW, 7, 2),
+        createPawn(EColor.RED, EColor.BLUE,   7, 3),
     ],
     [EColor.GREEN]: [
-        {
-            player: EColor.GREEN,
-            roles: DEFAULT_ROLES[EColor.GREEN],
-            position: {row: 7, col: 7}
-        },
-        {
-            player: EColor.GREEN,
-            roles: DEFAULT_ROLES[EColor.YELLOW],
-            position: {row: 6, col: 7}
-        },
-        {
-            player: EColor.GREEN,
-            roles: DEFAULT_ROLES[EColor.BLUE],
-            position: {row: 5, col: 7}
-        },
-        {
-            player: EColor.GREEN,
-            roles: DEFAULT_ROLES[EColor.RED],
-            position: {row: 4, col: 7}
-        },
+        createPawn(EColor.GREEN, EColor.GREEN,  7, 7),
+        createPawn(EColor.GREEN, EColor.YELLOW, 6, 7),
+        createPawn(EColor.GREEN, EColor.BLUE,   5, 7),
+        createPawn(EColor.GREEN, EColor.RED,    4, 7),
     ],
     [EColor.YELLOW]: [
-        {
-            player: EColor.YELLOW,
-            roles: DEFAULT_ROLES[EColor.YELLOW],
-            position: {row: 0, col: 7}
-        },
-        {
-            player: EColor.YELLOW,
-            roles: DEFAULT_ROLES[EColor.BLUE],
-            position: {row: 0, col: 6}
-        },
-        {
-            player: EColor.YELLOW,
-            roles: DEFAULT_ROLES[EColor.RED],
-            position: {row: 0, col: 5}
-        },
-        {
-            player: EColor.YELLOW,
-            roles: DEFAULT_ROLES[EColor.GREEN],
-            position: {row: 0, col: 4}
-        },
+        createPawn(EColor.YELLOW, EColor.YELLOW, 0, 7),
+        createPawn(EColor.YELLOW, EColor.BLUE,   0, 6),
+        createPawn(EColor.YELLOW, EColor.RED,    0, 5),
+        createPawn(EColor.YELLOW, EColor.GREEN,  0, 4),
     ],
     [EColor.BLUE]: [
-        {
-            player: EColor.BLUE,
-            roles: DEFAULT_ROLES[EColor.BLUE],
-            position: {row: 0, col: 0}
-        },
-        {
-            player: EColor.BLUE,
-            roles: DEFAULT_ROLES[EColor.RED],
-            position: {row: 1, col: 0}
-        },
-        {
-            player: EColor.BLUE,
-            roles: DEFAULT_ROLES[EColor.GREEN],
-            position: {row: 2, col: 0}
-        },
-        {
-            player: EColor.BLUE,
-            roles: DEFAULT_ROLES[EColor.YELLOW],
-            position: {row: 3, col: 0}
-        },
+        createPawn(EColor.BLUE, EColor.BLUE,   0, 0),
+        createPawn(EColor.BLUE, EColor.RED,    1, 0),
+        createPawn(EColor.BLUE, EColor.GREEN,  2, 0),
+        createPawn(EColor.BLUE, EColor.YELLOW, 3, 0),
     ],
 }
 function getDefaultPawns(player: EColor): IPawn[] {
     return DEFAULT_PAWNS[player]
-}
-
-function getCurrentRole(pawn: IPawn, board: Board): ERole {
-    let fieldColor = board[pawn.position.row][pawn.position.col]
-    return pawn.roles[fieldColor]
 }
 
 function knightMoves(pawnI: number, pawns: IPawn[], limits: ILimits): IPosition[] {
@@ -216,23 +159,21 @@ function knightMoves(pawnI: number, pawns: IPawn[], limits: ILimits): IPosition[
     })
 }
 
-function bishopMoves(pawnI: number, pawns: IPawn[], limits: ILimits): IPosition[] {    
-    let startingPos = pawns[pawnI].position
+function bishopMoves(pawnI: number, pawns: IPawn[], limits: ILimits): IPosition[] {
     return [
-        ...moveGenerator(startingPos, 1, 1, limits, pawns, pawnI),
-        ...moveGenerator(startingPos,-1, 1, limits, pawns, pawnI),
-        ...moveGenerator(startingPos, 1,-1, limits, pawns, pawnI),
-        ...moveGenerator(startingPos,-1,-1, limits, pawns, pawnI),
+        ...moveGenerator(pawns, pawnI, limits, { row: 1, col: 1 }),
+        ...moveGenerator(pawns, pawnI, limits, { row:-1, col: 1 }),
+        ...moveGenerator(pawns, pawnI, limits, { row: 1, col:-1 }),
+        ...moveGenerator(pawns, pawnI, limits, { row:-1, col:-1 }),
     ]
 }
 
 function rookMoves(pawnI: number, pawns: IPawn[], limits: ILimits): IPosition[] {
-    let startingPos = pawns[pawnI].position
     return [
-        ...moveGenerator(startingPos, 1, 0, limits, pawns, pawnI),
-        ...moveGenerator(startingPos,-1, 0, limits, pawns, pawnI),
-        ...moveGenerator(startingPos, 0, 1, limits, pawns, pawnI),
-        ...moveGenerator(startingPos, 0,-1, limits, pawns, pawnI),
+        ...moveGenerator(pawns, pawnI, limits, { row: 1, col: 0 }),
+        ...moveGenerator(pawns, pawnI, limits, { row:-1, col: 0 }),
+        ...moveGenerator(pawns, pawnI, limits, { row: 0, col: 1 }),
+        ...moveGenerator(pawns, pawnI, limits, { row: 0, col:-1 }),
     ]
 }
 
@@ -254,19 +195,25 @@ function getMoveType(move: IPosition, limits: ILimits, pawns: IPawn[], pawnI: nu
     return MoveType.INVALID
 }
 
-function moveGenerator(startingPos: IPosition, rowOffset: number, colOffset: number, limits: ILimits, pawns: IPawn[], pawnI: number): IPosition[] 
-{
+/** returns possible moves of a pawn, starting at its current position toward
+ * the given offset.
+ * 
+ * @param offset Offset in row and col direction per step
+ */
+function moveGenerator(pawns: IPawn[], pawnI: number, limits: ILimits, offset: IPosition): IPosition[] {
+    const startingPos = pawns[pawnI].position
+
     let result :IPosition[] = []
-    let tmpPos :IPosition = {...startingPos}
+    let currentPos :IPosition = deepClone(startingPos)
 
     while (true) {
-        tmpPos.row += rowOffset
-        tmpPos.col += colOffset
-        let moveType = getMoveType(tmpPos, limits, pawns, pawnI)
+        currentPos.row += offset.row
+        currentPos.col += offset.col
+        let moveType = getMoveType(currentPos, limits, pawns, pawnI)
 
         // don't add move if it's invalid
         if (moveType !== MoveType.INVALID)
-            result.push(deepClone(tmpPos))
+            result.push(deepClone(currentPos))
 
         // stop generator if invalid or beating was encountered
         if (moveType !== MoveType.NORMAL)

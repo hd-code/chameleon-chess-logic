@@ -1,41 +1,26 @@
 import { isNumber } from "./helper";
 
-/* --------------------------------- Types ---------------------------------- */
+/* --------------------------------- ERole ---------------------------------- */
 
 export enum ERole { KNIGHT, QUEEN, BISHOP, ROOK }
-
-export enum EColor { RED, GREEN, YELLOW, BLUE }
-
-export type Board = EColor[][]
-
-const R = EColor.RED
-const G = EColor.GREEN
-const Y = EColor.YELLOW
-const B = EColor.BLUE
-export const BOARD: Board = [
-    [B, R, B, Y, G, R, B, Y],
-    [R, G, R, B, Y, G, R, B],
-    [G, Y, R, G, R, B, B, Y],
-    [Y, B, G, Y, G, R, Y, G],
-    [B, R, Y, B, R, B, G, R],
-    [R, G, G, Y, B, Y, R, B],
-    [G, Y, B, R, G, Y, B, Y],
-    [R, G, Y, B, R, G, Y, G]
-]
-
-export interface IPosition {
-    row: number
-    col: number
-}
-
-/* ------------------------------ Type Guards ------------------------------- */
 
 export function isRole(role: ERole): role is ERole {
     return isNumber(role) && ERole[role] !== undefined
 }
 
+/* --------------------------------- EColor --------------------------------- */
+
+export enum EColor { RED, GREEN, YELLOW, BLUE }
+
 export function isColor(color: EColor): color is EColor {
     return isNumber(color) && EColor[color] !== undefined
+}
+
+/* ------------------------------- IPosition -------------------------------- */
+
+export interface IPosition {
+    row: number
+    col: number
 }
 
 export function isPosition(pos: IPosition): pos is IPosition {
@@ -51,3 +36,23 @@ export function isInPositions(position: IPosition, positions: IPosition[]): bool
     }
     return false
 }
+
+/* --------------------------------- Board ---------------------------------- */
+
+export type TBoard = EColor[][]
+
+export function getBoard(): TBoard {
+    return BOARD
+}
+
+const [R,G,Y,B] = [EColor.RED, EColor.GREEN, EColor.YELLOW, EColor.BLUE]
+const BOARD: TBoard = [
+    [B, R, B, Y, G, R, B, Y],
+    [R, G, R, B, Y, G, R, B],
+    [G, Y, R, G, R, B, B, Y],
+    [Y, B, G, Y, G, R, Y, G],
+    [B, R, Y, B, R, B, G, R],
+    [R, G, G, Y, B, Y, R, B],
+    [G, Y, B, R, G, Y, B, Y],
+    [R, G, Y, B, R, G, Y, G]
+]

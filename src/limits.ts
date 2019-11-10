@@ -11,11 +11,11 @@ export interface ILimits {
 export function isLimits(limits: ILimits): limits is ILimits {
     return 'lower' in limits && isPosition(limits.lower)
         && 'upper' in limits && isPosition(limits.upper)
+        && !isFieldSmallerThanAllowed(limits)
 }
 
-export const STARTING_LIMITS = <ILimits>{
-    lower: {row: 0, col: 0},
-    upper: {row: 7, col: 7}
+export function getStartingLimits(): ILimits {
+    return STARTING_LIMITS
 }
 
 export function isWithinLimits(pos: IPosition, limits: ILimits): boolean {
@@ -44,13 +44,16 @@ export function calcLimits(pawns: IPawn[], oldLimits: ILimits): ILimits {
     return result
 }
 
-/* --------------------------------- Intern --------------------------------- */
-
-const SMALLEST_FIELD_SIZE = <IPosition>{ row: 3, col: 3 }
-
-function isSmallestFieldSize(limits: ILimits): boolean {
+export function isSmallestFieldSize(limits: ILimits): boolean {
     return limits.upper.row - limits.lower.row + 1 === SMALLEST_FIELD_SIZE.row
         && limits.upper.col - limits.lower.col + 1 === SMALLEST_FIELD_SIZE.col
+}
+
+/* --------------------------------- Intern --------------------------------- */
+
+const STARTING_LIMITS = <ILimits>{
+    lower: {row: 0, col: 0},
+    upper: {row: 7, col: 7}
 }
 
 function calcPureLimits(pawns: IPawn[]): ILimits {
@@ -72,14 +75,14 @@ function calcPureLimits(pawns: IPawn[]): ILimits {
     }, initVal)
 }
 
+const SMALLEST_FIELD_SIZE = <IPosition>{ row: 3, col: 3 }
+
 function isFieldSmallerThanAllowed(limits: ILimits): boolean {
     return areRowsSmallerThanAllowed(limits) || areColsSmallerThanAllowed(limits)
 }
-
 function areRowsSmallerThanAllowed(limits: ILimits): boolean {
     return limits.upper.row - limits.lower.row + 1 < SMALLEST_FIELD_SIZE.row
 }
-
 function areColsSmallerThanAllowed(limits: ILimits): boolean {
     return limits.upper.col - limits.lower.col + 1 < SMALLEST_FIELD_SIZE.col
 }

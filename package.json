@@ -1,6 +1,6 @@
 {
   "name": "chameleon-chess-logic",
-  "version": "0.0.1",
+  "version": "0.9.0",
   "description": "The game logic engine for the board game Chameleon Chess",
   "files": [
     "build"

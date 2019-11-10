@@ -1,24 +1,21 @@
-import { EColor, BOARD } from "./basic";
-import { nextMoves, getIOfPawn } from "./pawns";
-import { IGameState, isGameOn, getNextPossibleGameStates } from "./gameState";
+import { EColor, getBoard } from "./basic";
+import { getNextMoves, getIOfPawn } from "./pawns";
+import { IGameState, isGameOver, getNextPossibleGameStates } from "./gameState";
 import { deepClone } from "./helper";
 
 /* --------------------------------- Public --------------------------------- */
 
 export function makeBestMove(gs: IGameState): IGameState {
     const nextGSs = getNextPossibleGameStates(gs)
-
     const recursionDepth = setRecursion(gs)
 
     const weightedGSs = nextGSs.map(cGS => ({
         gs: cGS,
-        score: evalGS(cGS, recursionDepth, DEFAULT_SCORE)
+        score: evalGS(cGS, RECURSION_DEPTH)
     }))
-
-    const orderedGSs = weightedGSs.sort((a,b) => {
-        const diff =  calcPlayerScore(b.score, gs.whoseTurn)
-                    - calcPlayerScore(a.score, gs.whoseTurn)
-        return diff === 0 ? Math.random() * 2 - 1 : diff
+    const orderedGSs = deepClone(weightedGSs).sort((a,b) => {
+        return calcPlayerScore(b.score, gs.whoseTurn)
+             - calcPlayerScore(a.score, gs.whoseTurn)
     })
 
     return orderedGSs[0].gs
@@ -26,46 +23,31 @@ export function makeBestMove(gs: IGameState): IGameState {
 
 /* --------------------------------- Intern --------------------------------- */
 
-const DEFAULT_SCORE_VAL = 1000
-const DEFAULT_SCORE = {
-    [EColor.RED]:    DEFAULT_SCORE_VAL,
-    [EColor.GREEN]:  DEFAULT_SCORE_VAL,
-    [EColor.YELLOW]: DEFAULT_SCORE_VAL,
-    [EColor.BLUE]:   DEFAULT_SCORE_VAL
-}
-const PAWN_VALUE = 100
+const PAWN_VALUE = 1000
+const RECURSION_DEPTH = 12
 
 function setRecursion(gs: IGameState): number {
     const numOfPawns = gs.pawns.length
     return numOfPawns <=  2 ? 6
-        :  numOfPawns <=  3 ? 4
-        :  numOfPawns <=  6 ? 2
-        :  1
+        // :  numOfPawns <=  3 ? 4
+        // :  numOfPawns <=  6 ? 2
+        :  3
 }
 
 type Score = {[player in EColor]: number}
 
-function evalGS(gs: IGameState, depth: number, _score: Score): Score {
+function evalGS(gs: IGameState, depth: number): Score {
     // if gameOver or depth = 0, getScore -> recursion anchor
-    if (!isGameOn(gs) || !depth)
+    if (!isGameOver(gs.pawns) || depth <= 0)
         return getScore(gs)
 
-    // init result score and get all possible moves/their corresponding GameStates
-    let score = deepClone(_score)
     const moves = getNextPossibleGameStates(gs)
+    const moveScores = moves.map(move => evalGS(move, depth - 1))
+    const orderedScores = deepClone(moveScores).sort((a,b) => {
+        return calcPlayerScore(b, gs.whoseTurn) - calcPlayerScore(a, gs.whoseTurn)
+    })
 
-    // loop through all moves, take the best move's score
-    for (let i = 0, ie = moves.length; i < ie; i++) {
-        const moveScore = evalGS(moves[i], depth - 1, score)
-
-        const playerScore = calcPlayerScore(score, gs.whoseTurn)
-        const playerMoveScore = calcPlayerScore(moveScore, gs.whoseTurn)
-
-        if (playerMoveScore > playerScore)
-            score = moveScore
-    }
-
-    return score
+    return orderedScores[0]
 }
 
 function getScore(gs:IGameState): Score {
@@ -83,7 +65,7 @@ function evalPlayer(gs: IGameState, player: EColor): number {
     const pawns = gs.pawns.filter(pawn => pawn.player === player)
     return pawns.length * PAWN_VALUE + pawns.reduce((result, pawn) => {
         const pawnI = getIOfPawn(pawn, gs.pawns)
-        return result + nextMoves(pawnI, gs.pawns, gs.limits, BOARD).length
+        return result + getNextMoves(pawnI, gs.pawns, gs.limits, getBoard()).length
     }, 0)
 }
 
