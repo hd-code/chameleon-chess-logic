@@ -20,8 +20,34 @@ export function isPawn(pawn: IPawn): pawn is IPawn {
         && 'position' in pawn && isPosition(pawn.position)
 }
 
+export function areAllPawnsWithinLimits(pawns: IPawn[], limits: ILimits): boolean {
+    const pawnsWithinLimits = pawns.filter(pawn => isPositionWithinLimits(pawn.position, limits));
+    return pawnsWithinLimits.length === pawns.length;
+}
+
+export function areTherePawnsOnTheSameField(pawns: IPawn[]): boolean {
+    const orderedPawns = deepClone(pawns).sort((a,b) => a.position.row - b.position.row);
+
+    for (let i = 1, ie = orderedPawns.length; i < ie; i++) {
+        if (isSamePosition(orderedPawns[i-1].position, orderedPawns[i].position))
+            return true;
+    }
+
+    return false;
+}
+
 export function getDefaultPawnsForPlayer(player: EColor): IPawn[] {
     return DEFAULT_PAWNS[player];
+}
+
+export function getPawnAtPosition(position: IPosition, pawns: IPawn[]): IPawn|null {
+    const result = pawns.filter(p => isSamePosition(p.position, position));
+    return result === [] ? null : result[0];
+}
+
+/** Returns -1 if the pawn was not found. */
+export function getIndexOfPawn(pawn: IPawn, pawns: IPawn[]): number {
+    return pawns.indexOf(pawn)
 }
 
 /** Returns -1 if there is no pawn at the specified position. */
@@ -32,8 +58,7 @@ export function getIndexOfPawnAtPosition(position: IPosition, pawns: IPawn[]): n
 
 /** pawnI is the index in pawns[]. Therefore it is just a number. This avoids 
  * redundance. After all, the pawn always has to be part of pawns[]. */
-export function getNextMoves(pawnI: number, pawns: IPawn[], limits: ILimits): IPosition[]
-{
+export function getNextMoves(pawnI: number, pawns: IPawn[], limits: ILimits): IPosition[] {
     switch ( getCurrentRole(pawns[pawnI]) ) {
         case ERole.KNIGHT:
             return knightMoves(pawnI, pawns, limits)
@@ -95,16 +120,6 @@ function createPawn(player: EColor, knightColor: EColor, row: number, col: numbe
         roles: getRoles(knightColor),
         position: { row, col }
     }
-}
-
-function getPawnAtPosition(position: IPosition, pawns: IPawn[]): IPawn|null {
-    const result = pawns.filter(p => isSamePosition(p.position, position));
-    return result === [] ? null : result[0];
-}
-
-// returns -1 if not found
-function getIndexOfPawn(pawn: IPawn, pawns: IPawn[]): number {
-    return pawns.indexOf(pawn)
 }
 
 /*

@@ -2,8 +2,8 @@ import { makeBestMove } from "./ai";
 
 import { EColor } from "./models/Color";
 import * as GS from "./models/GameState"
-import { isPositionWithinLimits } from "./models/Limits";
-import { getNextMoves, getIndexOfPawnAtPosition } from "./models/Pawns"
+import * as Limits from "./models/Limits";
+import * as Pawns from "./models/Pawns"
 import { IPosition } from "./models/Position";
 
 /* --------------------------------- Types ---------------------------------- */
@@ -39,7 +39,7 @@ export { getBoard } from "./models/Board";
  */
 export function initGame(red: boolean, green: boolean, yellow: boolean, blue: boolean): GS.IGameState|null {
     const gs = GS.initGameState(red, green, yellow, blue)
-    return !GS.isGameOver(gs.pawns) ? gs : null
+    return !GS.isGameOver(gs) ? gs : null
 }
 
 /**
@@ -51,9 +51,9 @@ export function initGame(red: boolean, green: boolean, yellow: boolean, blue: bo
  * - pawn doesn't exist or doesn't belong to the player whose turn it is 
  * - destination is not available to the pawn right now
  * 
+ * @param gs          The current game state.
+ * @param pawnIndex   The index of the pawn in the pawns array in the game state
  * @param destination The destination where the pawn should go to
- * @param pawnIndex The index of the pawn in the pawns array in the game state
- * @param gs The current game state.
  */
 export function advanceGame(gs: GS.IGameState, pawnIndex: number, destination: IPosition): GS.IGameState|null {
     return GS.isValidMove(gs, pawnIndex, destination)
@@ -64,7 +64,7 @@ export function advanceGame(gs: GS.IGameState, pawnIndex: number, destination: I
 /**
  * Advances the game automatically by one turn.
  * @param gs  The current game state
- * @param difficulty not yet implemented
+ * @param difficulty – not yet implemented
  */
 export function letComputerAdvanceGame(gs: GS.IGameState, difficulty?: number): GS.IGameState {
     return makeBestMove(gs);
@@ -75,22 +75,22 @@ export function letComputerAdvanceGame(gs: GS.IGameState, difficulty?: number): 
  * 
  * If the pawn doesn't exist, an empty array is returned
  * 
- * @param gs     The current game state
+ * @param gs        The current game state
  * @param pawnIndex The index of the pawn in the pawns array of the game state whose moves should be calculated.
  */
 export function getNextMovesOfPawn(gs: GS.IGameState, pawnIndex: number): IPosition[] {
-    return getNextMoves(pawnIndex, gs.pawns, gs.limits);
+    return Pawns.getNextMoves(pawnIndex, gs.pawns, gs.limits);
 }
 
 /**
- * Checks if one of the pawns is located at the given field. If so, the index of
- * that pawn in the pawns array is returned. If the given field is empty, this
- * function returns -1.
- * @param gs    the current game state
- * @param field the field to search for a pawn
+ * Checks if one of the pawns is located at the given position. If so, the index
+ * of that pawn in the pawns array is returned. If the given position is empty,
+ * this function returns -1.
+ * @param gs       The current game state
+ * @param position The field to search for a pawn
  */
-export function getIndexOfPawnOnField(gs: GS.IGameState, field: IPosition): number {
-    return getIndexOfPawnAtPosition(field, gs.pawns);
+export function getIndexOfPawnAtPosition(gs: GS.IGameState, field: IPosition): number {
+    return Pawns.getIndexOfPawnAtPosition(field, gs.pawns);
 }
 
 /**
@@ -99,7 +99,7 @@ export function getIndexOfPawnOnField(gs: GS.IGameState, field: IPosition): numb
  * E.g. it checks if the player whose turn it is, is actually alive or if there
  * are any pawns at the same field or outside the limits (both rendering the
  * game state incorrect).
- * @param gs The game state to be checked
+ * @param gs  The game state to be checked
  */
 export function isValidGameState(gs: any): gs is GS.IGameState {
     return GS.isGameState(gs) && GS.isValidGameState(gs);
@@ -107,27 +107,27 @@ export function isValidGameState(gs: any): gs is GS.IGameState {
 
 /**
  * Returns true if a given game has ended.
- * @param gs the current game state
+ * @param gs  The current game state
  */
 export function isGameOver(gs: GS.IGameState): boolean {
-    return GS.isGameOver(gs.pawns);
+    return GS.isGameOver(gs);
 }
 
 /**
  * Checks if the given player still takes part in the game.
- * @param player the player to be checked
- * @param gs     the current game state
+ * @param player The player to be checked
+ * @param gs     The current game state
  */
-export function isPlayerAlive(player: EColor, gs: GS.IGameState): boolean {
-    return GS.isPlayerAlive(player, gs.pawns);
+export function isPlayerAlive(gs: GS.IGameState, player: EColor): boolean {
+    return GS.isPlayerAlive(gs, player);
 }
 
 /**
- * Checks if a given field is within the limits of the current game. Thus, if
- * this field is still part of the game or not.
- * @param field the field to be checked
- * @param gs    the current game state
+ * Checks if a given position is within the limits of the current game. Thus, if
+ * this position is still part of the game or not.
+ * @param position The position to be checked
+ * @param gs       The current game state
  */
-export function isFieldWithinLimits(field: IPosition, gs: GS.IGameState): boolean {
-    return isPositionWithinLimits(field, gs.limits);
+export function isPositionWithinLimits(gs: GS.IGameState, position: IPosition): boolean {
+    return Limits.isPositionWithinLimits(position, gs.limits);
 }

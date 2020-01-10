@@ -9,7 +9,7 @@
   "scripts": {
     "prepare": "npm run ts",
     "start": "npm run ts && node test",
-    "test": "npm run ts && mocha",
+    "test": "npm run ts && mocha ./test/**/*.js",
     "ts": "rm -rf build && tsc",
     "ts:debug": "rm -rf build && tsc --sourceMap"
   },

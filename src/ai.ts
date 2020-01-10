@@ -2,7 +2,7 @@ import { deepClone } from "./helper";
 
 import { EColor } from "./models/Color";
 import { IGameState, isGameOver, getNextPossibleGameStates } from "./models/GameState";
-import { getNextMoves, getIndexOfPawnAtPosition} from "./models/Pawns";
+import { getNextMoves, getIndexOfPawn} from "./models/Pawns";
 
 /* --------------------------------- Public --------------------------------- */
 
@@ -39,7 +39,7 @@ type Score = {[player in EColor]: number}
 
 function evalGS(gs: IGameState, depth: number): Score {
     // if gameOver or depth = 0, getScore -> recursion anchor
-    if (isGameOver(gs.pawns) || depth <= 0)
+    if (isGameOver(gs) || depth <= 0)
         return getScore(gs)
 
     const moves = getNextPossibleGameStates(gs)
@@ -69,7 +69,7 @@ function evalPlayer(gs: IGameState, player: EColor): number {
 
 function countMovesOfAllPawns(player: EColor, gs: IGameState): number {
     const pawns = gs.pawns.filter(pawn => pawn.player === player)
-    const pawnsI = pawns.map(pawn => getIndexOfPawnAtPosition(pawn.position, gs.pawns))
+    const pawnsI = pawns.map(pawn => getIndexOfPawn(pawn, gs.pawns));
     return pawnsI.reduce((result, pawn) => result + countMovesOfPawn(pawn, gs), 0)
 }
 
