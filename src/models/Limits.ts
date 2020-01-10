@@ -14,16 +14,21 @@ export function isLimits(limits: ILimits): limits is ILimits {
         && !isFieldSmallerThanAllowed(limits)
 }
 
-export function getStartingLimits(): ILimits {
-    return {
-        lower: {row: MIN_ROW, col: MIN_COL},
-        upper: {row: MAX_ROW, col: MAX_COL}
-    }
+export function isSmallestFieldSize(limits: ILimits): boolean {
+    return limits.upper.row - limits.lower.row + 1 === SMALLEST_FIELD_SIZE.row
+        && limits.upper.col - limits.lower.col + 1 === SMALLEST_FIELD_SIZE.col
 }
 
 export function isPositionWithinLimits(pos: IPosition, limits: ILimits): boolean {
     return limits.lower.row <= pos.row &&  pos.row <= limits.upper.row
         && limits.lower.col <= pos.col &&  pos.col <= limits.upper.col
+}
+
+export function getStartingLimits(): ILimits {
+    return {
+        lower: {row: MIN_ROW, col: MIN_COL},
+        upper: {row: MAX_ROW, col: MAX_COL}
+    }
 }
 
 export function calcLimits(pawns: IPawn[], oldLimits: ILimits): ILimits {
@@ -47,17 +52,22 @@ export function calcLimits(pawns: IPawn[], oldLimits: ILimits): ILimits {
     return result
 }
 
-export function isSmallestFieldSize(limits: ILimits): boolean {
-    return limits.upper.row - limits.lower.row + 1 === SMALLEST_FIELD_SIZE.row
-        && limits.upper.col - limits.lower.col + 1 === SMALLEST_FIELD_SIZE.col
-}
-
 // -----------------------------------------------------------------------------
 
 const MIN_ROW = 0, MAX_ROW = 7;
 const MIN_COL = 0, MAX_COL = 7;
 
 const SMALLEST_FIELD_SIZE = <IPosition>{ row: 3, col: 3 }
+
+function isFieldSmallerThanAllowed(limits: ILimits): boolean {
+    return areRowsSmallerThanAllowed(limits) || areColsSmallerThanAllowed(limits)
+}
+function areRowsSmallerThanAllowed(limits: ILimits): boolean {
+    return limits.upper.row - limits.lower.row + 1 < SMALLEST_FIELD_SIZE.row
+}
+function areColsSmallerThanAllowed(limits: ILimits): boolean {
+    return limits.upper.col - limits.lower.col + 1 < SMALLEST_FIELD_SIZE.col
+}
 
 function calcPureLimits(pawns: IPawn[]): ILimits {
     let firstPos = pawns[0].position
@@ -76,14 +86,4 @@ function calcPureLimits(pawns: IPawn[]): ILimits {
 
         return limits
     }, initVal)
-}
-
-function isFieldSmallerThanAllowed(limits: ILimits): boolean {
-    return areRowsSmallerThanAllowed(limits) || areColsSmallerThanAllowed(limits)
-}
-function areRowsSmallerThanAllowed(limits: ILimits): boolean {
-    return limits.upper.row - limits.lower.row + 1 < SMALLEST_FIELD_SIZE.row
-}
-function areColsSmallerThanAllowed(limits: ILimits): boolean {
-    return limits.upper.col - limits.lower.col + 1 < SMALLEST_FIELD_SIZE.col
 }

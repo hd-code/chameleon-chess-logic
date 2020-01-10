@@ -114,7 +114,7 @@ export function isGameOver(gs: GS.IGameState): boolean {
 }
 
 /**
- * Checks if the given player is still part of the game.
+ * Checks if the given player still takes part in the game.
  * @param player the player to be checked
  * @param gs     the current game state
  */
@@ -123,7 +123,7 @@ export function isPlayerAlive(player: EColor, gs: GS.IGameState): boolean {
 }
 
 /**
- * Checks if a given field is within the limits of the current game, thus if
+ * Checks if a given field is within the limits of the current game. Thus, if
  * this field is still part of the game or not.
  * @param field the field to be checked
  * @param gs    the current game state

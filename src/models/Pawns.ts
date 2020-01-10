@@ -49,11 +49,6 @@ export function getNextMoves(pawnI: number, pawns: IPawn[], limits: ILimits): IP
     }
 }
 
-export function getCurrentRole(pawn: IPawn): ERole {
-    let fieldColor = getFieldColor(pawn.position);
-    return pawn.roles[fieldColor]
-}
-
 // -----------------------------------------------------------------------------
 
 function isPawnRoles(r:any): r is {[fieldColor in EColor]: ERole} {
@@ -142,6 +137,11 @@ function getRoles(knightColor: EColor): {[fieldColor in EColor]: ERole} {
         [EColor.YELLOW]: result[EColor.YELLOW],
         [EColor.BLUE]:   result[EColor.BLUE],
     };
+}
+
+function getCurrentRole(pawn: IPawn): ERole {
+    let fieldColor = getFieldColor(pawn.position);
+    return pawn.roles[fieldColor]
 }
 
 function knightMoves(pawnI: number, pawns: IPawn[], limits: ILimits): IPosition[] {

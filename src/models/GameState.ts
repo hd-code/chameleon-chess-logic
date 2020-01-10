@@ -26,15 +26,21 @@ export function isValidGameState(gs: IGameState): boolean {
         && isPlayerAlive(gs.whoseTurn, gs.pawns)
 }
 
+export function isGameOver(pawns: IPawn[]): boolean {
+    const players = [EColor.RED, EColor.GREEN, EColor.YELLOW, EColor.BLUE]
+    const playersAlive = players.filter(player => isPlayerAlive(player, pawns))
+    return playersAlive.length < 2
+}
+
 export function isPlayerAlive(player: EColor, pawns: IPawn[]): boolean {
     const playerPawns = pawns.filter(pawn => pawn.player === player)
     return playerPawns.length > 0
 }
 
-export function isGameOver(pawns: IPawn[]): boolean {
-    const players = [EColor.RED, EColor.GREEN, EColor.YELLOW, EColor.BLUE]
-    const playersAlive = players.filter(player => isPlayerAlive(player, pawns))
-    return playersAlive.length < 2
+export function isValidMove(gs: IGameState, pawnI: number, destination: IPosition): boolean {
+    return !isGameOver(gs.pawns)
+        && gs.pawns[pawnI] && gs.pawns[pawnI].player === gs.whoseTurn
+        && isPositionInPositions(destination, getNextMoves(pawnI, gs.pawns, gs.limits));
 }
 
 export function initGameState(red: boolean, green: boolean, yellow: boolean, blue: boolean): IGameState {
@@ -49,12 +55,6 @@ export function initGameState(red: boolean, green: boolean, yellow: boolean, blu
         pawns: pawns,
         whoseTurn: getNextPlayer(EColor.GREEN, pawns) // usually RED begins
     }
-}
-
-export function isValidMove(gs: IGameState, pawnI: number, destination: IPosition): boolean {
-    return !isGameOver(gs.pawns)
-        && gs.pawns[pawnI] && gs.pawns[pawnI].player === gs.whoseTurn
-        && isPositionInPositions(destination, getNextMoves(pawnI, gs.pawns, gs.limits));
 }
 
 // TODO: handle special case with knight in the middle
