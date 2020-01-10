@@ -1,0 +1,26 @@
+import { EColor } from './Color';
+import { IPosition } from './Position';
+
+// -----------------------------------------------------------------------------
+
+export function getBoard(): EColor[][] {
+    return BOARD;
+}
+
+export function getFieldColor(position: IPosition): EColor {
+    return BOARD[position.row][position.col];
+}
+
+// -----------------------------------------------------------------------------
+
+const [R,G,Y,B] = [EColor.RED, EColor.GREEN, EColor.YELLOW, EColor.BLUE]
+const BOARD: EColor[][] = [
+    [B, R, B, Y, G, R, B, Y],
+    [R, G, R, B, Y, G, R, B],
+    [G, Y, R, G, R, B, B, Y],
+    [Y, B, G, Y, G, R, Y, G],
+    [B, R, Y, B, R, B, G, R],
+    [R, G, G, Y, B, Y, R, B],
+    [G, Y, B, R, G, Y, B, Y],
+    [R, G, Y, B, R, G, Y, G]
+];

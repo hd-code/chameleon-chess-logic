@@ -1,8 +1,12 @@
-import { EColor, isColor, ERole, isRole, IPosition, isPosition, TBoard } from "./basic";
-import { ILimits, isWithinLimits } from "./limits";
-import { deepClone } from "./helper";
+import { getFieldColor } from "./Board";
+import { EColor, isColor } from "./Color";
+import { ILimits, isPositionWithinLimits } from "./Limits";
+import { IPosition, isPosition, isSamePosition } from "./Position";
+import { ERole, isRole } from "./Role";
 
-/* --------------------------------- Public --------------------------------- */
+import { deepClone } from "../helper";
+
+// -----------------------------------------------------------------------------
 
 export interface IPawn {
     player:  EColor
@@ -17,14 +21,20 @@ export function isPawn(pawn: IPawn): pawn is IPawn {
 }
 
 export function getDefaultPawnsForPlayer(player: EColor): IPawn[] {
-    return getDefaultPawns(player)
+    return DEFAULT_PAWNS[player];
 }
 
-// pawnI is the index in pawns. Therefore it is just a number. This avoids
-// redundance. After all, the pawn always has to be part of pawns.
-export function getNextMoves(pawnI: number, pawns: IPawn[], limits: ILimits, board: TBoard): IPosition[]
+/** Returns -1 if there is no pawn at the specified position. */
+export function getIndexOfPawnAtPosition(position: IPosition, pawns: IPawn[]): number {
+    const pawn = getPawnAtPosition(position, pawns);
+    return pawn == null ? -1 : getIndexOfPawn(pawn, pawns);
+}
+
+/** pawnI is the index in pawns[]. Therefore it is just a number. This avoids 
+ * redundance. After all, the pawn always has to be part of pawns[]. */
+export function getNextMoves(pawnI: number, pawns: IPawn[], limits: ILimits): IPosition[]
 {
-    switch ( getCurrentRole(pawns[pawnI], board) ) {
+    switch ( getCurrentRole(pawns[pawnI]) ) {
         case ERole.KNIGHT:
             return knightMoves(pawnI, pawns, limits)
         case ERole.BISHOP:
@@ -39,25 +49,12 @@ export function getNextMoves(pawnI: number, pawns: IPawn[], limits: ILimits, boa
     }
 }
 
-export function getIOfPawnAtPosition(position: IPosition, pawns: IPawn[]): number {
-    for (let i = 0, ie = pawns.length; i < ie; i++) {
-        if (   position.row === pawns[i].position.row
-            && position.col === pawns[i].position.col)
-                return i
-    }
-    return -1
-}
-
-export function getIOfPawn(pawn: IPawn, pawns: IPawn[]): number {
-    return pawns.indexOf(pawn)
-}
-
-export function getCurrentRole(pawn: IPawn, board: TBoard): ERole {
-    let fieldColor = board[pawn.position.row][pawn.position.col]
+export function getCurrentRole(pawn: IPawn): ERole {
+    let fieldColor = getFieldColor(pawn.position);
     return pawn.roles[fieldColor]
 }
 
-/* --------------------------------- Intern --------------------------------- */
+// -----------------------------------------------------------------------------
 
 function isPawnRoles(r:any): r is {[fieldColor in EColor]: ERole} {
     const keys = Object.keys(r)
@@ -70,42 +67,6 @@ function isPawnRoles(r:any): r is {[fieldColor in EColor]: ERole} {
     return nkeys.length === correctRoles.length
 }
 
-/*
-Basic Order:
-KNIGHT, QUEEN, BISHOP, ROOK
-  RED,  GREEN, YELLOW, BLUE
-
-Arrangement switches through.
-
-knightColor -> offset of role in color array
-
-knightColor = 0 (RED)   -> no offset, standard mapping as above
-knightColor = 1 (GREEN) -> offset of 1, all roles move to the right by one spot
-*/
-function getDefaultRoles(knightColor: EColor): {[fieldColor in EColor]: ERole} {
-    const roles = [ERole.KNIGHT, ERole.QUEEN, ERole.BISHOP, ERole.ROOK]
-    const colors = [EColor.RED, EColor.GREEN, EColor.YELLOW, EColor.BLUE]
-
-    const result = roles.map((_,i) => {
-        const tmp = i - knightColor
-        const index = tmp < EColor.RED ? tmp + roles.length : tmp
-        return roles[index]
-    })
-
-    return {
-        [EColor.RED]: result[EColor.RED],
-        [EColor.GREEN]: result[EColor.GREEN],
-        [EColor.YELLOW]: result[EColor.YELLOW],
-        [EColor.BLUE]: result[EColor.BLUE],
-    }
-}
-function createPawn(player: EColor, knightColor: EColor, row: number, col: number): IPawn {
-    return {
-        player,
-        roles: getDefaultRoles(knightColor),
-        position: { row, col }
-    }
-}
 const DEFAULT_PAWNS: {[player in EColor]: IPawn[]} = {
     [EColor.RED]: [
         createPawn(EColor.RED, EColor.RED,    7, 0),
@@ -132,8 +93,55 @@ const DEFAULT_PAWNS: {[player in EColor]: IPawn[]} = {
         createPawn(EColor.BLUE, EColor.YELLOW, 3, 0),
     ],
 }
-function getDefaultPawns(player: EColor): IPawn[] {
-    return DEFAULT_PAWNS[player]
+
+function createPawn(player: EColor, knightColor: EColor, row: number, col: number): IPawn {
+    return {
+        player,
+        roles: getRoles(knightColor),
+        position: { row, col }
+    }
+}
+
+function getPawnAtPosition(position: IPosition, pawns: IPawn[]): IPawn|null {
+    const result = pawns.filter(p => isSamePosition(p.position, position));
+    return result === [] ? null : result[0];
+}
+
+// returns -1 if not found
+function getIndexOfPawn(pawn: IPawn, pawns: IPawn[]): number {
+    return pawns.indexOf(pawn)
+}
+
+/*
+RED = 0,    GREEN = 1, YELLOW = 2, BLUE = 3
+KNIGHT = 0, QUEEN = 1, BISHOP = 2, ROOK = 3
+
+            |       fieldColor
+knightColor | RED    | GREEN  | YELLOW | BLUE
+------------|--------|--------|--------|--------
+     RED    | KNIGHT | ROOK   | BISHOP | QUEEN
+     GREEN  | QUEEN  | KNIGHT | ROOK   | BISHOP
+     YELLOW | BISHOP | QUEEN  | KNIGHT | ROOK
+     BLUE   | ROOK   | BISHOP | QUEEN  | KNIGHT
+
+knightColor -> offset of role in color array
+*/
+function getRoles(knightColor: EColor): {[fieldColor in EColor]: ERole} {
+    const roles = [ERole.KNIGHT, ERole.QUEEN, ERole.BISHOP, ERole.ROOK];
+    const numRoles = roles.length;
+
+    const result = roles.map((_,i) => {
+        let index = i - knightColor;
+        if (index < 0) index += numRoles;
+        return roles[index];
+    })
+
+    return {
+        [EColor.RED]:    result[EColor.RED],
+        [EColor.GREEN]:  result[EColor.GREEN],
+        [EColor.YELLOW]: result[EColor.YELLOW],
+        [EColor.BLUE]:   result[EColor.BLUE],
+    };
 }
 
 function knightMoves(pawnI: number, pawns: IPawn[], limits: ILimits): IPosition[] {
@@ -181,9 +189,9 @@ enum MoveType { INVALID, NORMAL, BEATING }
 
 function getMoveType(move: IPosition, limits: ILimits, pawns: IPawn[], pawnI: number): MoveType {
     const pawnToMove  = pawns[pawnI]
-    const pawnOnField = pawns[getIOfPawnAtPosition(move, pawns)]
+    const pawnOnField = pawns[getIndexOfPawnAtPosition(move, pawns)]
 
-    if (!isWithinLimits(move, limits))
+    if (!isPositionWithinLimits(move, limits))
         return MoveType.INVALID
 
     if (!pawnOnField)

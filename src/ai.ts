@@ -1,13 +1,14 @@
-import { EColor, getBoard } from "./basic";
-import { getNextMoves, getIOfPawn } from "./pawns";
-import { IGameState, isGameOver, getNextPossibleGameStates } from "./gameState";
 import { deepClone } from "./helper";
+
+import { EColor } from "./models/Color";
+import { IGameState, isGameOver, getNextPossibleGameStates } from "./models/GameState";
+import { getNextMoves, getIndexOfPawnAtPosition} from "./models/Pawns";
 
 /* --------------------------------- Public --------------------------------- */
 
 export function makeBestMove(gs: IGameState): IGameState {
     const nextGSs = getNextPossibleGameStates(gs)
-    const recursionDepth = getRecurtionDepth(gs)
+    const recursionDepth = getRecursionDepth(gs)
 
     const weightedGSs = nextGSs.map(cGS => ({
         gs: cGS,
@@ -24,7 +25,7 @@ export function makeBestMove(gs: IGameState): IGameState {
 /* --------------------------------- Intern --------------------------------- */
 
 const PAWN_VALUE = 100
-function getRecurtionDepth(gs: IGameState): number {
+function getRecursionDepth(gs: IGameState): number {
     const numOfPawns = gs.pawns.length
     return numOfPawns < 3 ? 5
          : numOfPawns < 5 ? 3
@@ -66,12 +67,12 @@ function evalPlayer(gs: IGameState, player: EColor): number {
 
 function countMovesOfAllPawns(player: EColor, gs: IGameState): number {
     const pawns = gs.pawns.filter(pawn => pawn.player === player)
-    const pawnsI = pawns.map(pawn => getIOfPawn(pawn, gs.pawns))
+    const pawnsI = pawns.map(pawn => getIndexOfPawnAtPosition(pawn.position, gs.pawns))
     return pawnsI.reduce((result, pawn) => result + countMovesOfPawn(pawn, gs), 0)
 }
 
 function countMovesOfPawn(pawnI: number, gs: IGameState): number {
-    return getNextMoves(pawnI, gs.pawns, gs.limits, getBoard()).length
+    return getNextMoves(pawnI, gs.pawns, gs.limits).length
 }
 
 //       scoreOfPlayer - scoresOfOpponents
