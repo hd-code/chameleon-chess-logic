@@ -19,7 +19,9 @@ export function makeBestMove(gs: IGameState): IGameState {
              - calcPlayerScore(a.score, gs.whoseTurn)
     })
 
-    return orderedGSs[0].gs
+    return orderedGSs.length > 1 && orderedGSs[0].score === orderedGSs[1].score
+        ? orderedGSs[Math.round(Math.random())].gs
+        : orderedGSs[0].gs
 }
 
 /* --------------------------------- Intern --------------------------------- */
@@ -27,9 +29,9 @@ export function makeBestMove(gs: IGameState): IGameState {
 const PAWN_VALUE = 100
 function getRecursionDepth(gs: IGameState): number {
     const numOfPawns = gs.pawns.length
-    return numOfPawns < 3 ? 5
-         : numOfPawns < 5 ? 3
-         : numOfPawns < 7 ? 2
+    return numOfPawns < 3 ? 4
+         : numOfPawns < 5 ? 2
+        //  : numOfPawns < 7 ? 2
          : 1
 }
 
