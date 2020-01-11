@@ -20,8 +20,8 @@ describe('models/Position', () => {
         });
 
         it('should return false for wrong data types (obj,array,string,boolean,null,undefined)', () => {
-            const DIFF_OBJ  = {street: 'Baker Street', houseNo: 2};
-            const DIFF_ARR  = [1,2,3,4];
+            const DIFF_OBJ = {street: 'Baker Street', houseNo: 2};
+            const DIFF_ARR = [1,2,3,4];
 
             assert.ok(!Position.isPosition(DIFF_OBJ));
             assert.ok(!Position.isPosition(DIFF_ARR));

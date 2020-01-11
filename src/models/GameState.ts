@@ -17,11 +17,8 @@ export function isGameState(gs: IGameState): gs is IGameState {
     return isObject(gs)
         && 'limits'    in gs && isLimits(gs.limits)
         && 'pawns'     in gs && isArrayOf(gs.pawns, Pawns.isPawn)
-        && 'whoseTurn' in gs && isColor(gs.whoseTurn);
-}
-
-export function isValidGameState(gs: IGameState): boolean {
-    return Pawns.areAllPawnsWithinLimits(gs.pawns, gs.limits)
+        && 'whoseTurn' in gs && isColor(gs.whoseTurn)
+        && Pawns.areAllPawnsWithinLimits(gs.pawns, gs.limits)
         && !Pawns.areTherePawnsOnTheSameField(gs.pawns)
         && isPlayerAlive(gs, gs.whoseTurn);
 }

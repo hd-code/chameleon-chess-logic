@@ -20,11 +20,11 @@ describe('models/Color', () => {
         });
         
         it('should return false for wrong data types (obj,array,string,boolean,null,undefined)', () => {
-            const DIFF_OBJ   = {street: 'Baker Street', houseNo: 2};
-            const DIFF_TYPE  = [1,2,3,4];
+            const DIFF_OBJ = {street: 'Baker Street', houseNo: 2};
+            const DIFF_ARR = [1,2,3,4];
 
             assert.ok(!Color.isColor(DIFF_OBJ));
-            assert.ok(!Color.isColor(DIFF_TYPE));
+            assert.ok(!Color.isColor(DIFF_ARR));
             assert.ok(!Color.isColor(' '));
             assert.ok(!Color.isColor(true));
             assert.ok(!Color.isColor(null));

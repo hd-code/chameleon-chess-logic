@@ -45,8 +45,8 @@ describe('models/Limits', () => {
         });
 
         it('should return false for wrong data types (obj,array,string,boolean,null,undefined)', () => {
-            const DIFF_OBJ  = {street: 'Baker Street', houseNo: 2};
-            const DIFF_ARR  = [1,2,3,4];
+            const DIFF_OBJ = {street: 'Baker Street', houseNo: 2};
+            const DIFF_ARR = [1,2,3,4];
 
             assert.ok(!Limits.isLimits(DIFF_OBJ));
             assert.ok(!Limits.isLimits(DIFF_ARR));

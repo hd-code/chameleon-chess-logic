@@ -102,7 +102,7 @@ export function getIndexOfPawnAtPosition(gs: GS.IGameState, field: IPosition): n
  * @param gs  The game state to be checked
  */
 export function isValidGameState(gs: any): gs is GS.IGameState {
-    return GS.isGameState(gs) && GS.isValidGameState(gs);
+    return GS.isGameState(gs);
 }
 
 /**

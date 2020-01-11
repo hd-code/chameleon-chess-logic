@@ -20,11 +20,11 @@ describe('models/Role', () => {
         });
         
         it('should return false for wrong data types (obj,array,string,boolean,null,undefined)', () => {
-            const DIFF_OBJ   = {street: 'Baker Street', houseNo: 2};
-            const DIFF_TYPE  = [1,2,3,4];
+            const DIFF_OBJ = {street: 'Baker Street', houseNo: 2};
+            const DIFF_ARR = [1,2,3,4];
 
             assert.ok(!Role.isRole(DIFF_OBJ));
-            assert.ok(!Role.isRole(DIFF_TYPE));
+            assert.ok(!Role.isRole(DIFF_ARR));
             assert.ok(!Role.isRole(' '));
             assert.ok(!Role.isRole(true));
             assert.ok(!Role.isRole(null));
