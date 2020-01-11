@@ -73,8 +73,31 @@ describe('models/Limits', () => {
         });
     });
 
-    // TODO
-    describe('isPositionWithinLimits()', () => {});
+    describe('isPositionWithinLimits()', () => {
+        const CENTER_POS = { row: 3, col: 4 };
+        const EDGE_POS_TR = { row: 0, col: 7 };
+        const EDGE_POS_BL = { row: 7, col: 0 };
+
+        const POS_OUT_OF_BOUNCE_POS = { row: 9, col: 8 };
+        const POS_OUT_OF_BOUNCE_NEG = { row:-5, col:-3 };
+        const POS_OUT_OF_BOUNCE_BOTH = { row:-1, col: 9 };
+
+        it('should return true if a position is within the limits', () => {
+            assert.ok(Limits.isPositionWithinLimits(CENTER_POS, NORMAL_LIMITS));
+            assert.ok(Limits.isPositionWithinLimits(CENTER_POS, START_LIMITS));
+            assert.ok(Limits.isPositionWithinLimits(EDGE_POS_TR, START_LIMITS));
+            assert.ok(Limits.isPositionWithinLimits(EDGE_POS_BL, START_LIMITS));
+        });
+
+        it('should return false if a position is not within the limits', () => {
+            assert.ok(!Limits.isPositionWithinLimits(EDGE_POS_TR, NORMAL_LIMITS));
+            assert.ok(!Limits.isPositionWithinLimits(EDGE_POS_BL, NORMAL_LIMITS));
+
+            assert.ok(!Limits.isPositionWithinLimits(POS_OUT_OF_BOUNCE_POS, START_LIMITS));
+            assert.ok(!Limits.isPositionWithinLimits(POS_OUT_OF_BOUNCE_NEG, START_LIMITS));
+            assert.ok(!Limits.isPositionWithinLimits(POS_OUT_OF_BOUNCE_BOTH, START_LIMITS));
+        });
+    });
 
     describe('getStartingLimits()', () => {
         it('should return correct starting limit (0,0 7,7)', () => {
@@ -83,6 +106,62 @@ describe('models/Limits', () => {
         });
     });
 
-    // TODO
-    describe('calcLimits()', () => {});
+    describe('calcLimits()', () => {
+        const EDGE_PAWN_TR = [{
+            player:  0,
+            roles:   {0:0, 1:1, 2:2, 3:3},
+            position:{ row: 0, col: 7 }
+        }];
+        const EDGE_PAWN_BL = [{
+            player:  1,
+            roles:   {0:0, 1:1, 2:2, 3:3},
+            position:{ row: 7, col: 0 }
+        }];
+        const EDGE_PAWNS = [EDGE_PAWN_TR[0], EDGE_PAWN_BL[0]];
+
+        const CENTER_PAWN_TL = [{
+            player:  0,
+            roles:   {0:0, 1:1, 2:2, 3:3},
+            position:{ row: 3, col: 3 }
+        }];
+        const CENTER_PAWN_BR = [{
+            player:  1,
+            roles:   {0:0, 1:1, 2:2, 3:3},
+            position:{ row: 5, col: 6 }
+        }];
+        const CENTER_PAWNS = [CENTER_PAWN_TL[0], CENTER_PAWN_BR[0]];
+
+        it('should return shrunken limits (3,3 5,6)', () => {
+            const expected = { lower:{row:3,col:3}, upper:{row:5,col:6} };
+            const actual = Limits.calcLimits(CENTER_PAWNS, START_LIMITS);
+            assert.deepStrictEqual(actual, expected);
+        });
+
+        it('should not shrink limits if pawns are on the edges', () => {
+            const actual = Limits.calcLimits(EDGE_PAWNS, START_LIMITS);
+            assert.deepStrictEqual(actual,START_LIMITS);
+        });
+
+        it('should only shrink limits until a 3x3 field remains on the edges', () => {
+            const SMALLEST_EDGE_LIMITS_TR = { lower:{row:0,col:5}, upper:{row:2,col:7} };
+            const SMALLEST_EDGE_LIMITS_BL = { lower:{row:5,col:0}, upper:{row:7,col:2} };
+
+            const actualTR = Limits.calcLimits(EDGE_PAWN_TR, START_LIMITS);
+            const actualBL = Limits.calcLimits(EDGE_PAWN_BL, START_LIMITS);
+
+            assert.deepStrictEqual(actualTR,SMALLEST_EDGE_LIMITS_TR);
+            assert.deepStrictEqual(actualBL,SMALLEST_EDGE_LIMITS_BL);
+        });
+
+        it('should only shrink limits until a 3x3 field and should keep pawns centered inside', () => {
+            const SMALLEST_CENTER_LIMITS_TL = { lower:{row:2,col:2}, upper:{row:4,col:4} };
+            const SMALLEST_CENTER_LIMITS_BR = { lower:{row:4,col:5}, upper:{row:6,col:7} };
+
+            const actualTL = Limits.calcLimits(CENTER_PAWN_TL, START_LIMITS);
+            const actualBR = Limits.calcLimits(CENTER_PAWN_BR, START_LIMITS);
+
+            assert.deepStrictEqual(actualTL,SMALLEST_CENTER_LIMITS_TL);
+            assert.deepStrictEqual(actualBR,SMALLEST_CENTER_LIMITS_BR);
+        });
+    });
 });

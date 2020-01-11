@@ -37,23 +37,10 @@ export function getStartingLimits(): ILimits {
 
 export function calcLimits(pawns: IPawn[], oldLimits: ILimits): ILimits {
     if (isSmallestFieldSize(oldLimits))
-        return oldLimits
+        return oldLimits;
 
-    let result = calcPureLimits(pawns)
-    if (!isFieldSmallerThanAllowed(result))
-        return result
-
-    // push limits step by step, while too small and not bigger than old limits
-    while (areRowsSmallerThanAllowed(result) && result.lower.row > oldLimits.lower.row)
-        result.lower.row--
-    while (areRowsSmallerThanAllowed(result) && result.upper.row < oldLimits.upper.row)
-        result.upper.row++
-    while (areColsSmallerThanAllowed(result) && result.lower.col > oldLimits.lower.col)
-        result.lower.col--
-    while (areColsSmallerThanAllowed(result) && result.upper.col < oldLimits.upper.col)
-        result.upper.col++
-
-    return result
+    let result = calcPureLimits(pawns);
+    return increaseLimitsToMinFieldSize(result, oldLimits);
 }
 
 // -----------------------------------------------------------------------------
@@ -79,20 +66,48 @@ function areColsSmallerThanAllowed(limits: ILimits): boolean {
 }
 
 function calcPureLimits(pawns: IPawn[]): ILimits {
-    let firstPos = pawns[0].position
+    let firstPos = pawns[0].position;
     let initVal = <ILimits>{
         lower: {row: firstPos.row, col: firstPos.col},
         upper: {row: firstPos.row, col: firstPos.col}
-    }
+    };
 
     return pawns.reduce((limits, pawn) => {
-
         // push limits if a pawn is outside current limits
-        if (limits.lower.row > pawn.position.row) limits.lower.row = pawn.position.row
-        if (limits.lower.col > pawn.position.col) limits.lower.col = pawn.position.col
-        if (limits.upper.row < pawn.position.row) limits.upper.row = pawn.position.row
-        if (limits.upper.col < pawn.position.col) limits.upper.col = pawn.position.col
+        if (limits.lower.row > pawn.position.row) limits.lower.row = pawn.position.row;
+        if (limits.lower.col > pawn.position.col) limits.lower.col = pawn.position.col;
+        if (limits.upper.row < pawn.position.row) limits.upper.row = pawn.position.row;
+        if (limits.upper.col < pawn.position.col) limits.upper.col = pawn.position.col;
 
         return limits
-    }, initVal)
+    }, initVal);
+}
+
+function increaseLimitsToMinFieldSize(limits: ILimits, oldLimits: ILimits): ILimits {
+    let direction = 0;
+
+    while (isFieldSmallerThanAllowed(limits)) {
+        switch (direction % 4) {
+            case 0:
+                if (areRowsSmallerThanAllowed(limits) && limits.lower.row > oldLimits.lower.row)
+                    limits.lower.row--;
+                break;
+            case 2:
+                if (areRowsSmallerThanAllowed(limits) && limits.upper.row < oldLimits.upper.row)
+                    limits.upper.row++;
+                break;
+            case 1:
+                if (areColsSmallerThanAllowed(limits) && limits.lower.col > oldLimits.lower.col)
+                    limits.lower.col--;
+                break;
+            case 3:
+                if (areColsSmallerThanAllowed(limits) && limits.upper.col < oldLimits.upper.col)
+                    limits.upper.col++;
+                break;
+        }
+
+        direction++;
+    }
+
+    return limits;
 }
