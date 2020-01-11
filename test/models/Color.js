@@ -1,4 +1,4 @@
-const Assert = require('assert');
+const assert = require('assert');
 const Color = require('../../build/models/Color.js');
 
 // -----------------------------------------------------------------------------
@@ -8,20 +8,27 @@ describe('models/Color', () => {
         const [R,G,Y,B] = [Color.EColor.RED, Color.EColor.GREEN, Color.EColor.YELLOW, Color.EColor.BLUE];
 
         it('should return true if color is RED, GREEN, YELLOW, BLUE', () => {
-            Assert.ok(Color.isColor(R));
-            Assert.ok(Color.isColor(G));
-            Assert.ok(Color.isColor(Y));
-            Assert.ok(Color.isColor(B));
+            assert.ok(Color.isColor(R));
+            assert.ok(Color.isColor(G));
+            assert.ok(Color.isColor(Y));
+            assert.ok(Color.isColor(B));
         });
 
         it('should return false for invalid colors (-1, 5)', () => {
-            Assert.ok(!Color.isColor(-1));
-            Assert.ok(!Color.isColor(5));
+            assert.ok(!Color.isColor(-1));
+            assert.ok(!Color.isColor(5));
         });
         
-        it('should return false for wrong data types (string, boolean)', () => {
-            Assert.ok(!Color.isColor(' '));
-            Assert.ok(!Color.isColor(true));
+        it('should return false for wrong data types (obj,array,string,boolean,null,undefined)', () => {
+            const DIFF_OBJ   = {street: 'Baker Street', houseNo: 2};
+            const DIFF_TYPE  = [1,2,3,4];
+
+            assert.ok(!Color.isColor(DIFF_OBJ));
+            assert.ok(!Color.isColor(DIFF_TYPE));
+            assert.ok(!Color.isColor(' '));
+            assert.ok(!Color.isColor(true));
+            assert.ok(!Color.isColor(null));
+            assert.ok(!Color.isColor());
         });
     });
 });

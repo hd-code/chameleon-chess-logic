@@ -4,7 +4,7 @@ import { ILimits, isPositionWithinLimits } from "./Limits";
 import { IPosition, isPosition, isSamePosition } from "./Position";
 import { ERole, isRole } from "./Role";
 
-import { deepClone } from "../helper";
+import { deepClone, isObject } from "../helper";
 
 // -----------------------------------------------------------------------------
 
@@ -15,7 +15,8 @@ export interface IPawn {
 }
 
 export function isPawn(pawn: IPawn): pawn is IPawn {
-    return 'player'   in pawn && isColor(pawn.player)
+    return isObject(pawn)
+        && 'player'   in pawn && isColor(pawn.player)
         && 'roles'    in pawn && isPawnRoles(pawn.roles)
         && 'position' in pawn && isPosition(pawn.position)
 }

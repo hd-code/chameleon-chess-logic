@@ -3,7 +3,7 @@ import { ILimits, isLimits, calcLimits, getStartingLimits } from "./Limits";
 import * as Pawns from "./Pawns";
 import { IPosition, isPositionInPositions } from "./Position";
 
-import { isArrayOf, deepClone, flattenArray } from "../helper";
+import { isArrayOf, deepClone, flattenArray, isObject } from "../helper";
 
 // -----------------------------------------------------------------------------
 
@@ -14,8 +14,8 @@ export interface IGameState {
 }
 
 export function isGameState(gs: IGameState): gs is IGameState {
-    // check for all keys and check type of value
-    return 'limits'    in gs && isLimits(gs.limits)
+    return isObject(gs)
+        && 'limits'    in gs && isLimits(gs.limits)
         && 'pawns'     in gs && isArrayOf(gs.pawns, Pawns.isPawn)
         && 'whoseTurn' in gs && isColor(gs.whoseTurn);
 }

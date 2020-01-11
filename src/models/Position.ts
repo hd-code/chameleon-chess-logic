@@ -1,4 +1,4 @@
-import { isNumber } from "../helper";
+import { isNumber, isObject } from "../helper";
 
 // -----------------------------------------------------------------------------
 
@@ -8,8 +8,9 @@ export interface IPosition {
 }
 
 export function isPosition(pos: IPosition): pos is IPosition {
-    return 'row' in pos && isNumber(pos.row)
-        && 'col' in pos && isNumber(pos.col)
+    return isObject(pos)
+        && 'row' in pos && isNumber(pos.row)
+        && 'col' in pos && isNumber(pos.col);
 }
 
 export function isSamePosition(a: IPosition, b: IPosition): boolean {

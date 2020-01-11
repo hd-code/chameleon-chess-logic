@@ -1,8 +1,18 @@
 const ccl = require('./build/main');
+const fs = require('fs');
 
+let log = [];
 
-let gs = ccl.initGame(true, true, true, true)
-do {
-    console.log('Pawns:', gs.pawns.length, 'Turn:', gs.whoseTurn);
-    gs = ccl.letComputerAdvanceGame(gs)
-} while(!ccl.isGameOver(gs))
+try {
+    let gs = ccl.initGame(true, false, true, true)
+    while (!ccl.isGameOver(gs)) {
+        log.push(gs);
+        console.log('valid:', ccl.isValidGameState(gs));
+        console.log('Pawns:', gs.pawns.length, 'Turn:', gs.whoseTurn);
+        gs = ccl.letComputerAdvanceGame(gs);
+    }
+} catch (e) {
+    console.log(e);
+} finally {
+    fs.writeFileSync('log.json', JSON.stringify(log));
+}
