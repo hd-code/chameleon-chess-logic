@@ -1,4 +1,4 @@
-import { flattenArray } from "./helper";
+import { flattenArray } from "./lib/hd-helper";
 
 import { EColor } from "./models/Color";
 import { IGameState, isGameOver, getNextPossibleGameStates } from "./models/GameState";

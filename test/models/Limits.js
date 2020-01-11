@@ -7,9 +7,6 @@ describe('models/Limits', () => {
     const START_LIMITS = { lower:{row:0,col:0}, upper:{row:7,col:7} };
     const NORMAL_LIMITS = { lower:{row:1,col:2}, upper:{row:6,col:5} };
     const SMALL_LIMITS = { lower:{row:3,col:5}, upper:{row:5,col:7} };
-    const TOO_SMALL_LIMITS = { lower:{row:4,col:2}, upper:{row:5,col:2}};
-    const TOO_SMALL_LIMITS_ROW = { lower:{row:4,col:2}, upper:{row:5,col:4}};
-    const TOO_SMALL_LIMITS_COL = { lower:{row:4,col:2}, upper:{row:6,col:2}};
 
     describe('isLimits()', () => {
         it('should return true for valid limits (starting, normal, smallest)', () => {
@@ -19,9 +16,13 @@ describe('models/Limits', () => {
         });
 
         it('should return false for invalid limits (too small, too large)', () => {
-            const TOO_BIG_LIMITS = { lower:{row:-1,col:0}, upper:{row:8,col:9}};
-            const TOO_BIG_LIMITS_ROW = { lower:{row:0,col:0}, upper:{row:8,col:7}};
-            const TOO_BIG_LIMITS_COL = { lower:{row:0,col:0}, upper:{row:7,col:9}};
+            const TOO_BIG_LIMITS     = { lower:{row:-1,col:0}, upper:{row:8,col:9} };
+            const TOO_BIG_LIMITS_ROW = { lower:{row: 0,col:0}, upper:{row:8,col:7} };
+            const TOO_BIG_LIMITS_COL = { lower:{row: 0,col:0}, upper:{row:7,col:9} };
+
+            const TOO_SMALL_LIMITS     = { lower:{row:4,col:2}, upper:{row:5,col:2} };
+            const TOO_SMALL_LIMITS_ROW = { lower:{row:4,col:2}, upper:{row:5,col:4} };
+            const TOO_SMALL_LIMITS_COL = { lower:{row:4,col:2}, upper:{row:6,col:2} };
 
             assert.ok(!Limits.isLimits(TOO_SMALL_LIMITS));
             assert.ok(!Limits.isLimits(TOO_SMALL_LIMITS_COL));
@@ -54,22 +55,6 @@ describe('models/Limits', () => {
             assert.ok(!Limits.isLimits(true));
             assert.ok(!Limits.isLimits(null));
             assert.ok(!Limits.isLimits());
-        });
-    });
-
-    describe('isSmallestFieldSize()', () => {
-        it('should return true for 3x3 field', () => {
-            assert.ok(Limits.isSmallestFieldSize(SMALL_LIMITS));
-        });
-
-        it('should return false for bigger field', () => {
-            assert.ok(!Limits.isSmallestFieldSize(START_LIMITS));
-        });
-
-        it('should return false for too small fields', () => {
-            assert.ok(!Limits.isSmallestFieldSize(TOO_SMALL_LIMITS));
-            assert.ok(!Limits.isSmallestFieldSize(TOO_SMALL_LIMITS_ROW));
-            assert.ok(!Limits.isSmallestFieldSize(TOO_SMALL_LIMITS_COL));
         });
     });
 

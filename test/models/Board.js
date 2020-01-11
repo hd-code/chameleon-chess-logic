@@ -1,7 +1,7 @@
 const assert = require('assert');
 const Board = require('../../build/models/Board.js');
 
-const { isArrayOf } = require('../../build/helper.js');
+const { isArray } = require('../../build/lib/hd-helper.js');
 const Color = require('../../build/models/Color.js');
 
 // -----------------------------------------------------------------------------
@@ -16,7 +16,7 @@ describe('models/Board', () => {
             assert.strictEqual(board.length, numRowsCols);
             board.forEach(row => {
                 assert.strictEqual(row.length, numRowsCols);
-                assert.ok(isArrayOf(row, Color.isColor));
+                assert.ok(isArray(row, Color.isColor));
             });
         });
     }); 

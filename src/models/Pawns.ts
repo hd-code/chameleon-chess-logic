@@ -4,21 +4,22 @@ import { ILimits, isPositionWithinLimits } from "./Limits";
 import { IPosition, isPosition, isSamePosition } from "./Position";
 import { ERole, isRole } from "./Role";
 
-import { deepClone, isObject } from "../helper";
+import { isKeyOfObject, deepClone } from "../lib/hd-helper";
 
 // -----------------------------------------------------------------------------
 
 export interface IPawn {
-    player:  EColor
-    roles:   {[fieldColor in EColor]: ERole}
-    position:IPosition
+    player:  EColor;
+    roles:   TColorRoleMap;
+    position:IPosition;
 }
 
-export function isPawn(pawn: IPawn): pawn is IPawn {
-    return isObject(pawn)
-        && 'player'   in pawn && isColor(pawn.player)
-        && 'roles'    in pawn && isPawnRoles(pawn.roles)
-        && 'position' in pawn && isPosition(pawn.position)
+export type TColorRoleMap = {[fieldColor in EColor]: ERole}
+
+export function isPawn(pawn: any): pawn is IPawn {
+    return isKeyOfObject(pawn, 'player', isColor)
+        && isKeyOfObject(pawn, 'position', isPosition)
+        && isKeyOfObject(pawn, 'position', isPawnRoles);
 }
 
 export function areAllPawnsWithinLimits(pawns: IPawn[], limits: ILimits): boolean {
@@ -48,7 +49,7 @@ export function getPawnAtPosition(position: IPosition, pawns: IPawn[]): IPawn|nu
 
 /** Returns -1 if the pawn was not found. */
 export function getIndexOfPawn(pawn: IPawn, pawns: IPawn[]): number {
-    return pawns.indexOf(pawn)
+    return pawns.indexOf(pawn);
 }
 
 /** Returns -1 if there is no pawn at the specified position. */
@@ -62,30 +63,47 @@ export function getIndexOfPawnAtPosition(position: IPosition, pawns: IPawn[]): n
 export function getNextMoves(pawnI: number, pawns: IPawn[], limits: ILimits): IPosition[] {
     switch ( getCurrentRole(pawns[pawnI]) ) {
         case ERole.KNIGHT:
-            return knightMoves(pawnI, pawns, limits)
+            return knightMoves(pawnI, pawns, limits);
         case ERole.BISHOP:
-            return bishopMoves(pawnI, pawns, limits)
+            return bishopMoves(pawnI, pawns, limits);
         case ERole.ROOK:
-            return rookMoves(pawnI, pawns, limits)
+            return rookMoves(pawnI, pawns, limits);
         case ERole.QUEEN:
             return bishopMoves(pawnI, pawns, limits)
-                .concat( rookMoves(pawnI, pawns, limits) )
+                .concat( rookMoves(pawnI, pawns, limits) );
         default:
-            return []
+            return [];
     }
 }
 
 // -----------------------------------------------------------------------------
 
-function isPawnRoles(r:any): r is {[fieldColor in EColor]: ERole} {
-    const keys = Object.keys(r)
-    if (!keys)
-        return false
+function isPawnRoles(r:any): r is TColorRoleMap {
+    if (!isColorRoleMap(r))
+        return false;
 
-    const nkeys = keys.map(key => parseInt(key))
-    const correctRoles = nkeys.filter(key => isColor(key) && isRole(r[key]))
+    const legalRoles = [
+        getRoles(EColor.RED),    getRoles(EColor.GREEN),
+        getRoles(EColor.YELLOW), getRoles(EColor.BLUE),
+    ];
 
-    return nkeys.length === correctRoles.length
+    for (let i = 0, ie = legalRoles.length; i < ie; i++) {
+        if (    legalRoles[i][EColor.RED]    === r[EColor.RED]
+             && legalRoles[i][EColor.GREEN]  === r[EColor.GREEN]
+             && legalRoles[i][EColor.YELLOW] === r[EColor.YELLOW]
+             && legalRoles[i][EColor.BLUE]   === r[EColor.BLUE]
+        )
+            return true;
+    }
+
+    return false;
+}
+
+function isColorRoleMap(r: any): r is TColorRoleMap {
+    return isKeyOfObject<TColorRoleMap,ERole>(r, EColor.RED, isRole)
+        && isKeyOfObject<TColorRoleMap,ERole>(r, EColor.GREEN, isRole)
+        && isKeyOfObject<TColorRoleMap,ERole>(r, EColor.YELLOW, isRole)
+        && isKeyOfObject<TColorRoleMap,ERole>(r, EColor.BLUE, isRole);
 }
 
 const DEFAULT_PAWNS: {[player in EColor]: IPawn[]} = {
@@ -113,14 +131,14 @@ const DEFAULT_PAWNS: {[player in EColor]: IPawn[]} = {
         createPawn(EColor.BLUE, EColor.GREEN,  2, 0),
         createPawn(EColor.BLUE, EColor.YELLOW, 3, 0),
     ],
-}
+};
 
 function createPawn(player: EColor, knightColor: EColor, row: number, col: number): IPawn {
     return {
         player,
         roles: getRoles(knightColor),
         position: { row, col }
-    }
+    };
 }
 
 /*
@@ -145,7 +163,7 @@ function getRoles(knightColor: EColor): {[fieldColor in EColor]: ERole} {
         let index = i - knightColor;
         if (index < 0) index += numRoles;
         return roles[index];
-    })
+    });
 
     return {
         [EColor.RED]:    result[EColor.RED],
@@ -157,30 +175,30 @@ function getRoles(knightColor: EColor): {[fieldColor in EColor]: ERole} {
 
 function getCurrentRole(pawn: IPawn): ERole {
     let fieldColor = getFieldColor(pawn.position);
-    return pawn.roles[fieldColor]
+    return pawn.roles[fieldColor];
 }
 
 function knightMoves(pawnI: number, pawns: IPawn[], limits: ILimits): IPosition[] {
-    const currentPos: IPosition = pawns[pawnI].position
+    const currentPos: IPosition = pawns[pawnI].position;
 
     const offsets: IPosition[] = [
         {row: 2, col: 1}, {row: 1, col: 2},
         {row:-2, col: 1}, {row:-1, col: 2},
         {row: 2, col:-1}, {row: 1, col:-2},
         {row:-2, col:-1}, {row:-1, col:-2},
-    ]
+    ];
 
     const result = offsets.map(offset => {
         return {
             row: currentPos.row + offset.row,
             col: currentPos.col + offset.col
-        }
-    })
+        };
+    });
 
     // only return move if it is not INVALID
     return result.filter(position => {
-        return getMoveType(position, limits, pawns, pawnI)
-    })
+        return getMoveType(position, limits, pawns, pawnI);
+    });
 }
 
 function bishopMoves(pawnI: number, pawns: IPawn[], limits: ILimits): IPosition[] {
@@ -189,7 +207,7 @@ function bishopMoves(pawnI: number, pawns: IPawn[], limits: ILimits): IPosition[
         ...moveGenerator(pawns, pawnI, limits, { row:-1, col: 1 }),
         ...moveGenerator(pawns, pawnI, limits, { row: 1, col:-1 }),
         ...moveGenerator(pawns, pawnI, limits, { row:-1, col:-1 }),
-    ]
+    ];
 }
 
 function rookMoves(pawnI: number, pawns: IPawn[], limits: ILimits): IPosition[] {
@@ -198,25 +216,25 @@ function rookMoves(pawnI: number, pawns: IPawn[], limits: ILimits): IPosition[] 
         ...moveGenerator(pawns, pawnI, limits, { row:-1, col: 0 }),
         ...moveGenerator(pawns, pawnI, limits, { row: 0, col: 1 }),
         ...moveGenerator(pawns, pawnI, limits, { row: 0, col:-1 }),
-    ]
+    ];
 }
 
 enum MoveType { INVALID, NORMAL, BEATING }
 
 function getMoveType(move: IPosition, limits: ILimits, pawns: IPawn[], pawnI: number): MoveType {
-    const pawnToMove  = pawns[pawnI]
-    const pawnOnField = pawns[getIndexOfPawnAtPosition(move, pawns)]
+    const pawnToMove  = pawns[pawnI];
+    const pawnOnField = pawns[getIndexOfPawnAtPosition(move, pawns)];
 
     if (!isPositionWithinLimits(move, limits))
-        return MoveType.INVALID
+        return MoveType.INVALID;
 
     if (!pawnOnField)
-        return MoveType.NORMAL
+        return MoveType.NORMAL;
 
     if (pawnOnField.player !== pawnToMove.player)
-        return MoveType.BEATING
+        return MoveType.BEATING;
 
-    return MoveType.INVALID
+    return MoveType.INVALID;
 }
 
 /** returns possible moves of a pawn, starting at its current position toward
@@ -225,24 +243,24 @@ function getMoveType(move: IPosition, limits: ILimits, pawns: IPawn[], pawnI: nu
  * @param offset Offset in row and col direction per step
  */
 function moveGenerator(pawns: IPawn[], pawnI: number, limits: ILimits, offset: IPosition): IPosition[] {
-    const startingPos = pawns[pawnI].position
+    const startingPos = pawns[pawnI].position;
 
-    let result :IPosition[] = []
-    let currentPos :IPosition = deepClone(startingPos)
+    let result :IPosition[] = [];
+    let currentPos :IPosition = deepClone(startingPos);
 
     while (true) {
-        currentPos.row += offset.row
-        currentPos.col += offset.col
-        let moveType = getMoveType(currentPos, limits, pawns, pawnI)
+        currentPos.row += offset.row;
+        currentPos.col += offset.col;
+        let moveType = getMoveType(currentPos, limits, pawns, pawnI);
 
         // don't add move if it's invalid
         if (moveType !== MoveType.INVALID)
-            result.push(deepClone(currentPos))
+            result.push(deepClone(currentPos));
 
         // stop generator if invalid or beating was encountered
         if (moveType !== MoveType.NORMAL)
             break;
     }
 
-    return result
+    return result;
 }

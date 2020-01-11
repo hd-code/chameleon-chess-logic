@@ -1,38 +1,32 @@
 import { IPawn } from "./Pawns";
 import { IPosition, isPosition } from "./Position";
 
-import { isObject } from "../helper"
+import { isKeyOfObject } from "../lib/hd-helper"
 
 // -----------------------------------------------------------------------------
 
 export interface ILimits {
-    lower: IPosition
-    upper: IPosition
+    lower: IPosition;
+    upper: IPosition;
 }
 
-export function isLimits(limits: ILimits): limits is ILimits {
-    return isObject(limits)
-        && 'lower' in limits && isPosition(limits.lower)
-        && 'upper' in limits && isPosition(limits.upper)
+export function isLimits(limits: any): limits is ILimits {
+    return isKeyOfObject(limits, 'lower', isPosition)
+        && isKeyOfObject(limits, 'upper', isPosition)
         && isWithinRange(limits)
         && !isFieldSmallerThanAllowed(limits);
 }
 
-export function isSmallestFieldSize(limits: ILimits): boolean {
-    return limits.upper.row - limits.lower.row + 1 === SMALLEST_FIELD_SIZE.row
-        && limits.upper.col - limits.lower.col + 1 === SMALLEST_FIELD_SIZE.col;
-}
-
 export function isPositionWithinLimits(pos: IPosition, limits: ILimits): boolean {
     return limits.lower.row <= pos.row &&  pos.row <= limits.upper.row
-        && limits.lower.col <= pos.col &&  pos.col <= limits.upper.col
+        && limits.lower.col <= pos.col &&  pos.col <= limits.upper.col;
 }
 
 export function getStartingLimits(): ILimits {
     return {
         lower: {row: MIN_ROW, col: MIN_COL},
         upper: {row: MAX_ROW, col: MAX_COL}
-    }
+    };
 }
 
 export function calcLimits(pawns: IPawn[], oldLimits: ILimits): ILimits {
@@ -63,6 +57,11 @@ function areRowsSmallerThanAllowed(limits: ILimits): boolean {
 }
 function areColsSmallerThanAllowed(limits: ILimits): boolean {
     return limits.upper.col - limits.lower.col + 1 < SMALLEST_FIELD_SIZE.col
+}
+
+function isSmallestFieldSize(limits: ILimits): boolean {
+    return limits.upper.row - limits.lower.row + 1 === SMALLEST_FIELD_SIZE.row
+        && limits.upper.col - limits.lower.col + 1 === SMALLEST_FIELD_SIZE.col;
 }
 
 function calcPureLimits(pawns: IPawn[]): ILimits {

@@ -1,16 +1,15 @@
-import { isNumber, isObject } from "../helper";
+import { isKeyOfObject, isNumber } from "../lib/hd-helper";
 
 // -----------------------------------------------------------------------------
 
 export interface IPosition {
-    row: number
-    col: number
+    row: number;
+    col: number;
 }
 
-export function isPosition(pos: IPosition): pos is IPosition {
-    return isObject(pos)
-        && 'row' in pos && isNumber(pos.row)
-        && 'col' in pos && isNumber(pos.col);
+export function isPosition(pos: any): pos is IPosition {
+    return isKeyOfObject(pos, 'row', isNumber)
+        && isKeyOfObject(pos, 'col', isNumber);
 }
 
 export function isSamePosition(a: IPosition, b: IPosition): boolean {
