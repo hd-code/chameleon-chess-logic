@@ -10,8 +10,8 @@ import { isKeyOfObject, deepClone } from "../lib/hd-helper";
 
 export interface IPawn {
     player:  EColor;
-    roles:   TColorRoleMap;
     position:IPosition;
+    roles:   TColorRoleMap;
 }
 
 export type TColorRoleMap = {[fieldColor in EColor]: ERole}
@@ -19,7 +19,7 @@ export type TColorRoleMap = {[fieldColor in EColor]: ERole}
 export function isPawn(pawn: any): pawn is IPawn {
     return isKeyOfObject(pawn, 'player', isColor)
         && isKeyOfObject(pawn, 'position', isPosition)
-        && isKeyOfObject(pawn, 'position', isPawnRoles);
+        && isKeyOfObject(pawn, 'roles', isPawnRoles);
 }
 
 export function areAllPawnsWithinLimits(pawns: IPawn[], limits: ILimits): boolean {
@@ -44,7 +44,7 @@ export function getDefaultPawnsForPlayer(player: EColor): IPawn[] {
 
 export function getPawnAtPosition(position: IPosition, pawns: IPawn[]): IPawn|null {
     const result = pawns.filter(p => isSamePosition(p.position, position));
-    return result === [] ? null : result[0];
+    return result.length === 0 ? null : result[0];
 }
 
 /** Returns -1 if the pawn was not found. */
