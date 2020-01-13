@@ -1,4 +1,4 @@
-const ccl = require('./build/main');
+const ccl = require('../build/main');
 const fs = require('fs');
 
 let log = [];
