@@ -2,8 +2,8 @@
 /node_modules
 /package-lock.json
 
-# Editor Config
+# VSCode
 .vscode
 
-# System
+# macOS
 .DS_STORE
