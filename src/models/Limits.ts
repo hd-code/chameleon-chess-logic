@@ -22,6 +22,12 @@ export function isPositionWithinLimits(pos: IPosition, limits: ILimits): boolean
         && limits.lower.col <= pos.col &&  pos.col <= limits.upper.col;
 }
 
+// TODO: Test!
+export function isSmallestFieldSize(limits: ILimits): boolean {
+    return limits.upper.row - limits.lower.row + 1 === SMALLEST_FIELD_SIZE.row
+        && limits.upper.col - limits.lower.col + 1 === SMALLEST_FIELD_SIZE.col;
+}
+
 export function getStartingLimits(): ILimits {
     return {
         lower: {row: MIN_ROW, col: MIN_COL},
@@ -57,11 +63,6 @@ function areRowsSmallerThanAllowed(limits: ILimits): boolean {
 }
 function areColsSmallerThanAllowed(limits: ILimits): boolean {
     return limits.upper.col - limits.lower.col + 1 < SMALLEST_FIELD_SIZE.col
-}
-
-function isSmallestFieldSize(limits: ILimits): boolean {
-    return limits.upper.row - limits.lower.row + 1 === SMALLEST_FIELD_SIZE.row
-        && limits.upper.col - limits.lower.col + 1 === SMALLEST_FIELD_SIZE.col;
 }
 
 function calcPureLimits(pawns: IPawn[]): ILimits {
