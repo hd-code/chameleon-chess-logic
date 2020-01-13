@@ -22,7 +22,6 @@ export function isPositionWithinLimits(pos: IPosition, limits: ILimits): boolean
         && limits.lower.col <= pos.col &&  pos.col <= limits.upper.col;
 }
 
-// TODO: Test!
 export function isSmallestFieldSize(limits: ILimits): boolean {
     return limits.upper.row - limits.lower.row + 1 === SMALLEST_FIELD_SIZE.row
         && limits.upper.col - limits.lower.col + 1 === SMALLEST_FIELD_SIZE.col;

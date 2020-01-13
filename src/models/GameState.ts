@@ -25,11 +25,9 @@ export function isGameState(gs: any): gs is IGameState {
 export function arePlayersAlive(gs: IGameState): {[player in EColor]: boolean} {
     let numOfPawnsPerPlayer = getNumOfPawnsPerPlayer(gs);
 
-    if (Limits.isSmallestFieldSize(gs.limits)) {
-        const playerInDeadlock = getPlayerInDeadlock(gs);
-        if (playerInDeadlock !== null)
-            numOfPawnsPerPlayer[playerInDeadlock]--;
-    }
+    const playerInDeadlock = getPlayerInDeadlock(gs);
+    if (playerInDeadlock !== null)
+        numOfPawnsPerPlayer[playerInDeadlock]--;
 
     return {
         [EColor.RED]:    numOfPawnsPerPlayer[EColor.RED]    > 0,
@@ -61,6 +59,7 @@ export function initGameState(red: boolean, green: boolean, yellow: boolean, blu
         pawns: pawns,
         whoseTurn: EColor.GREEN // usually RED begins, GREEN is just before RED
     };
+    result.limits = Limits.calcLimits(pawns, result.limits);
     result.whoseTurn = getNextPlayer(result);
 
     return result;
@@ -112,15 +111,19 @@ function getNumOfPawnsPerPlayer(gs: IGameState): {[player in EColor]: number} {
 }
 
 function getPlayerInDeadlock(gs: IGameState): EColor|null {
+    if (!Limits.isSmallestFieldSize(gs.limits))
+        return null;
+    
     const centerPos = {
         row: gs.limits.lower.row + 1,
         col: gs.limits.lower.col + 1
     };
     const pawnAtCenter = Pawns.getIndexOfPawnAtPosition(centerPos, gs.pawns);
-    const moves = Pawns.getNextMoves(pawnAtCenter, gs.pawns, gs.limits);
+    if (pawnAtCenter === -1)
+        return null;;
 
-    return pawnAtCenter === -1 || moves.length > 0
-        ? null : gs.pawns[pawnAtCenter].player;
+    const moves = Pawns.getNextMoves(pawnAtCenter, gs.pawns, gs.limits);
+    return moves.length === 0 ? gs.pawns[pawnAtCenter].player : null;
 }
 
 // usage: TURN_ORDER[ currentPlayer ] -> nextPlayer
