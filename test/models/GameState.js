@@ -7,8 +7,8 @@ const Limits = require('../../build/models/Limits.js');
 // -----------------------------------------------------------------------------
 
 describe('models/GameState', () => {
-    const GS_START_4_PLAYERS = GameState.initGameState(true, true, true, true);
-    const GS_START_2_PLAYERS = GameState.initGameState(true, false, true, false);
+    const GS_START_4_PLAYERS = GameState.createGameState(true, true, true, true);
+    const GS_START_2_PLAYERS = GameState.createGameState(true, false, true, false);
 
     const GS_IN_ACTION = 0;
 
@@ -39,14 +39,14 @@ describe('models/GameState', () => {
     // TODO
     describe('isGameOver()', () => {});
 
-    describe('initGameState()', () => {
-        const GS_ONLY_RED = GameState.initGameState(true, false, false, false);
-        const GS_ONLY_GREEN = GameState.initGameState(false, true, false, false);
-        const GS_ONLY_YELLOW = GameState.initGameState(false, false, true, false);
-        const GS_ONLY_BLUE = GameState.initGameState(false, false, false, true);
+    describe('createGameState()', () => {
+        const GS_ONLY_RED = GameState.createGameState(true, false, false, false);
+        const GS_ONLY_GREEN = GameState.createGameState(false, true, false, false);
+        const GS_ONLY_YELLOW = GameState.createGameState(false, false, true, false);
+        const GS_ONLY_BLUE = GameState.createGameState(false, false, false, true);
 
-        const GS_2_RED_BLUE = GameState.initGameState(true, false, false, true);
-        const GS_3_PLAYERS_NO_RED = GameState.initGameState(false, true, true, true);
+        const GS_2_RED_BLUE = GameState.createGameState(true, false, false, true);
+        const GS_3_PLAYERS_NO_RED = GameState.createGameState(false, true, true, true);
 
         it('should have 4 pawns per player', () => {
             assert.strictEqual(GS_ONLY_RED.pawns.length, 4);
@@ -80,7 +80,7 @@ describe('models/GameState', () => {
             assert.deepStrictEqual(GS_2_RED_BLUE.limits, LIMITS_RED_BLUE);
         });
 
-        it('should be player red on turn or, if there is non, the one next to player red', () => {
+        it('should be player red on turn or, if there is none, the one next to player red', () => {
             assert.strictEqual(GS_START_4_PLAYERS.whoseTurn, Color.EColor.RED);
             assert.strictEqual(GS_START_2_PLAYERS.whoseTurn, Color.EColor.RED);
             assert.strictEqual(GS_2_RED_BLUE.whoseTurn, Color.EColor.RED);

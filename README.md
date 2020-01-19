@@ -1,56 +1,58 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Chameleon Chess Logic
 
-This node.js module contains the basic logic and rules for the chameleon chess game.
+This node module contains the game logic for the board game "Chameleon Chess".
 
-It offers a basic data structure that represents a situation on the game board. It also provides means to update this game state, thus advancing the game.
+Here you can find a description of the game and its rules:
+- [english](./docs/game/en.md)
+- [deutsch](./docs/game/de.md)
 
-This module doesn't contain any visual rendering. It is just a micro-service for managing a game on the most basic level.
+However, this module doesn't provide any kind of visual rendering. Instead, it is a library that implements the game logic of Chameleon Chess. It offers the basic models (data structures and functions to work on these data structures) that can be used to create an App or Website or any other kind of format to play a game of Chameleon Chess.
 
+## Installation
 
-...
+The easiest way to use this library in your project, is by using NPM.
 
-## Data Structures
+So, if you have the current version of NPM installed, just run this in the terminal in the folder of your project:
 
-According to these rules there are several needed data structures.
+```` bash
+npm install git+https://github.com/hd-code/chameleon-chess-logic.git
+````
 
-**EColor:** An enum representing the four colors: RED, GREEN, YELLOW and BLUE. (0-3)
+Now you can use this module in your app by simply requiring or importing it.
 
-**ERole:** An enum representing the four roles a pawn can have: KNIGHT, QUEEN, BISHOP and ROOK. (0-3)
+```` JS
+const ccl = require('chameleon-chess-logic');
+````
 
-**IPosition:** Positions are represented by two numbers: `row` and `col`. They are 0-based, so `{ row: 2, col: 0 }` is the third row and the first column.
+```` TS
+import * as ccl from 'chameleon-chess-logic';
+````
 
-**Board:** The board is a two-dimensional array of EColors. The first dimension being the `row` and the second dimension being the `col` as found in `IPosition`
+This project is written in Typescript. So all declarations interfaces etc. are included in the build.
 
-**ILimits:** The limits are represented by two `IPosition`s: `lower` and `upper`. The numbers in the limits are part of the active board. So, `{ lower: { row: 1, ... }` means that the lowest row, which is still part of the playing field, is the second row (zero-based).
+## Usage
 
-**IPawn:** A pawn holds three attributes:
-- `player` which is an `EColor` representing the player this pawn belongs to
-- `position` which is an `IPosition` representing the current position of this pawn on the board
-- `roles` which is a map that maps all four `EColor`s to the corresponding `ERole`, so this tells us on which field this pawn has which role
+The data structures that this library provides are explained [here](./docs/data-types.md).
 
-**IGameState:** The central data structure. Holds all information to represent the current board situation.
-- `limits` which is an `ILimits` telling us how big the board currently is
-- `pawns` which is an array holding all `IPawn`s that are currently on the board, so beaten pawns are no longer part of this array
-- `whoseTurn` an `EColor` which represents the player whose turn it currently is (so this one has to make a move to advance the game)
+A Documentation on all functions this library offers, can be found [here](./docs/functions.md).
 
-## Functions
+## Development
 
-All available functions can be found in `src/main.ts`.
+If you want to work on this module you need the current version of NPM installed on your machine.
+
+Then open your terminal and do the following:
+
+````bash
+# clone git repo
+git clone https://github.com/hd-code/chameleon-chess-logic.git
+
+# change to project directory
+cd chameleon-chess-logic
+
+# install dev dependencies for npm module
+npm i
+````
+
+Now, you can work on the project.
+
+Please read the [Developer Guide](./docs/developer-guide.md) for an explanation of the project structure and further important information.

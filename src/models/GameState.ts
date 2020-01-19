@@ -23,12 +23,7 @@ export function isGameState(gs: any): gs is IGameState {
 }
 
 export function arePlayersAlive(gs: IGameState): {[player in EColor]: boolean} {
-    let numOfPawnsPerPlayer = getNumOfPawnsPerPlayer(gs);
-
-    const playerInDeadlock = getPlayerInDeadlock(gs);
-    if (playerInDeadlock !== null)
-        numOfPawnsPerPlayer[playerInDeadlock]--;
-
+    let numOfPawnsPerPlayer = Pawns.getNumOfPawnsPerPlayer(gs.pawns);
     return {
         [EColor.RED]:    numOfPawnsPerPlayer[EColor.RED]    > 0,
         [EColor.GREEN]:  numOfPawnsPerPlayer[EColor.GREEN]  > 0,
@@ -46,7 +41,7 @@ export function isGameOver(gs: IGameState): boolean {
     return numOfPlayers < 2;
 }
 
-export function initGameState(red: boolean, green: boolean, yellow: boolean, blue: boolean): IGameState {
+export function createGameState(red: boolean, green: boolean, yellow: boolean, blue: boolean): IGameState {
     let pawns = <Pawns.IPawn[]>[];
 
     red    && pawns.push(...Pawns.getDefaultPawnsForPlayer(EColor.RED));
@@ -54,15 +49,10 @@ export function initGameState(red: boolean, green: boolean, yellow: boolean, blu
     yellow && pawns.push(...Pawns.getDefaultPawnsForPlayer(EColor.YELLOW));
     blue   && pawns.push(...Pawns.getDefaultPawnsForPlayer(EColor.BLUE));
 
-    let result = {
-        limits: Limits.getStartingLimits(),
-        pawns: pawns,
-        whoseTurn: EColor.GREEN // usually RED begins, GREEN is just before RED
-    };
-    result.limits = Limits.calcLimits(pawns, result.limits);
-    result.whoseTurn = getNextPlayer(result);
+    const limits = Limits.calcLimits(pawns, Limits.getStartingLimits());
 
-    return result;
+    // GREEN comes before RED and RED usually starts
+    return updateWhoseTurn({limits, pawns, whoseTurn: EColor.GREEN});
 }
 
 export function isValidMove(gs: IGameState, pawnI: number, destination: IPosition): boolean {
@@ -79,11 +69,13 @@ export function makeMove(gs: IGameState, pawnI: number, destination: IPosition):
     pawns[pawnI].position = destination;
     pawns = pawns.filter((_,i) => i !== beatenPawnIndex);
 
-    return {
-        limits: Limits.calcLimits(pawns, gs.limits),
-        pawns: pawns,
-        whoseTurn: getNextPlayer(gs)
-    };
+    const limits = Limits.calcLimits(pawns, gs.limits);
+
+    const pawnInDeadlock = Pawns.getIndexOfPawnInDeadlock(pawns, limits);
+    if (pawnInDeadlock !== -1 && !isGameOver({limits, pawns, whoseTurn: gs.whoseTurn}))
+        pawns = pawns.filter((_,i) => i !== pawnInDeadlock);
+
+    return updateWhoseTurn({limits, pawns, whoseTurn: gs.whoseTurn});
 }
 
 export function getNextPossibleGameStates(gs: IGameState): IGameState[] {
@@ -100,32 +92,6 @@ export function getNextPossibleGameStates(gs: IGameState): IGameState[] {
 
 // -----------------------------------------------------------------------------
 
-function getNumOfPawnsPerPlayer(gs: IGameState): {[player in EColor]: number} {
-    let result = {
-        [EColor.RED]: 0, [EColor.GREEN]: 0, [EColor.YELLOW]: 0, [EColor.BLUE]: 0
-    };
-
-    gs.pawns.forEach(pawn => result[pawn.player]++);
-
-    return result;
-}
-
-function getPlayerInDeadlock(gs: IGameState): EColor|null {
-    if (!Limits.isSmallestFieldSize(gs.limits))
-        return null;
-    
-    const centerPos = {
-        row: gs.limits.lower.row + 1,
-        col: gs.limits.lower.col + 1
-    };
-    const pawnAtCenter = Pawns.getIndexOfPawnAtPosition(centerPos, gs.pawns);
-    if (pawnAtCenter === -1)
-        return null;;
-
-    const moves = Pawns.getNextMoves(pawnAtCenter, gs.pawns, gs.limits);
-    return moves.length === 0 ? gs.pawns[pawnAtCenter].player : null;
-}
-
 // usage: TURN_ORDER[ currentPlayer ] -> nextPlayer
 const TURN_ORDER: {[player in EColor]: EColor} = {
     [EColor.RED]:    EColor.BLUE,
@@ -134,13 +100,15 @@ const TURN_ORDER: {[player in EColor]: EColor} = {
     [EColor.BLUE]:   EColor.YELLOW
 };
 
-function getNextPlayer(gs: IGameState): EColor {
-    let nextPlayer = TURN_ORDER[gs.whoseTurn];
-    const playersAliveState = arePlayersAlive(gs);
+/** param is game state with everything updated except whoseTurn */
+function updateWhoseTurn(tmpGS: IGameState): IGameState {
+    let nextPlayer = TURN_ORDER[tmpGS.whoseTurn];
+    const playersAliveState = arePlayersAlive(tmpGS);
 
-    while (!playersAliveState[nextPlayer]) {
+    while (!playersAliveState[nextPlayer] && nextPlayer !== tmpGS.whoseTurn) {
         nextPlayer = TURN_ORDER[nextPlayer];
     }
 
-    return nextPlayer;
+    tmpGS.whoseTurn = nextPlayer;
+    return tmpGS;
 }

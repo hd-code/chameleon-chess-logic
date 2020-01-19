@@ -9,7 +9,7 @@ Jeder Spieler beginnt mit 4 Spielfiguren, die in schachähnlichen Zügen über d
 ## Vorbereitung
 
 Das Spielbrett mit 8x8 bunten Feldern wird in die Mitte gelegt. Die Felder des Spielbretts haben jeweils eine von vier Farben (rot, grün, gelb, blau). Die Anordnung der Farben ist vorgegeben.
-
+// TODO Bilder und Proofreading
 ![Bild des Spielbretts]()
 
 Die Spieler wählen sich jeweils eine von insgesamt vier Farben (rot, grün, gelb oder blau). Je nach Farbe setzen sich die Spieler entsprechend um das Spielbrett. Dabei gehört immer die Seite zu einem Spieler, bei der das linke Eckfeld der Farbe des Spielers entspricht.
@@ -82,14 +82,13 @@ Steht ihm eine gegnerische Figur im Weg, so kann er diese schlagen. Allerdings e
 
 ### Dame
 
-Die Dame ist die stärkste Figur im Spiel. Sie kann sich entweder wieder Läufer oder wie der Turm bewegen.
+Die Dame ist die stärkste Figur im Spiel. Sie kombiniert die beiden Rollen Läufer und Turm in sich. Eine Dame kann sich also beliebig viele freie Felder horizontal, vertikal oder diagonal von ihrem Startfeld aus bewegen. Gegnerische Figuren können geschlagen werden, stoppen aber die Fortbewegung. Eigene Figuren blockieren das weitere Fortkommen.
 
 ![Bild von den Zügen einer Dame]()
 
 ## Spezialfall
 
-Gegen Ende des Spieles, wenn das Brett auf 3x3 Felder geschrumpft ist, kann es zu einem Spezialfall kommen. Unter Umständen kommt eine Figur genau auf dem mittleren Feld zum Stehen und hat nun die Rolle "Springer". In diesem Fall kann sich die Figur nicht mehr bewegen, da die möglichen Springerzüge alle außerhalb des Bretts liegen.
-
-Wenn diese Figur die einzig verbleibende Figur eines Spielers ist, so hat er verloren, weil er nichts mehr machen kann. Die Figur gilt sozusagen als tot.
+// TODO
+Gegen Ende des Spieles, wenn das Brett auf 3x3 Felder geschrumpft ist, kann es zu einem Spezialfall kommen. Unter Umständen kommt eine Figur genau auf dem mittleren Feld zum Stehen und hat nun die Rolle "Springer". In diesem Fall kann sich die Figur nicht mehr bewegen, da die möglichen Springerzüge alle außerhalb des Bretts liegen. Daher wird diese Figur nun direkt entfernt.
 
 Ist diese Figur allerdings die allerletzte Figur, die überhaupt noch auf dem Brett stehen geblieben ist, so gewinnt der Spieler, dem diese Figur gehört.

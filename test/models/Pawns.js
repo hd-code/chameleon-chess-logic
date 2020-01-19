@@ -169,27 +169,30 @@ describe('models/Pawns', () => {
         });
     });
 
-    describe('getPawnAtPosition()', () => {
-        it('should return the pawn that is at the given position', () => {
-            const actual1 = Pawns.getPawnAtPosition(PAWN_1.position, PAWNS);
-            const actual2 = Pawns.getPawnAtPosition(PAWN_2.position, PAWNS);
-            const actual3 = Pawns.getPawnAtPosition(PAWN_3.position, PAWNS);
+    // TODO
+    describe('getNumOfPawnsPerPlayer()', () => {});
 
-            assert.deepStrictEqual(actual1, PAWN_1);
-            assert.deepStrictEqual(actual2, PAWN_2);
-            assert.deepStrictEqual(actual3, PAWN_3);
-        });
+    // describe('getPawnAtPosition()', () => {
+    //     it('should return the pawn that is at the given position', () => {
+    //         const actual1 = Pawns.getPawnAtPosition(PAWN_1.position, PAWNS);
+    //         const actual2 = Pawns.getPawnAtPosition(PAWN_2.position, PAWNS);
+    //         const actual3 = Pawns.getPawnAtPosition(PAWN_3.position, PAWNS);
 
-        it('should return null for a position where no pawn is at', () => {
-            const actual = Pawns.getPawnAtPosition(PAWN_4.position, PAWNS);
-            assert.strictEqual(actual, null);
-        });
+    //         assert.deepStrictEqual(actual1, PAWN_1);
+    //         assert.deepStrictEqual(actual2, PAWN_2);
+    //         assert.deepStrictEqual(actual3, PAWN_3);
+    //     });
 
-        it('should always return null if an empty array is passed', () => {
-            const actual = Pawns.getPawnAtPosition(PAWN_1.position, []);
-            assert.strictEqual(actual, null);
-        });
-    });
+    //     it('should return null for a position where no pawn is at', () => {
+    //         const actual = Pawns.getPawnAtPosition(PAWN_4.position, PAWNS);
+    //         assert.strictEqual(actual, null);
+    //     });
+
+    //     it('should always return null if an empty array is passed', () => {
+    //         const actual = Pawns.getPawnAtPosition(PAWN_1.position, []);
+    //         assert.strictEqual(actual, null);
+    //     });
+    // });
 
     describe('getIndexOfPawn()', () => {
         it('should return the index of the pawn in the array of pawns', () => {
@@ -234,6 +237,9 @@ describe('models/Pawns', () => {
             assert.strictEqual(actual, -1);
         });
     });
+
+    // TODO
+    describe('getIndexOfPawnInDeadlock()', () => {});
 
     describe('getNextMoves()', () => {
         const KNIGHT = { player:0, position:{row:3,col:3}, roles:{0:2, 1:3, 2:0, 3:1} };

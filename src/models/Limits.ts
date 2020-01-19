@@ -28,10 +28,7 @@ export function isSmallestFieldSize(limits: ILimits): boolean {
 }
 
 export function getStartingLimits(): ILimits {
-    return {
-        lower: {row: MIN_ROW, col: MIN_COL},
-        upper: {row: MAX_ROW, col: MAX_COL}
-    };
+    return STARTING_LIMITS;
 }
 
 export function calcLimits(pawns: IPawn[], oldLimits: ILimits): ILimits {
@@ -46,6 +43,11 @@ export function calcLimits(pawns: IPawn[], oldLimits: ILimits): ILimits {
 
 const MIN_ROW = 0, MAX_ROW = 7;
 const MIN_COL = 0, MAX_COL = 7;
+
+const STARTING_LIMITS = {
+    lower: {row: MIN_ROW, col: MIN_COL},
+    upper: {row: MAX_ROW, col: MAX_COL}
+};
 
 const SMALLEST_FIELD_SIZE = <IPosition>{ row: 3, col: 3 };
 
@@ -65,6 +67,9 @@ function areColsSmallerThanAllowed(limits: ILimits): boolean {
 }
 
 function calcPureLimits(pawns: IPawn[]): ILimits {
+    if (pawns.length === 0)
+        return STARTING_LIMITS;
+
     let firstPos = pawns[0].position;
     let initVal = <ILimits>{
         lower: {row: firstPos.row, col: firstPos.col},

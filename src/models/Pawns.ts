@@ -1,6 +1,6 @@
 import { getFieldColor } from "./Board";
 import { EColor, isColor } from "./Color";
-import { ILimits, isPositionWithinLimits } from "./Limits";
+import { ILimits, isPositionWithinLimits, isSmallestFieldSize } from "./Limits";
 import { IPosition, isPosition, isSamePosition } from "./Position";
 import { ERole, TRoles, isRoles, getRoles } from "./Roles";
 
@@ -40,9 +40,13 @@ export function getDefaultPawnsForPlayer(player: EColor): IPawn[] {
     return DEFAULT_PAWNS[player];
 }
 
-export function getPawnAtPosition(position: IPosition, pawns: IPawn[]): IPawn|null {
-    const result = pawns.filter(p => isSamePosition(p.position, position));
-    return result.length === 0 ? null : result[0];
+export function getNumOfPawnsPerPlayer(pawns: IPawn[]): {[player in EColor]: number} {
+    let result = {
+        [EColor.RED]:    0, [EColor.GREEN]: 0,
+        [EColor.YELLOW]: 0, [EColor.BLUE]:  0
+    };
+    pawns.forEach(pawn => result[pawn.player]++);
+    return result;
 }
 
 /** Returns -1 if the pawn was not found. */
@@ -52,8 +56,25 @@ export function getIndexOfPawn(pawn: IPawn, pawns: IPawn[]): number {
 
 /** Returns -1 if there is no pawn at the specified position. */
 export function getIndexOfPawnAtPosition(position: IPosition, pawns: IPawn[]): number {
-    const pawn = getPawnAtPosition(position, pawns);
-    return pawn == null ? -1 : getIndexOfPawn(pawn, pawns);
+    const pawnAtPos = pawns.filter(p => isSamePosition(p.position, position));
+    return pawnAtPos.length === 0 ? -1 : getIndexOfPawn(pawnAtPos[0], pawns);
+}
+
+export function getIndexOfPawnInDeadlock(pawns: IPawn[], limits: ILimits): number {
+    if (!isSmallestFieldSize(limits))
+        return -1;
+    
+    const centerPos = {
+        row: limits.lower.row + 1,
+        col: limits.lower.col + 1
+    };
+
+    const pawnAtCenter = getIndexOfPawnAtPosition(centerPos, pawns);
+    if (pawnAtCenter === -1)
+        return -1;
+
+    const moves = getNextMoves(pawnAtCenter, pawns, limits);
+    return moves.length === 0 ? pawnAtCenter : -1;
 }
 
 /** pawnI is the index in pawns[]. Therefore it is just a number. This avoids 

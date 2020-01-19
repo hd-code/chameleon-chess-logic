@@ -47,7 +47,7 @@ export function getBoard(): EColor[][] {
  * @param blue   If set to `true`, the blue   player takes part in this game.
  */
 export function initGame(red: boolean, green: boolean, yellow: boolean, blue: boolean): GS.IGameState|null {
-    const gs = GS.initGameState(red, green, yellow, blue)
+    const gs = GS.createGameState(red, green, yellow, blue)
     return !GS.isGameOver(gs) ? gs : null
 }
 
