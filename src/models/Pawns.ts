@@ -2,7 +2,7 @@ import { getFieldColor } from "./Board";
 import { EColor, isColor } from "./Color";
 import { ILimits, isPositionWithinLimits } from "./Limits";
 import { IPosition, isPosition, isSamePosition } from "./Position";
-import { ERole, isRole } from "./Role";
+import { ERole, TRoles, isRoles, getRoles } from "./Roles";
 
 import { isKeyOfObject, deepClone } from "../lib/hd-helper";
 
@@ -11,15 +11,13 @@ import { isKeyOfObject, deepClone } from "../lib/hd-helper";
 export interface IPawn {
     player:  EColor;
     position:IPosition;
-    roles:   TColorRoleMap;
+    roles:   TRoles;
 }
-
-export type TColorRoleMap = {[fieldColor in EColor]: ERole}
 
 export function isPawn(pawn: any): pawn is IPawn {
     return isKeyOfObject(pawn, 'player', isColor)
         && isKeyOfObject(pawn, 'position', isPosition)
-        && isKeyOfObject(pawn, 'roles', isPawnRoles);
+        && isKeyOfObject(pawn, 'roles', isRoles);
 }
 
 export function areAllPawnsWithinLimits(pawns: IPawn[], limits: ILimits): boolean {
@@ -61,7 +59,8 @@ export function getIndexOfPawnAtPosition(position: IPosition, pawns: IPawn[]): n
 /** pawnI is the index in pawns[]. Therefore it is just a number. This avoids 
  * redundance. After all, the pawn always has to be part of pawns[]. */
 export function getNextMoves(pawnI: number, pawns: IPawn[], limits: ILimits): IPosition[] {
-    switch ( getCurrentRole(pawns[pawnI]) ) {
+    const pawn = pawns[pawnI];
+    switch ( pawn.roles[getFieldColor(pawn.position)] ) {
         case ERole.KNIGHT:
             return knightMoves(pawnI, pawns, limits);
         case ERole.BISHOP:
@@ -77,34 +76,6 @@ export function getNextMoves(pawnI: number, pawns: IPawn[], limits: ILimits): IP
 }
 
 // -----------------------------------------------------------------------------
-
-function isPawnRoles(r:any): r is TColorRoleMap {
-    if (!isColorRoleMap(r))
-        return false;
-
-    const legalRoles = [
-        getRoles(EColor.RED),    getRoles(EColor.GREEN),
-        getRoles(EColor.YELLOW), getRoles(EColor.BLUE),
-    ];
-
-    for (let i = 0, ie = legalRoles.length; i < ie; i++) {
-        if (    legalRoles[i][EColor.RED]    === r[EColor.RED]
-             && legalRoles[i][EColor.GREEN]  === r[EColor.GREEN]
-             && legalRoles[i][EColor.YELLOW] === r[EColor.YELLOW]
-             && legalRoles[i][EColor.BLUE]   === r[EColor.BLUE]
-        )
-            return true;
-    }
-
-    return false;
-}
-
-function isColorRoleMap(r: any): r is TColorRoleMap {
-    return isKeyOfObject<TColorRoleMap,ERole>(r, EColor.RED, isRole)
-        && isKeyOfObject<TColorRoleMap,ERole>(r, EColor.GREEN, isRole)
-        && isKeyOfObject<TColorRoleMap,ERole>(r, EColor.YELLOW, isRole)
-        && isKeyOfObject<TColorRoleMap,ERole>(r, EColor.BLUE, isRole);
-}
 
 const DEFAULT_PAWNS: {[player in EColor]: IPawn[]} = {
     [EColor.RED]: [
@@ -139,43 +110,6 @@ function createPawn(player: EColor, knightColor: EColor, row: number, col: numbe
         roles: getRoles(knightColor),
         position: { row, col }
     };
-}
-
-/*
-RED = 0,    GREEN = 1, YELLOW = 2, BLUE = 3
-KNIGHT = 0, QUEEN = 1, BISHOP = 2, ROOK = 3
-
-            |       fieldColor
-knightColor | RED    | GREEN  | YELLOW | BLUE
-------------|--------|--------|--------|--------
-     RED    | KNIGHT | ROOK   | BISHOP | QUEEN
-     GREEN  | QUEEN  | KNIGHT | ROOK   | BISHOP
-     YELLOW | BISHOP | QUEEN  | KNIGHT | ROOK
-     BLUE   | ROOK   | BISHOP | QUEEN  | KNIGHT
-
-knightColor -> offset of role in color array
-*/
-function getRoles(knightColor: EColor): {[fieldColor in EColor]: ERole} {
-    const roles = [ERole.KNIGHT, ERole.QUEEN, ERole.BISHOP, ERole.ROOK];
-    const numRoles = roles.length;
-
-    const result = roles.map((_,i) => {
-        let index = i - knightColor;
-        if (index < 0) index += numRoles;
-        return roles[index];
-    });
-
-    return {
-        [EColor.RED]:    result[EColor.RED],
-        [EColor.GREEN]:  result[EColor.GREEN],
-        [EColor.YELLOW]: result[EColor.YELLOW],
-        [EColor.BLUE]:   result[EColor.BLUE],
-    };
-}
-
-function getCurrentRole(pawn: IPawn): ERole {
-    let fieldColor = getFieldColor(pawn.position);
-    return pawn.roles[fieldColor];
 }
 
 function knightMoves(pawnI: number, pawns: IPawn[], limits: ILimits): IPosition[] {

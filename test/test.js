@@ -14,5 +14,5 @@ try {
 } catch (e) {
     console.log(e);
 } finally {
-    fs.writeFileSync('log.json', JSON.stringify(log));
+    // fs.writeFileSync('log.json', JSON.stringify(log));
 }

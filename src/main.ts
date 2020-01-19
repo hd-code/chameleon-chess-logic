@@ -10,7 +10,7 @@ import { IPosition } from "./models/Position";
 
 // TODO: JS Doc type description
 export { EColor } from "./models/Color";
-export { ERole } from "./models/Role";
+export { ERole } from "./models/Roles";
 export { IGameState } from "./models/GameState";
 export { ILimits } from "./models/Limits";
 export { IPawn } from "./models/Pawns";

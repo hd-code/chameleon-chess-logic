@@ -3,7 +3,9 @@ import { IPosition } from './Position';
 
 // -----------------------------------------------------------------------------
 
-export function getBoard(): EColor[][] {
+export type TBoard = EColor[][]
+
+export function getBoard(): TBoard {
     return BOARD;
 }
 
@@ -14,7 +16,7 @@ export function getFieldColor(position: IPosition): EColor {
 // -----------------------------------------------------------------------------
 
 const [R,G,Y,B] = [EColor.RED, EColor.GREEN, EColor.YELLOW, EColor.BLUE]
-const BOARD: EColor[][] = [
+const BOARD: TBoard = [
     [B, R, B, Y, G, R, B, Y],
     [R, G, R, B, Y, G, R, B],
     [G, Y, R, G, R, B, B, Y],

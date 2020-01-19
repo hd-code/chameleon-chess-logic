@@ -1,8 +1,4 @@
-/**
- * hd-helper v1.1.0 | Hannes Dröse | office.hd@gmx.net
- */
-
-// -----------------------------------------------------------------------------
+/*! hd-helper v1.0.0 | Hannes Dröse | https://github.com/hd-code/hd-helper | MIT */
 
 // ---------------------------------- General ----------------------------------
 
@@ -42,28 +38,9 @@ export function isString(str: any): str is string {
     return typeof str === 'string';
 }
 
-/**
- * Type guard to check if a value is an object. If the value is `null`, the type 
- * guard will reject the value. However, just an empty object (like this: `{}`) 
- * is valid.
- * 
- * If you want to check the object for specific keys, use `isKeyOfObject()`.
- */
-export function isObject(obj:any): obj is object {
-    return typeof obj === 'object' && obj !== null;
-}
-
-/**
- * Type guard to check if a value is an `object` and also contains the specified
- * `key`. (`{ key: ... }`)
- * 
- * Optional: You can pass a type guard as a third argument to this function. If 
- * the given key is found, the value associated with that key is then 
- * type-checked by the type guard.
- */
-export function isKeyOfObject<T,U>(obj: any, key: keyof T, keyTypeGuard?: (e:any) => e is U): obj is T {
-    return typeof obj === 'object' && obj !== null && (obj as T)[key] !== undefined
-        && (!keyTypeGuard || keyTypeGuard(obj[key]));
+/** Type guard to check if a value is a JS Date type. */
+export function isDate(date: any): date is Date {
+    return date instanceof Date;
 }
 
 /**
@@ -83,4 +60,29 @@ export function isArray<T>(a: any, typeGuard?: (e:any) => e is T): a is T[] {
     }
 
     return true;
+}
+
+/**
+ * Type guard to check if a value is an object. If the value is `null`, the type 
+ * guard will reject the value. However, just an empty object (like this: `{}`) 
+ * is valid.
+ * 
+ * If you want to check the object for specific keys, use `isKeyOfObject()`.
+ */
+export function isObject(obj:any): obj is object {
+    return typeof obj === 'object' && obj !== null && !isArray(obj);
+}
+
+/**
+ * Type guard to check if a value is an `object` and also contains the specified
+ * `key`. (`{ key: ... }`)
+ * 
+ * Optional: You can pass a type guard as a third argument to this function. If 
+ * the given key is found, the value associated with that key is then 
+ * type-checked by the type guard.
+ */
+// TODO: find out if there is a better function signature?
+export function isKeyOfObject<T,U>(obj: any, key: keyof T, keyTypeGuard?: (e:any) => e is U): obj is T {
+    return typeof obj === 'object' && obj !== null && (obj as T)[key] !== undefined
+        && (!keyTypeGuard || keyTypeGuard(obj[key]));
 }
