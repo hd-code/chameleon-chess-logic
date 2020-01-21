@@ -33,6 +33,7 @@ describe('models/Pawns', () => {
 
     const START_LIMITS = Limits.getStartingLimits();
     const SMALL_LIMITS = { lower:START_LIMITS.lower, upper:{row:3,col:3} };
+    const SMALLEST_LIMITS = { lower:{row:3,col:2}, upper:{row:5,col:4} };
 
     describe('isPawn()', () => {
         it('should return true for valid pawns', () => {
@@ -142,7 +143,7 @@ describe('models/Pawns', () => {
             assert.ok(!actual);
         });
 
-        it('should return false if no pawns at all', () => {
+        it('should return false if there are no pawns at all', () => {
             const actual = Pawns.areTherePawnsOnTheSameField([]);
             assert.ok(!actual);
         });
@@ -169,30 +170,22 @@ describe('models/Pawns', () => {
         });
     });
 
-    // TODO
-    describe('getNumOfPawnsPerPlayer()', () => {});
+    it('getNumOfPawnsPerPlayer()', () => {
+        it('should return correct number of pawns per player', () => {
+            const actual1 = Pawns.getNumOfPawnsPerPlayer(PAWNS);
+            const expected1 = {0:1, 1:1, 2:1, 3:0};
 
-    // describe('getPawnAtPosition()', () => {
-    //     it('should return the pawn that is at the given position', () => {
-    //         const actual1 = Pawns.getPawnAtPosition(PAWN_1.position, PAWNS);
-    //         const actual2 = Pawns.getPawnAtPosition(PAWN_2.position, PAWNS);
-    //         const actual3 = Pawns.getPawnAtPosition(PAWN_3.position, PAWNS);
+            const actual2 = Pawns.getNumOfPawnsPerPlayer([PAWN_1,PAWN_1,PAWN_4,PAWN_1]);
+            const expected2 = {0:3, 1:0, 2:0, 3:1};
 
-    //         assert.deepStrictEqual(actual1, PAWN_1);
-    //         assert.deepStrictEqual(actual2, PAWN_2);
-    //         assert.deepStrictEqual(actual3, PAWN_3);
-    //     });
+            const actual3 = Pawns.getNumOfPawnsPerPlayer([]);
+            const expected3 = {0:0, 1:0, 2:0, 3:0};
 
-    //     it('should return null for a position where no pawn is at', () => {
-    //         const actual = Pawns.getPawnAtPosition(PAWN_4.position, PAWNS);
-    //         assert.strictEqual(actual, null);
-    //     });
-
-    //     it('should always return null if an empty array is passed', () => {
-    //         const actual = Pawns.getPawnAtPosition(PAWN_1.position, []);
-    //         assert.strictEqual(actual, null);
-    //     });
-    // });
+            assert.deepStrictEqual(actual1, expected1);
+            assert.deepStrictEqual(actual2, expected2);
+            assert.deepStrictEqual(actual3, expected3);
+        });
+    });
 
     describe('getIndexOfPawn()', () => {
         it('should return the index of the pawn in the array of pawns', () => {
@@ -238,8 +231,28 @@ describe('models/Pawns', () => {
         });
     });
 
-    // TODO
-    describe('getIndexOfPawnInDeadlock()', () => {});
+    describe('getIndexOfPawnInDeadlock()', () => {
+        it('should return index of pawn, if field is 3x3 and center pawn is knight', () => {
+            const actual = Pawns.getIndexOfPawnInDeadlock(PAWNS, SMALLEST_LIMITS);
+            assert.strictEqual(actual, 1);
+        });
+
+        it('should return -1 if field is 3x3 but center pawn is not knight', () => {
+            const CENTER_PAWN = {player: PAWN_2.player, position: PAWN_2.position, roles:PAWN_1.roles}
+            const PAWNS = [PAWN_1, CENTER_PAWN, PAWN_3];
+
+            const actual = Pawns.getIndexOfPawnInDeadlock(PAWNS, SMALLEST_LIMITS);
+            assert.strictEqual(actual, -1);
+        });
+
+        it('should return -1 if the field is bigger than 3x3', () => {
+            const actual1 = Pawns.getIndexOfPawnInDeadlock(PAWNS, START_LIMITS);
+            const actual2 = Pawns.getIndexOfPawnInDeadlock(PAWNS, SMALL_LIMITS);
+
+            assert.strictEqual(actual1, -1);
+            assert.strictEqual(actual2, -1);
+        });
+    });
 
     describe('getNextMoves()', () => {
         const KNIGHT = { player:0, position:{row:3,col:3}, roles:{0:2, 1:3, 2:0, 3:1} };

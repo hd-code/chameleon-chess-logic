@@ -1,7 +1,5 @@
 import { flattenArray } from "./lib/hd-helper";
 
-import * as fs from "fs";
-
 import { EColor } from "./models/Color";
 import { IGameState, isGameOver, getNextPossibleGameStates } from "./models/GameState";
 import { getNextMoves, getIndexOfPawn} from "./models/Pawns";
@@ -63,10 +61,7 @@ function calcDeepScore(gs: IGameState, depth: number): TScore {
     const nextGSs = getNextPossibleGameStates(gs);
     const scores = nextGSs.map(gs => calcDeepScore(gs, depth - 1));
 
-    fs.writeFileSync('log.json', JSON.stringify(nextGSs));
-
     const bestIndex = getIndexOfHighestScore(scores, gs.whoseTurn);
-
     return scores[bestIndex];
 }
 
