@@ -1,4 +1,4 @@
-import { isKeyOfObject, isNumber } from "../lib/hd-helper";
+import { isKeyOfObject, isNumber } from "../../lib/hd-helper";
 
 // -----------------------------------------------------------------------------
 

@@ -107,6 +107,7 @@ describe('models/Limits', () => {
         });
     });
 
+    // TEST CASES!!!
     describe('calcLimits()', () => {
         const EDGE_PAWN_TR = [{
             player:  0,

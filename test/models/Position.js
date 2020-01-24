@@ -48,7 +48,7 @@ describe('models/Position', () => {
         });
     });
     describe('isPositionInPositions()', () => {
-        const ARRAY_WITH_POS = [ {row: 1,col:1}, {row: 1,col:2}, {row: 1,col:3} ];
+        const ARRAY_WITH_POS = [ {row: 1,col:1}, {row: 1,col:2}, TEST_POS ];
         const ARRAY_WITHOUT  = [ {row: 2,col:1}, {row: 2,col:2}, {row: 2,col:3} ];
 
         it('should return true if the position is also in the array', () => {

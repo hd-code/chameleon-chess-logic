@@ -1,13 +1,15 @@
 const assert = require('assert');
 const Roles = require('../../build/models/Roles.js');
 
+const TestData = require('../test-data');
+
 // -----------------------------------------------------------------------------
 
 describe('models/Roles', () => {
-    const ROLES_KNIGHT_RED    = {0:0, 1:1, 2:2, 3:3};
-    const ROLES_KNIGHT_GREEN  = {0:3, 1:0, 2:1, 3:2};
-    const ROLES_KNIGHT_YELLOW = {0:2, 1:3, 2:0, 3:1};
-    const ROLES_KNIGHT_BLUE   = {0:1, 1:2, 2:3, 3:0};
+    const ROLES_KNIGHT_RED    = TestData.testMovesOfRoles.gameState.pawns[0].roles;
+    const ROLES_KNIGHT_GREEN  = TestData.testMovesOfRoles.gameState.pawns[1].roles;
+    const ROLES_KNIGHT_YELLOW = TestData.testMovesOfRoles.gameState.pawns[2].roles;
+    const ROLES_KNIGHT_BLUE   = TestData.testMovesOfRoles.gameState.pawns[3].roles;
 
     describe('isRoles()', () => {
         it('should return true for valid roles', () => {

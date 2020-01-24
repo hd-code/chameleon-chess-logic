@@ -3,7 +3,7 @@ import * as Limits from "./Limits";
 import * as Pawns from "./Pawns";
 import { IPosition, isPositionInPositions } from "./Position";
 
-import { isKeyOfObject, isArray, deepClone, flattenArray } from "../lib/hd-helper";
+import { isKeyOfObject, isArray, deepClone, flattenArray } from "../../lib/hd-helper";
 
 // -----------------------------------------------------------------------------
 

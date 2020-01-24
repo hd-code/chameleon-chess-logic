@@ -1,7 +1,7 @@
 const assert = require('assert');
 const Board = require('../../build/models/Board.js');
 
-const { isArray } = require('../../build/lib/hd-helper.js');
+const { isArray } = require('../../lib/hd-helper.js');
 const Color = require('../../build/models/Color.js');
 
 // -----------------------------------------------------------------------------

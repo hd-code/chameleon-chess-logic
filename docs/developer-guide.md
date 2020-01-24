@@ -16,10 +16,10 @@ In the root directory of this project you find the following files and directori
 
 - `src/` holds all the actual source code of this project in TypeScript. 
 - `src/main.ts` is the main file of this library. It holds all the public data types and functions. This is the entry point for the public API. Only what is exported here, will be visible to the users of this library.
-- `src/lib/` contains auxiliary libraries and helper functions.
 - `src/models/` contains all the models (data structures + functions with application logic) of this project. The core functionalities are located here.
 - `test/` has the same structure as `src/`. Because for every file in `src/` there is a unit test script to be found in this directory.
 - `test/test-data.js` holds a collection of several testing scenarios that the API has to be checked against. All unit tests use the scenarios in this file.
+- `lib/` contains auxiliary libraries and helper functions.
 - `docs/` contains all kinds of documentation files, like this guide. You will also find a description of the game and the basic rules. There is also a documentation on the public API (all available data types and functions for the users of this library).
 - `build/` is automatically generated during the build process. It contains the transpiled JavaScript files from `src/` plus a TypeScript declaration file. This also is the only directory exported in the final package. 
 - `.gitignore` should be self explaining.
@@ -61,8 +61,9 @@ This library should be a functional programm. So, functions are **not allowed** 
 
 Side-effects include:
 - reading/writing to files or databases
-- altering input parameters or global variables
+- reading/altering global variables
 - producing any kind of screen output
+- altering input parameters
 
 **Your functions should not have any of these side-effects.** Excessively use the return value of your functions.
 
@@ -80,7 +81,7 @@ End lines with `;`.
 
 Try to keep functions shorter than 20 lines. Abide by the 'Single Responsibility Principle'.
 
-Prefix types with a capital letter of their type (`I` for interfaces, `E` for enums, `T` for types, etc.).
+Prefix user-specified types with a capital letter of their kind (`I` for interfaces, `E` for enums, `T` for types, etc.).
 
 Structure your source code files:
 

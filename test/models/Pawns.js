@@ -1,94 +1,67 @@
 const assert = require('assert');
 const Pawns = require('../../build/models/Pawns.js');
 
-const Limits = require('../../build/models/Limits.js');
-const { isPosition } = require('../../build/models/Position.js');
+const { isArray } = require('../../lib/hd-helper.js');
 
-const { isArray } = require('../../build/lib/hd-helper.js');
+const TestData = require('../test-data');
 
 // -----------------------------------------------------------------------------
 
 describe('models/Pawns', () => {
-    const PAWN_1 = {
-        player:  0,
-        roles:   {0:0, 1:1, 2:2, 3:3},
-        position:{row:0, col:0}  // is Rook
-    };
-    const PAWN_2 = {
-        player:  1,
-        roles:   {0:1, 1:2, 2:3, 3:0},
-        position:{row:4, col:3} // is Knight
-    };
-    const PAWN_3 = {
-        player:  2,
-        roles:   {0:2, 1:3, 2:0, 3:1},
-        position:{row:5, col:6} // is Bishop
-    };
-    const PAWN_4 = {
-        player:  3,
-        roles:   {0:3, 1:0, 2:1, 3:2},
-        position:{row:4, col:2} // is Queen
-    };
-    const PAWNS = [PAWN_1, PAWN_2, PAWN_3];
+    const TEST_PAWNS = TestData.testMovesOfRoles.gameState.pawns;
+    const PAWN1 = TEST_PAWNS[0];
+    const PAWN2 = TEST_PAWNS[1]; // Knight
+    const PAWN3 = TEST_PAWNS[2];
+    const PAWN4 = TEST_PAWNS[3];
 
-    const START_LIMITS = Limits.getStartingLimits();
+    const START_LIMITS = TestData.testMovesOfRoles.gameState.limits;
     const SMALL_LIMITS = { lower:START_LIMITS.lower, upper:{row:3,col:3} };
-    const SMALLEST_LIMITS = { lower:{row:3,col:2}, upper:{row:5,col:4} };
 
     describe('isPawn()', () => {
         it('should return true for valid pawns', () => {
-            assert.ok(Pawns.isPawn(PAWN_1));
-            assert.ok(Pawns.isPawn(PAWN_2));
-            assert.ok(Pawns.isPawn(PAWN_3));
-            assert.ok(Pawns.isPawn(PAWN_4));
+            TEST_PAWNS.forEach(p => assert.ok(Pawns.isPawn(p)));
         });
 
         it('should return false for non-existing player', () => {
-            const PAWN_INVALID_PLAYER_1 = {player: 5, position:PAWN_1.position, roles:PAWN_1.roles};
-            const PAWN_INVALID_PLAYER_2 = {player:-1, position:PAWN_1.position, roles:PAWN_1.roles};
-            const PAWN_NO_PLAYER = {position:PAWN_1.position, roles:PAWN_1.roles};
+            const PAWN_NO_PLAYER = {position:PAWN1.position, roles:PAWN1.roles};
 
+            const PAWN_INVALID_PLAYER_1 = {player: 5, ...PAWN_NO_PLAYER};
+            const PAWN_INVALID_PLAYER_2 = {player:-1, ...PAWN_NO_PLAYER};
+
+            assert.ok(!Pawns.isPawn(PAWN_NO_PLAYER));
             assert.ok(!Pawns.isPawn(PAWN_INVALID_PLAYER_1));
             assert.ok(!Pawns.isPawn(PAWN_INVALID_PLAYER_2));
-            assert.ok(!Pawns.isPawn(PAWN_NO_PLAYER));
         });
 
         it('should return false for invalid positions', () => {
-            const PAWN_INVALID_POSITION_1 = {player:PAWN_1.player, position:{},      roles:PAWN_1.roles};
-            const PAWN_INVALID_POSITION_2 = {player:PAWN_1.player, position:{row:3}, roles:PAWN_1.roles};
-            const PAWN_NO_POSITION = {player:PAWN_1.player, roles:PAWN_1.roles};
+            const PAWN_NO_POSITION = {player:PAWN1.player, roles:PAWN1.roles};
 
+            const PAWN_INVALID_POSITION_1 = {position:{}, ...PAWN_NO_POSITION};
+            const PAWN_INVALID_POSITION_2 = {position:{row:3},  ...PAWN_NO_POSITION};
+
+            assert.ok(!Pawns.isPawn(PAWN_NO_POSITION));
             assert.ok(!Pawns.isPawn(PAWN_INVALID_POSITION_1));
             assert.ok(!Pawns.isPawn(PAWN_INVALID_POSITION_2));
-            assert.ok(!Pawns.isPawn(PAWN_NO_POSITION));
         });
 
         it('should return false for invalid roles', () => {
-            const PAWN_INVALID_ROLES_1 = {
-                player: PAWN_1.player, position: PAWN_1.position,
-                roles:  PAWN_1.position
-            };
-            const PAWN_INVALID_ROLES_2 = {
-                player: PAWN_1.player, position: PAWN_1.position,
-                roles:  PAWN_1.player
-            };
-            const PAWN_NO_ROLES = {
-                player: PAWN_1.player, position: PAWN_1.position,
-                roles:   {0:0, 1:2, 2:1, 3:3}
-            };
+            const PAWN_NO_ROLES = { player: PAWN1.player, position: PAWN1.position };
 
+            const PAWN_INVALID_ROLES_1 = {roles: PAWN1.position, ...PAWN_NO_ROLES};
+            const PAWN_INVALID_ROLES_2 = {roles:  PAWN1.player,  ...PAWN_NO_ROLES};
+
+            assert.ok(!Pawns.isPawn(PAWN_NO_ROLES));
             assert.ok(!Pawns.isPawn(PAWN_INVALID_ROLES_1));
             assert.ok(!Pawns.isPawn(PAWN_INVALID_ROLES_2));
-            assert.ok(!Pawns.isPawn(PAWN_NO_ROLES));
         });
 
         it('should return false invalid role combinations', () => {
             const PAWN_SAME_ROLE = {
-                player: PAWN_1.player, position: PAWN_1.position,
+                player: PAWN1.player, position: PAWN1.position,
                 roles:   {0:0, 1:0, 2:0, 3:0}
             };
             const PAWN_WRONG_ROLE_ORDER = {
-                player: PAWN_1.player, position: PAWN_1.position,
+                player: PAWN1.player, position: PAWN1.position,
                 roles:   {0:0, 1:2, 2:1, 3:3}
             };
 
@@ -111,11 +84,11 @@ describe('models/Pawns', () => {
 
     describe('areAllPawnsWithinLimits()', () => {
         it('should return true if all pawns are within the limits', () => {
-            assert.ok(Pawns.areAllPawnsWithinLimits(PAWNS, START_LIMITS));
+            assert.ok(Pawns.areAllPawnsWithinLimits(TEST_PAWNS, START_LIMITS));
         });
 
         it('should return false if pawns are outside the limits', () => {
-            assert.ok(!Pawns.areAllPawnsWithinLimits(PAWNS, SMALL_LIMITS));
+            assert.ok(!Pawns.areAllPawnsWithinLimits(TEST_PAWNS, SMALL_LIMITS));
         });
 
         it('should return true if there are no pawns at all, because there is none outside the limits', () => {
@@ -125,9 +98,9 @@ describe('models/Pawns', () => {
 
     describe('areTherePawnsOnTheSameField()', () => {
         it('should return true if there is more than one pawn on the same field', () => {
-            const SAME_POS_2 = [...PAWNS, PAWN_1];
-            const SAME_POS_3 = [...PAWNS, PAWN_1, PAWN_1];
-            const SAME_POS_2_2 = [...PAWNS, PAWN_1, PAWN_2];
+            const SAME_POS_2 = [...TEST_PAWNS, PAWN1];
+            const SAME_POS_3 = [...TEST_PAWNS, PAWN1, PAWN1];
+            const SAME_POS_2_2 = [...TEST_PAWNS, PAWN1, PAWN2];
 
             const actual1 = Pawns.areTherePawnsOnTheSameField(SAME_POS_2);
             const actual2 = Pawns.areTherePawnsOnTheSameField(SAME_POS_3);
@@ -139,13 +112,11 @@ describe('models/Pawns', () => {
         });
 
         it('should return false if no pawns are on the same field', () => {
-            const actual = Pawns.areTherePawnsOnTheSameField(PAWNS);
-            assert.ok(!actual);
+            assert.ok(!Pawns.areTherePawnsOnTheSameField(TEST_PAWNS));
         });
 
         it('should return false if there are no pawns at all', () => {
-            const actual = Pawns.areTherePawnsOnTheSameField([]);
-            assert.ok(!actual);
+            assert.ok(!Pawns.areTherePawnsOnTheSameField([]));
         });
     });
 
@@ -172,11 +143,11 @@ describe('models/Pawns', () => {
 
     it('getNumOfPawnsPerPlayer()', () => {
         it('should return correct number of pawns per player', () => {
-            const actual1 = Pawns.getNumOfPawnsPerPlayer(PAWNS);
-            const expected1 = {0:1, 1:1, 2:1, 3:0};
+            const actual1 = Pawns.getNumOfPawnsPerPlayer(TestData.testMovesOfRoles.gameState.pawns);
+            const expected1 = TestData.testMovesOfRoles.numOfPawnsPerPlayer;
 
-            const actual2 = Pawns.getNumOfPawnsPerPlayer([PAWN_1,PAWN_1,PAWN_4,PAWN_1]);
-            const expected2 = {0:3, 1:0, 2:0, 3:1};
+            const actual2 = Pawns.getNumOfPawnsPerPlayer(TestData.testAdvancedMoves.gameState.pawns);
+            const expected2 = TestData.testAdvancedMoves.numOfPawnsPerPlayer;
 
             const actual3 = Pawns.getNumOfPawnsPerPlayer([]);
             const expected3 = {0:0, 1:0, 2:0, 3:0};
@@ -189,9 +160,9 @@ describe('models/Pawns', () => {
 
     describe('getIndexOfPawn()', () => {
         it('should return the index of the pawn in the array of pawns', () => {
-            const actual1 = Pawns.getIndexOfPawn(PAWN_1, PAWNS);
-            const actual2 = Pawns.getIndexOfPawn(PAWN_2, PAWNS);
-            const actual3 = Pawns.getIndexOfPawn(PAWN_3, PAWNS);
+            const actual1 = Pawns.getIndexOfPawn(PAWN1, TEST_PAWNS);
+            const actual2 = Pawns.getIndexOfPawn(PAWN2, TEST_PAWNS);
+            const actual3 = Pawns.getIndexOfPawn(PAWN3, TEST_PAWNS);
 
             assert.strictEqual(actual1, 0);
             assert.strictEqual(actual2, 1);
@@ -199,21 +170,22 @@ describe('models/Pawns', () => {
         });
 
         it('should return -1 for a pawn that is not in the array', () => {
-            const actual = Pawns.getIndexOfPawn(PAWN_4, PAWNS);
+            const testArray = [ PAWN1, PAWN2, PAWN3];
+            const actual = Pawns.getIndexOfPawn(PAWN4, testArray);
             assert.strictEqual(actual, -1);
         });
 
         it('should always return -1 if an empty array is passed', () => {
-            const actual = Pawns.getIndexOfPawn(PAWN_1, []);
+            const actual = Pawns.getIndexOfPawn(PAWN1, []);
             assert.strictEqual(actual, -1);
         });
     });
 
     describe('getIndexOfPawnAtPosition()', () => {
         it('should return the index of the pawn that is at the given position', () => {
-            const actual1 = Pawns.getIndexOfPawnAtPosition(PAWN_1.position, PAWNS);
-            const actual2 = Pawns.getIndexOfPawnAtPosition(PAWN_2.position, PAWNS);
-            const actual3 = Pawns.getIndexOfPawnAtPosition(PAWN_3.position, PAWNS);
+            const actual1 = Pawns.getIndexOfPawnAtPosition(PAWN1.position, TEST_PAWNS);
+            const actual2 = Pawns.getIndexOfPawnAtPosition(PAWN2.position, TEST_PAWNS);
+            const actual3 = Pawns.getIndexOfPawnAtPosition(PAWN3.position, TEST_PAWNS);
 
             assert.strictEqual(actual1, 0);
             assert.strictEqual(actual2, 1);
@@ -221,33 +193,44 @@ describe('models/Pawns', () => {
         });
 
         it('should return -1 for a position where no pawn is at', () => {
-            const actual = Pawns.getIndexOfPawnAtPosition(PAWN_4.position, PAWNS);
+            const testArray = [ PAWN1, PAWN2, PAWN3 ];
+            const actual = Pawns.getIndexOfPawnAtPosition(PAWN4.position, testArray);
             assert.strictEqual(actual, -1);
         });
 
         it('should always return -1 if an empty array is passed', () => {
-            const actual = Pawns.getIndexOfPawnAtPosition(PAWN_1.position, []);
+            const actual = Pawns.getIndexOfPawnAtPosition(PAWN1.position, []);
             assert.strictEqual(actual, -1);
         });
     });
 
     describe('getIndexOfPawnInDeadlock()', () => {
         it('should return index of pawn, if field is 3x3 and center pawn is knight', () => {
-            const actual = Pawns.getIndexOfPawnInDeadlock(PAWNS, SMALLEST_LIMITS);
+            const LIMITS = {
+                lower:{ row: PAWN2.position.row-1, col: PAWN2.position.col-1 },
+                upper:{ row: PAWN2.position.row+1, col: PAWN2.position.col+1 },
+            }
+
+            const actual = Pawns.getIndexOfPawnInDeadlock(TEST_PAWNS, LIMITS);
             assert.strictEqual(actual, 1);
         });
 
         it('should return -1 if field is 3x3 but center pawn is not knight', () => {
-            const CENTER_PAWN = {player: PAWN_2.player, position: PAWN_2.position, roles:PAWN_1.roles}
-            const PAWNS = [PAWN_1, CENTER_PAWN, PAWN_3];
+            const LIMITS = {
+                lower:{ row: PAWN1.position.row-1, col: PAWN1.position.col-1 },
+                upper:{ row: PAWN1.position.row+1, col: PAWN1.position.col+1 },
+            }
 
-            const actual = Pawns.getIndexOfPawnInDeadlock(PAWNS, SMALLEST_LIMITS);
+            const actual = Pawns.getIndexOfPawnInDeadlock(TEST_PAWNS, LIMITS);
             assert.strictEqual(actual, -1);
         });
 
         it('should return -1 if the field is bigger than 3x3', () => {
-            const actual1 = Pawns.getIndexOfPawnInDeadlock(PAWNS, START_LIMITS);
-            const actual2 = Pawns.getIndexOfPawnInDeadlock(PAWNS, SMALL_LIMITS);
+            const actual1 = Pawns.getIndexOfPawnInDeadlock(TEST_PAWNS, START_LIMITS);
+            const actual2 = Pawns.getIndexOfPawnInDeadlock(
+                TestData.testSpecialCase.gameState.pawns,
+                TestData.testSpecialCase.gameState.limits
+            );
 
             assert.strictEqual(actual1, -1);
             assert.strictEqual(actual2, -1);
@@ -255,119 +238,26 @@ describe('models/Pawns', () => {
     });
 
     describe('getNextMoves()', () => {
-        const KNIGHT = { player:0, position:{row:3,col:3}, roles:{0:2, 1:3, 2:0, 3:1} };
-        const BISHOP = { player:0, position:{row:3,col:3}, roles:{0:0, 1:1, 2:2, 3:3} };
-        const ROOK   = { player:0, position:{row:3,col:3}, roles:{0:1, 1:2, 2:3, 3:0} };
-        const QUEEN  = { player:0, position:{row:3,col:3}, roles:{0:3, 1:0, 2:1, 3:2} };
+        const TestCase = TestData.testMovesOfRoles;
 
-        describe('One pawn at (3,3) on a full board (8,8)', () => {
-            it('should return 8 positions for a KNIGHT', () => {
-                const moves = Pawns.getNextMoves(0, [KNIGHT], START_LIMITS);
-                assert.strictEqual(moves.length, 8);
-                assert.ok(isArray(moves, isPosition));
-            });
-
-            it('should return 13 positions for a BISHOP', () => {
-                const moves = Pawns.getNextMoves(0, [BISHOP], START_LIMITS);
-                assert.strictEqual(moves.length, 13);
-                assert.ok(isArray(moves, isPosition));
-            });
-
-            it('should return 14 positions for a ROOK', () => {
-                const moves = Pawns.getNextMoves(0, [ROOK], START_LIMITS);
-                assert.strictEqual(moves.length, 14);
-                assert.ok(isArray(moves, isPosition));
-            });
-
-            it('should return 27 positions for a QUEEN', () => {
-                const moves = Pawns.getNextMoves(0, [QUEEN], START_LIMITS);
-                assert.strictEqual(moves.length, 27);
-                assert.ok(isArray(moves, isPosition));
-            });
+        describe('should return correct moves for knight', () => {
+            const moves = Pawns.getNextMoves(TestCase.pawnIKnight, TestCase.gameState.pawns, TestCase.gameState.limits);
+            assert.ok(TestData.isSameMoves(moves, TestCase.validKnightMoves));
         });
 
-        describe('One pawn at (3,3) on a small board (0,0 3,3)', () => {
-            it('should return 2 positions for a KNIGHT', () => {
-                const moves = Pawns.getNextMoves(0, [KNIGHT], SMALL_LIMITS);
-                assert.strictEqual(moves.length, 2);
-                assert.ok(isArray(moves, isPosition));
-            });
-
-            it('should return 3 positions for a BISHOP', () => {
-                const moves = Pawns.getNextMoves(0, [BISHOP], SMALL_LIMITS);
-                assert.strictEqual(moves.length, 3);
-                assert.ok(isArray(moves, isPosition));
-            });
-
-            it('should return 6 positions for a ROOK', () => {
-                const moves = Pawns.getNextMoves(0, [ROOK], SMALL_LIMITS);
-                assert.strictEqual(moves.length, 6);
-                assert.ok(isArray(moves, isPosition));
-            });
-
-            it('should return 9 positions for a QUEEN', () => {
-                const moves = Pawns.getNextMoves(0, [QUEEN], SMALL_LIMITS);
-                assert.strictEqual(moves.length, 9);
-                assert.ok(isArray(moves, isPosition));
-            });
+        describe('should return correct moves for bishop', () => {
+            const moves = Pawns.getNextMoves(TestCase.pawnIBishop, TestCase.gameState.pawns, TestCase.gameState.limits);
+            assert.ok(TestData.isSameMoves(moves, TestCase.validBishopMoves));
         });
 
-        describe('Two pawns at (3,3) and the other blocking the way on a small board (0,0 3,3)', () => {
-            it('should return 2 positions for a KNIGHT when other pawn is opponent', () => {
-                const OTHER_PAWN = { player:1, position:{row:1,col:2}, roles:PAWN_1.roles };
-                const moves = Pawns.getNextMoves(0, [KNIGHT, OTHER_PAWN], SMALL_LIMITS);
-                assert.strictEqual(moves.length, 2);
-                assert.ok(isArray(moves, isPosition));
-            });
+        describe('should return correct moves for rook', () => {
+            const moves = Pawns.getNextMoves(TestCase.pawnIRook, TestCase.gameState.pawns, TestCase.gameState.limits);
+            assert.ok(TestData.isSameMoves(moves, TestCase.validRookMoves));
+        });
 
-            it('should return 1 positions for a KNIGHT when other pawn is from same player', () => {
-                const OTHER_PAWN = { player:0, position:{row:1,col:2}, roles:PAWN_1.roles };
-                const moves = Pawns.getNextMoves(0, [KNIGHT, OTHER_PAWN], SMALL_LIMITS);
-                assert.strictEqual(moves.length, 1);
-                assert.ok(isArray(moves, isPosition));
-            });
-
-            it('should return 2 positions for a BISHOP when other pawn is opponent', () => {
-                const OTHER_PAWN = { player:1, position:{row:1,col:1}, roles:PAWN_1.roles };
-                const moves = Pawns.getNextMoves(0, [BISHOP, OTHER_PAWN], SMALL_LIMITS);
-                assert.strictEqual(moves.length, 2);
-                assert.ok(isArray(moves, isPosition));
-            });
-
-            it('should return 1 positions for a BISHOP when other pawn is from same player', () => {
-                const OTHER_PAWN = { player:0, position:{row:1,col:1}, roles:PAWN_1.roles };
-                const moves = Pawns.getNextMoves(0, [BISHOP, OTHER_PAWN], SMALL_LIMITS);
-                assert.strictEqual(moves.length, 1);
-                assert.ok(isArray(moves, isPosition));
-            });
-
-            it('should return 5 positions for a ROOK when other pawn is opponent', () => {
-                const OTHER_PAWN = { player:1, position:{row:3,col:1}, roles:PAWN_1.roles };
-                const moves = Pawns.getNextMoves(0, [ROOK, OTHER_PAWN], SMALL_LIMITS);
-                assert.strictEqual(moves.length, 5);
-                assert.ok(isArray(moves, isPosition));
-            });
-
-            it('should return 4 positions for a ROOK when other pawn is from same player', () => {
-                const OTHER_PAWN = { player:0, position:{row:3,col:1}, roles:PAWN_1.roles };
-                const moves = Pawns.getNextMoves(0, [ROOK, OTHER_PAWN], SMALL_LIMITS);
-                assert.strictEqual(moves.length, 4);
-                assert.ok(isArray(moves, isPosition));
-            });
-
-            it('should return 8 positions for a QUEEN when other pawn is opponent', () => {
-                const OTHER_PAWN = { player:1, position:{row:1,col:3}, roles:PAWN_1.roles };
-                const moves = Pawns.getNextMoves(0, [QUEEN, OTHER_PAWN], SMALL_LIMITS);
-                assert.strictEqual(moves.length, 8);
-                assert.ok(isArray(moves, isPosition));
-            });
-
-            it('should return 7 positions for a QUEEN when other pawn is from same player', () => {
-                const OTHER_PAWN = { player:0, position:{row:1,col:3}, roles:PAWN_1.roles };
-                const moves = Pawns.getNextMoves(0, [QUEEN, OTHER_PAWN], SMALL_LIMITS);
-                assert.strictEqual(moves.length, 7);
-                assert.ok(isArray(moves, isPosition));
-            });
+        describe('should return correct moves for queen', () => {
+            const moves = Pawns.getNextMoves(TestCase.pawnIQueen, TestCase.gameState.pawns, TestCase.gameState.limits);
+            assert.ok(TestData.isSameMoves(moves, TestCase.validQueenMoves));
         });
     });
 });
