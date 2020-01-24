@@ -132,16 +132,16 @@ public.testMovesOfRoles = {
     ],
 
     invalidMovesForAll: [
-        {row:1, col:4},
-        {row:6, col:1},
-        {row:4, col:7},
-        {row:0, col:0},
-        {row:7, col:7},
+        {row:1, col:4}, // unreachable for blue pawns
+        {row:6, col:1}, // unreachable for blue pawns
+        {row:4, col:7}, // unreachable for blue pawns
+        {row:0, col:0}, // unreachable for blue pawns
+        {row:7, col:7}, // unreachable for blue pawns
 
-        {row:0, col:8},
-        {row:-3, col:2},
+        {row:0, col:8}, // out of limits
+        {row:-3, col:2}, // out of limits
 
-        {row:0.5, col:3.6},
+        {row:0.5, col:3.6}, // invalid numbers
     ]
 };
 
@@ -162,92 +162,117 @@ public.testShrinkingOfBoard = {
 
     shrinkColsRight: {
         move: { pawnI: 1, destination:{row:0, col:4} },
-        newLimits: { lower:{row:0,col:0}, upper:{row:7,col:4} }
+        gameState: {
+            limits: { lower:{row:0,col:0}, upper:{row:7,col:4} },
+            pawns: [
+                { player: 3, roles:{ 0:2, 1:3, 2:0, 3:1 }, position: { row:6, col:0 } }, // ROOK
+                { player: 1, roles:{ 0:3, 1:0, 2:1, 3:2 }, position: { row:0, col:4 } }, // QUEEN
+                { player: 1, roles:{ 0:1, 1:2, 2:3, 3:0 }, position: { row:7, col:0 } }, // QUEEN
+            ],
+            whoseTurn: 3
+        },
     },
     shrinkColsRightToSmallest: {
         move: { pawnI: 1, destination:{row:0, col:0} },
-        newLimits: { lower:{row:0,col:0}, upper:{row:7,col:2} }
+        gameState: {
+            limits: { lower:{row:0,col:0}, upper:{row:7,col:2} },
+            pawns: [
+                { player: 3, roles:{ 0:2, 1:3, 2:0, 3:1 }, position: { row:6, col:0 } }, // ROOK
+                { player: 1, roles:{ 0:3, 1:0, 2:1, 3:2 }, position: { row:0, col:0 } }, // QUEEN
+                { player: 1, roles:{ 0:1, 1:2, 2:3, 3:0 }, position: { row:7, col:0 } }, // QUEEN
+            ],
+            whoseTurn: 3
+        },
     },
 
     shrinkRowsTop: {
         move: { pawnI: 1, destination:{row:3, col:7} },
-        newLimits: { lower:{row:3,col:0}, upper:{row:7,col:7} }
+        gameState: {
+            limits: { lower:{row:3,col:0}, upper:{row:7,col:7} },
+            pawns: [
+                { player: 3, roles:{ 0:2, 1:3, 2:0, 3:1 }, position: { row:6, col:0 } }, // ROOK
+                { player: 1, roles:{ 0:3, 1:0, 2:1, 3:2 }, position: { row:3, col:7 } }, // QUEEN
+                { player: 1, roles:{ 0:1, 1:2, 2:3, 3:0 }, position: { row:7, col:0 } }, // QUEEN
+            ],
+            whoseTurn: 3
+        },
     },
     shrinkRowsTopToSmallest: {
         move: { pawnI: 1, destination:{row:7, col:7} },
-        newLimits: { lower:{row:5,col:0}, upper:{row:7,col:7} }
+        gameState: {
+            limits: { lower:{row:5,col:0}, upper:{row:7,col:7} },
+            pawns: [
+                { player: 3, roles:{ 0:2, 1:3, 2:0, 3:1 }, position: { row:6, col:0 } }, // ROOK
+                { player: 1, roles:{ 0:3, 1:0, 2:1, 3:2 }, position: { row:7, col:7 } }, // QUEEN
+                { player: 1, roles:{ 0:1, 1:2, 2:3, 3:0 }, position: { row:7, col:0 } }, // QUEEN
+            ],
+            whoseTurn: 3
+        },
     },
 
     shrinkRowsAndColsTopRight: {
         move: { pawnI: 1, destination:{row:3, col:4} },
-        newLimits: { lower:{row:3,col:0}, upper:{row:7,col:4} }
+        gameState: {
+            limits: { lower:{row:3,col:0}, upper:{row:7,col:4} },
+            pawns: [
+                { player: 3, roles:{ 0:2, 1:3, 2:0, 3:1 }, position: { row:6, col:0 } }, // ROOK
+                { player: 1, roles:{ 0:3, 1:0, 2:1, 3:2 }, position: { row:3, col:4 } }, // QUEEN
+                { player: 1, roles:{ 0:1, 1:2, 2:3, 3:0 }, position: { row:7, col:0 } }, // QUEEN
+            ],
+            whoseTurn: 3
+        },
     },
     shrinkRowsAndColsTopRightToSmallest: {
         move: { pawnI: 1, destination:{row:6, col:1} },
-        newLimits: { lower:{row:5,col:0}, upper:{row:7,col:2} }
+        gameState: {
+            limits: { lower:{row:5,col:0}, upper:{row:7,col:2} },
+            pawns: [
+                { player: 3, roles:{ 0:2, 1:3, 2:0, 3:1 }, position: { row:6, col:0 } }, // ROOK
+                { player: 1, roles:{ 0:3, 1:0, 2:1, 3:2 }, position: { row:6, col:1 } }, // QUEEN
+                { player: 1, roles:{ 0:1, 1:2, 2:3, 3:0 }, position: { row:7, col:0 } }, // QUEEN
+            ],
+            whoseTurn: 3
+        },
     },
 
     noShrinking: {
         move: { pawnI: 2, destination:{row:7,col:7} },
-        newLimits: START_LIMITS
+        gameState: {
+            limits: START_LIMITS,
+            pawns: [
+                { player: 3, roles:{ 0:2, 1:3, 2:0, 3:1 }, position: { row:6, col:0 } }, // ROOK
+                { player: 1, roles:{ 0:3, 1:0, 2:1, 3:2 }, position: { row:0, col:7 } }, // QUEEN
+                { player: 1, roles:{ 0:1, 1:2, 2:3, 3:0 }, position: { row:7, col:7 } }, // QUEEN
+            ],
+            whoseTurn: 3
+        },
     },
 
     shrinkingOtherPawnsSetLimits: {
         move: { pawnI: 2, destination:{row:4, col:3} },
-        newLimits: { lower:{row:0,col:0}, upper:{row:6,col:7} }
+        gameState: {
+            limits: { lower:{row:0,col:0}, upper:{row:6,col:7} },
+            pawns: [
+                { player: 3, roles:{ 0:2, 1:3, 2:0, 3:1 }, position: { row:6, col:0 } }, // ROOK
+                { player: 1, roles:{ 0:3, 1:0, 2:1, 3:2 }, position: { row:0, col:7 } }, // QUEEN
+                { player: 1, roles:{ 0:1, 1:2, 2:3, 3:0 }, position: { row:4, col:3 } }, // QUEEN
+            ],
+            whoseTurn: 3
+        },
     },
 
     shrinkingBeatingWinning: {
         move: { pawnI: 2, destination:{row:6, col:0} },
-        newLimits: { lower:{row:0,col:0}, upper:{row:6,col:7} }
+        gameState: {
+            limits: { lower:{row:0,col:0}, upper:{row:6,col:7} },
+            pawns: [
+                { player: 1, roles:{ 0:3, 1:0, 2:1, 3:2 }, position: { row:0, col:7 } }, // QUEEN
+                { player: 1, roles:{ 0:1, 1:2, 2:3, 3:0 }, position: { row:6, col:0 } }, // QUEEN
+            ],
+            whoseTurn: 1
+        },
     },
 }
-
-// ----------------------------- Test Special Case -----------------------------
-
-public.testSpecialCase = {
-    gameState: {
-        limits: { lower:{row:2,col:0}, upper:{row:4,col:5} },
-        pawns: [
-            { player: 0, roles:{ 0:3, 1:0, 2:1, 3:2 }, position: { row:3, col:4 } }, // Knight !
-            { player: 0, roles:{ 0:2, 1:3, 2:0, 3:1 }, position: { row:3, col:4 } }, // Queen
-            { player: 2, roles:{ 0:1, 1:2, 2:3, 3:0 }, position: { row:2, col:5 } }, // Knight
-            { player: 2, roles:{ 0:3, 1:0, 2:1, 3:2 }, position: { row:3, col:0 } }, // Queen, becomes Knight !
-        ],
-        whoseTurn: 2
-    },
-    numOfPawnsPerPlayer: { 0:2, 1:0, 2:2, 3:0 },
-    arePlayersAlive: { 0:true, 1:false, 2:true, 3:false },
-
-    beatingAndBeingRemoved: {
-        move: { pawnI: 3, destination: { row:3, col:3 } },
-        numOfPawnsPerPlayer: { 0:1, 1:0, 2:1, 3:0 },
-        numOfPawns: 2,
-    },
-
-    creatingSmallestBoardRemoveTrappedPawn: {
-        move: { pawnI: 3, destination: { row:3, col:4 } },
-        numOfPawnsPerPlayer: { 0:1, 1:0, 2:2, 3:0 },
-        numOfPawns: 3,
-    }
-};
-
-public.testSpecialCaseWinning = {
-    gameState: {
-        limits: { lower:{row:4,col:2}, upper:{row:6,col:4} },
-        pawns: [
-            { player: 0, roles:{ 0:2, 1:3, 2:0, 3:1 }, position: { row:4, col:4 } }, // Bishop, becomes knight !
-            { player: 3, roles:{ 0:3, 1:0, 2:1, 3:2 }, position: { row:3, col:5 } }, // Queen
-        ],
-        whoseTurn: 0
-    },
-
-    beatingBeingTrappedButWinning: {
-        move: { pawnI: 0, destination:{row:3, col:5} },
-        numOfPawnsPerPlayer: { 0:1, 1:0, 2:0, 3:0 },
-        numOfPawns: 1,
-    }
-};
 
 // ---------------------------- Test advanced moves ----------------------------
 
@@ -267,29 +292,70 @@ public.testAdvancedMoves = {
 
     normalMove: {
         move: { pawnI: 0, destination: { row: 2, col: 3 } },
+        gameState: {
+            limits: { lower:{row:2,col:1}, upper:{row:6,col:5} },
+            pawns: [
+                {player: 0, roles:{ 0:3, 1:0, 2:1, 3:2}, position: { row:2, col: 3 } },
+                {player: 0, roles:{ 0:1, 1:2, 2:3, 3:0}, position: { row:6, col: 1 } },
+                {player: 2, roles:{ 0:0, 1:1, 2:2, 3:3}, position: { row:6, col: 3 } },
+                {player: 2, roles:{ 0:3, 1:0, 2:1, 3:2}, position: { row:6, col: 5 } },
+            ],
+            whoseTurn: 2
+        },
     },
 
     shrinking: {
         move: { pawnI: 0, destination: { row: 3, col: 1 } },
-        newLimits: { lower:{row:3,col:1}, upper:{row:6,col:5} }
+        gameState: {
+            limits: { lower:{row:3,col:1}, upper:{row:6,col:5} },
+            pawns: [
+                {player: 0, roles:{ 0:3, 1:0, 2:1, 3:2}, position: { row:3, col: 1 } },
+                {player: 0, roles:{ 0:1, 1:2, 2:3, 3:0}, position: { row:6, col: 1 } },
+                {player: 2, roles:{ 0:0, 1:1, 2:2, 3:3}, position: { row:6, col: 3 } },
+                {player: 2, roles:{ 0:3, 1:0, 2:1, 3:2}, position: { row:6, col: 5 } },
+            ],
+            whoseTurn: 2
+        },
     },
 
     shrinkingToSmallestRow: {
         move: { pawnI: 0, destination: { row: 5, col: 1 } },
-        newLimits: { lower:{row:4,col:1}, upper:{row:6,col:5} }
+        gameState: {
+            limits: { lower:{row:4,col:1}, upper:{row:6,col:5} },
+            pawns: [
+                {player: 0, roles:{ 0:3, 1:0, 2:1, 3:2}, position: { row:5, col: 1 } },
+                {player: 0, roles:{ 0:1, 1:2, 2:3, 3:0}, position: { row:6, col: 1 } },
+                {player: 2, roles:{ 0:0, 1:1, 2:2, 3:3}, position: { row:6, col: 3 } },
+                {player: 2, roles:{ 0:3, 1:0, 2:1, 3:2}, position: { row:6, col: 5 } },
+            ],
+            whoseTurn: 2
+        },
     },
 
     beating: {
         move: { pawnI: 1, destination: { row: 6, col: 3 } },
-        numOfPawnsPerPlayer: { 0:2, 1:0, 2:1, 3:0 },
-        numOfPawns: 3,
+        gameState: {
+            limits: { lower:{row:2,col:1}, upper:{row:6,col:5} },
+            pawns: [
+                {player: 0, roles:{ 0:3, 1:0, 2:1, 3:2}, position: { row:2, col: 1 } },
+                {player: 0, roles:{ 0:1, 1:2, 2:3, 3:0}, position: { row:6, col: 3 } },
+                {player: 2, roles:{ 0:3, 1:0, 2:1, 3:2}, position: { row:6, col: 5 } },
+            ],
+            whoseTurn: 2
+        },
     },
 
     beatingAndShrinking: {
         move: { pawnI: 0, destination: { row: 6, col: 5 } },
-        newLimits: { lower:{row:4,col:1}, upper:{row:6,col:5} },
-        numOfPawnsPerPlayer: { 0:2, 1:0, 2:1, 3:0 },
-        numOfPawns: 3,
+        gameState: {
+            limits: { lower:{row:4,col:1}, upper:{row:6,col:5} },
+            pawns: [
+                {player: 0, roles:{ 0:3, 1:0, 2:1, 3:2}, position: { row:6, col: 5 } },
+                {player: 0, roles:{ 0:1, 1:2, 2:3, 3:0}, position: { row:6, col: 1 } },
+                {player: 2, roles:{ 0:0, 1:1, 2:2, 3:3}, position: { row:6, col: 3 } },
+            ],
+            whoseTurn: 2
+        },
     },
 
     invalidMoves: [
@@ -304,6 +370,78 @@ public.testAdvancedMoves = {
         { pawnI: 4, destination: { row: 3, col: 3 } }, // pawn does not exist
         { pawnI: 5, destination: { row: 3, col: 3 } }, // pawn does not exist
     ],
+};
+
+// ----------------------------- Test Special Case -----------------------------
+
+public.testSpecialCase = {
+    gameState: {
+        limits: { lower:{row:2,col:0}, upper:{row:4,col:5} },
+        pawns: [
+            { player: 0, roles:{ 0:3, 1:0, 2:1, 3:2 }, position: { row:3, col:4 } }, // Knight !
+            { player: 0, roles:{ 0:2, 1:3, 2:0, 3:1 }, position: { row:4, col:3 } }, // Queen
+            { player: 2, roles:{ 0:1, 1:2, 2:3, 3:0 }, position: { row:2, col:5 } }, // Knight
+            { player: 2, roles:{ 0:3, 1:0, 2:1, 3:2 }, position: { row:3, col:0 } }, // Queen, becomes Knight !
+        ],
+        whoseTurn: 2
+    },
+    numOfPawnsPerPlayer: { 0:2, 1:0, 2:2, 3:0 },
+    arePlayersAlive: { 0:true, 1:false, 2:true, 3:false },
+
+    beatingAndBeingRemoved: {
+        move: { pawnI: 3, destination: { row:3, col:4 } },
+        numOfPawnsPerPlayer: { 0:1, 1:0, 2:1, 3:0 },
+        numOfPawns: 2,
+        gameState: {
+            limits: { lower:{row:2,col:3}, upper:{row:4,col:5} },
+            pawns: [
+                { player: 0, roles:{ 0:2, 1:3, 2:0, 3:1 }, position: { row:4, col:3 } }, // Queen
+                { player: 2, roles:{ 0:1, 1:2, 2:3, 3:0 }, position: { row:2, col:5 } }, // Knight
+            ],
+            whoseTurn: 0
+        },
+    },
+
+    creatingSmallestBoardRemoveTrappedPawn: {
+        move: { pawnI: 3, destination: { row:3, col:3 } },
+        numOfPawnsPerPlayer: { 0:1, 1:0, 2:2, 3:0 },
+        numOfPawns: 3,
+        gameState: {
+            limits: { lower:{row:2,col:3}, upper:{row:4,col:5} },
+            pawns: [
+                { player: 0, roles:{ 0:2, 1:3, 2:0, 3:1 }, position: { row:4, col:3 } }, // Queen
+                { player: 2, roles:{ 0:1, 1:2, 2:3, 3:0 }, position: { row:2, col:5 } }, // Knight
+                { player: 2, roles:{ 0:3, 1:0, 2:1, 3:2 }, position: { row:3, col:3 } }, // Queen, becomes Knight !
+            ],
+            whoseTurn: 0
+        },
+    }
+};
+
+public.testSpecialCaseWinning = {
+    gameState: {
+        limits: { lower:{row:2,col:4}, upper:{row:4,col:6} },
+        pawns: [
+            { player: 0, roles:{ 0:2, 1:3, 2:0, 3:1 }, position: { row:4, col:4 } }, // Bishop, becomes knight !
+            { player: 3, roles:{ 0:3, 1:0, 2:1, 3:2 }, position: { row:3, col:5 } }, // Queen
+        ],
+        whoseTurn: 0
+    },
+    numOfPawnsPerPlayer: { 0:1, 1:0, 2:0, 3:1 },
+    arePlayersAlive: { 0:true, 1:false, 2:false, 3:true },
+
+    beatingBeingTrappedButWinning: {
+        move: { pawnI: 0, destination:{row:3, col:5} },
+        numOfPawnsPerPlayer: { 0:1, 1:0, 2:0, 3:0 },
+        numOfPawns: 1,
+        gameState: {
+            limits: { lower:{row:2,col:4}, upper:{row:4,col:6} },
+            pawns: [
+                { player: 0, roles:{ 0:2, 1:3, 2:0, 3:1 }, position: { row:3, col:5 } },
+            ],
+            whoseTurn: 0
+        },
+    }
 };
 
 // ----------------------------- Helper Functions ------------------------------

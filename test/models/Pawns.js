@@ -1,7 +1,7 @@
 const assert = require('assert');
-const Pawns = require('../../build/models/Pawns.js');
+const Pawns = require('../../build/models/Pawns');
 
-const { isArray } = require('../../lib/hd-helper.js');
+const { isArray } = require('../../lib/hd-helper');
 
 const TestData = require('../test-data');
 

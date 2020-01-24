@@ -1,5 +1,5 @@
 const assert = require('assert');
-const Color = require('../../build/models/Color.js');
+const Color = require('../../build/models/Color');
 
 // -----------------------------------------------------------------------------
 

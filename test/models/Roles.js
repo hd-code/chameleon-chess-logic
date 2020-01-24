@@ -1,5 +1,5 @@
 const assert = require('assert');
-const Roles = require('../../build/models/Roles.js');
+const Roles = require('../../build/models/Roles');
 
 const TestData = require('../test-data');
 

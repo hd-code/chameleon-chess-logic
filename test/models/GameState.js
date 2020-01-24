@@ -1,8 +1,10 @@
 const assert = require('assert');
-const GameState = require('../../build/models/GameState.js');
+const GameState = require('../../build/models/GameState');
 
-const Color = require('../../build/models/Color.js');
-const Limits = require('../../build/models/Limits.js');
+const Color = require('../../build/models/Color');
+const Limits = require('../../build/models/Limits');
+
+const TestData = require('../test-data');
 
 // -----------------------------------------------------------------------------
 
@@ -18,29 +20,14 @@ describe('models/GameState', () => {
     const GS_2_RED_BLUE = GameState.createGameState(true, false, false, true);
     const GS_3_PLAYERS_NO_RED = GameState.createGameState(false, true, true, true);
 
-    const GS_ADV_STATE = {
-        limits: { lower:{row:2,col:1}, upper:{row:6,col:5} },
-        pawns: [
-            {player: 0, roles:{ 0:3, 1:0, 2:1, 3:2}, position: {row:2, col: 1} },
-            {player: 0, roles:{ 0:1, 1:2, 2:3, 3:0}, position: {row:6, col: 1} },
-            {player: 2, roles:{ 0:0, 1:1, 2:2, 3:3}, position: {row:6, col: 3} },
-            {player: 2, roles:{ 0:3, 1:0, 2:1, 3:2}, position: {row:6, col: 5} },
-        ],
-        whoseTurn: 0
-    };
-    const GS_ADV_STATE2 = {
-        limits: GS_ADV_STATE.limits,
-        pawns: GS_ADV_STATE.pawns,
-        whoseTurn: 2
-    };
-
-    // TODO
+    // One could make more test here, but tests are already done in main.js.
     describe('isGameState()', () => {
-        // TODO: check for other general game states
         it('should return true for valid game states', () => {
-            assert.ok(GameState.isGameState(GS_START_4_PLAYERS));
-            assert.ok(GameState.isGameState(GS_START_2_PLAYERS));
-            assert.ok(GameState.isGameState(GS_ADV_STATE));
+            assert.ok(GameState.isGameState(TestData.testAdvancedMoves.gameState));
+            assert.ok(GameState.isGameState(TestData.testMovesOfRoles.gameState));
+            assert.ok(GameState.isGameState(TestData.testShrinkingOfBoard.gameState));
+            assert.ok(GameState.isGameState(TestData.testSpecialCase.gameState));
+            assert.ok(GameState.isGameState(TestData.testSpecialCaseWinning.gameState));
         });
 
         it('should return false for wrong data types (obj,array,string,boolean,null,undefined)', () => {
@@ -57,29 +44,21 @@ describe('models/GameState', () => {
     });
 
     it('arePlayersAlive()', () => {
-        const CASES = [
-            {   actual: GameState.arePlayersAlive(GS_START_4_PLAYERS),
-                expected: { 0:true, 1:true, 2:true, 3:true } },
-            {   actual: GameState.arePlayersAlive(GS_START_2_PLAYERS),
-                expected: { 0:true, 1:false, 2:true, 3:false } },
-            {   actual: GameState.arePlayersAlive(GS_ADV_STATE),
-                expected: { 0:true, 1:false, 2:true, 3:false } },
-            {   actual: GameState.arePlayersAlive(GS_ONLY_RED),
-                expected: { 0:true, 1:false, 2:false, 3:false } },
-            {   actual: GameState.arePlayersAlive(GS_ONLY_GREEN),
-                expected: { 0:false, 1:true, 2:false, 3:false } },
-            {   actual: GameState.arePlayersAlive(GS_ONLY_YELLOW),
-                expected: { 0:false, 1:false, 2:true, 3:false } },
-            {   actual: GameState.arePlayersAlive(GS_ONLY_BLUE),
-                expected: { 0:false, 1:false, 2:false, 3:true } },
-            {   actual: GameState.arePlayersAlive(GS_2_RED_BLUE),
-                expected: { 0:true, 1:false, 2:false, 3:true } },
-            {   actual: GameState.arePlayersAlive(GS_3_PLAYERS_NO_RED),
-                expected: { 0:false, 1:true, 2:true, 3:true } },
+        const Cases = [
+            {   gs: TestData.testAdvancedMoves.gameState, 
+                expected: TestData.testAdvancedMoves.arePlayersAlive },
+            {   gs: TestData.testMovesOfRoles.gameState, 
+                expected: TestData.testMovesOfRoles.arePlayersAlive },
+            {   gs: TestData.testShrinkingOfBoard.gameState, 
+                expected: TestData.testShrinkingOfBoard.arePlayersAlive },
+            {   gs: TestData.testSpecialCase.gameState, 
+                expected: TestData.testSpecialCase.arePlayersAlive },
+            {   gs: TestData.testSpecialCaseWinning.gameState, 
+                expected: TestData.testSpecialCaseWinning.arePlayersAlive },
         ];
 
-        CASES.forEach(({actual,expected}) => {
-            assert.deepStrictEqual(actual, expected);
+        Cases.forEach(({gs,expected}) => {
+            assert.deepStrictEqual(GameState.arePlayersAlive(gs), expected);
         });
     });
 
@@ -92,11 +71,11 @@ describe('models/GameState', () => {
         });
 
         it('should return false if there pawns of more than one player left', () => {
-            assert.ok(!GameState.isGameOver(GS_START_4_PLAYERS));
-            assert.ok(!GameState.isGameOver(GS_START_2_PLAYERS));
-            assert.ok(!GameState.isGameOver(GS_ADV_STATE));
-            assert.ok(!GameState.isGameOver(GS_2_RED_BLUE));
-            assert.ok(!GameState.isGameOver(GS_3_PLAYERS_NO_RED));
+            assert.ok(!GameState.isGameOver(TestData.testAdvancedMoves.gameState));
+            assert.ok(!GameState.isGameOver(TestData.testMovesOfRoles.gameState));
+            assert.ok(!GameState.isGameOver(TestData.testShrinkingOfBoard.gameState));
+            assert.ok(!GameState.isGameOver(TestData.testSpecialCase.gameState));
+            assert.ok(!GameState.isGameOver(TestData.testSpecialCaseWinning.gameState));
         });
     });
 
@@ -147,110 +126,15 @@ describe('models/GameState', () => {
         });
     });
 
-    describe('isValidMove()', () => {
-        it('should return true for normal moves without shrinking', () => {
-            const actual = [
-                GameState.isValidMove(GS_ADV_STATE, 0, { row: 2, col: 3 }),
-                GameState.isValidMove(GS_ADV_STATE2, 2, { row: 4, col: 4 })
-            ];
-            actual.forEach(actual => assert.ok(actual));
-        });
+    it('getNextPossibleGameStates()', () => {
+        const GSs = GameState.getNextPossibleGameStates(TestData.testMovesOfRoles.gameState);
 
-        it('should return true for normal moves with shrinking', () => {
-            const actual = [
-                GameState.isValidMove(GS_ADV_STATE, 0, { row: 3, col: 1 }),
-                GameState.isValidMove(GS_ADV_STATE2, 3, { row: 6, col: 4 })
-            ];
-            actual.forEach(actual => assert.ok(actual));
-        });
+        const numOfMoves = 0
+            + TestData.testMovesOfRoles.validBishopMoves.length
+            + TestData.testMovesOfRoles.validKnightMoves.length
+            + TestData.testMovesOfRoles.validRookMoves.length
+            + TestData.testMovesOfRoles.validQueenMoves.length;
 
-        it('should return true for normal moves with shrinking to smallest field size', () => {
-            const actual = [
-                GameState.isValidMove(GS_ADV_STATE, 0, { row: 5, col: 1 }),
-                GameState.isValidMove(GS_ADV_STATE2, 3, { row: 6, col: 4 })
-            ];
-            actual.forEach(actual => assert.ok(actual));
-        });
-        
-        it('should return true for beating an opponents pawn without shrinking the board', () => {
-            assert.ok(GameState.isValidMove(GS_ADV_STATE, 1, { row: 6, col: 3 }));
-        });
-
-        it('should return true for beating an opponents pawn with shrinking the board', () => {
-            const actual = [
-                GameState.isValidMove(GS_ADV_STATE, 0, { row: 6, col: 5 }),
-                GameState.isValidMove(GS_ADV_STATE2, 3, { row: 2, col: 1 })
-            ];
-            actual.forEach(actual => assert.ok(actual));
-        });
-
-        it('should return false for trying to move to a position that is not reachable in the current role', () => {
-            const actual = [
-                GameState.isValidMove(GS_ADV_STATE, 0, { row: 3, col: 3 }),
-                GameState.isValidMove(GS_ADV_STATE, 1, { row: 3, col: 3 }),
-                GameState.isValidMove(GS_ADV_STATE2, 2, { row: 3, col: 3 }),
-                GameState.isValidMove(GS_ADV_STATE2, 3, { row: 3, col: 3 })
-            ];
-            actual.forEach(actual => assert.ok(!actual));
-        });
-
-        it('should return false for trying to beat ones own pawn', () => {
-            const actual = [
-                GameState.isValidMove(GS_ADV_STATE, 0, { row: 6, col: 1 }),
-                GameState.isValidMove(GS_ADV_STATE, 1, { row: 2, col: 1 }),
-                GameState.isValidMove(GS_ADV_STATE2, 3, { row: 6, col: 3 })
-            ];
-            actual.forEach(actual => assert.ok(!actual));
-        });
-        
-        it('should return false for trying to move a pawn over/through another own pawn', () => {
-            assert.ok(!GameState.isValidMove(GS_ADV_STATE2, 3, { row: 6, col: 2 }));
-        });
-
-        it('should return false for trying to move a pawn over/through opponents pawn', () => {
-            assert.ok(!GameState.isValidMove(GS_ADV_STATE, 1, { row: 6, col: 4 }));
-        });
-        
-        it('should return false for trying to move pawn out of limits', () => {
-            const actual = [
-                GameState.isValidMove(GS_ADV_STATE, 0, { row: 2, col: 0 }),
-                GameState.isValidMove(GS_ADV_STATE, 0, { row: 2, col: 7 }),
-                GameState.isValidMove(GS_ADV_STATE, 0, { row: 0, col: 3 }),
-                GameState.isValidMove(GS_ADV_STATE2, 2, { row: 7, col: 5 }),
-                GameState.isValidMove(GS_ADV_STATE2, 2, { row: 7, col: 1 }),
-            ];
-            actual.forEach(actual => assert.ok(!actual));
-        });
-
-        it('should return false for trying to move a pawn of a player who is not on turn', () => {
-            const actual = [
-                GameState.isValidMove(GS_ADV_STATE2, 0, { row: 2, col: 3 }),
-                GameState.isValidMove(GS_ADV_STATE, 2, { row: 4, col: 4 }),
-                GameState.isValidMove(GS_ADV_STATE2, 0, { row: 3, col: 1 }),
-                GameState.isValidMove(GS_ADV_STATE, 3, { row: 6, col: 4 }),
-                GameState.isValidMove(GS_ADV_STATE2, 0, { row: 5, col: 1 }),
-                GameState.isValidMove(GS_ADV_STATE, 3, { row: 6, col: 4 }),
-                GameState.isValidMove(GS_ADV_STATE2, 1, { row: 6, col: 3 }),
-                GameState.isValidMove(GS_ADV_STATE2, 0, { row: 6, col: 5 }),
-                GameState.isValidMove(GS_ADV_STATE, 3, { row: 2, col: 1 }),
-            ];
-            actual.forEach(actual => assert.ok(!actual));
-        });
-
-        it('should return false for trying to move a non existing pawn', () => {
-            const actual = [
-                GameState.isValidMove(GS_ADV_STATE, 4, { row: 4, col: 4 }),
-                GameState.isValidMove(GS_ADV_STATE, 5, { row: 4, col: 4 }),
-                GameState.isValidMove(GS_ADV_STATE2, 4, { row: 2, col: 3 }),
-                GameState.isValidMove(GS_ADV_STATE2, 8, { row: 2, col: 3 }),
-            ];
-            actual.forEach(actual => assert.ok(!actual));
-        });
+        assert.strictEqual(GSs.length, numOfMoves);
     });
-
-    // TODO
-    describe('makeMove()', () => {});
-
-    // TODO
-    describe('getNextPossibleGameStates()', () => {});
 });

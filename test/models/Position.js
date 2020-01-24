@@ -1,5 +1,5 @@
 const assert = require('assert');
-const Position = require('../../build/models/Position.js');
+const Position = require('../../build/models/Position');
 
 // -----------------------------------------------------------------------------
 
