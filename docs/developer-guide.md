@@ -38,7 +38,7 @@ There are several NPM command line scripts, which will help in development.
 
 There are also some auxiliary commands:
 
-- `npm run ts` transpieles all TypeScript files in `src/` to JavaScript files and outputs them in the `build` directory.
+- `npm run ts` transpieles all TypeScript files in `src/` to JavaScript files and outputs them in the `build/` directory.
 - `npm run ts:debug` does the same as above, but it will also create mapping files. These help the debugger to link the code in `build/` to its origin in `src/`.
 - `npm run minify` reduces the file size of all JavaScript files in `build/` by deleting whitespace, shortening local variables, functions etc.
 - `npm run mocha` will run all unit tests in directory `test/`.

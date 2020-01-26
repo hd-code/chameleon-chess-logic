@@ -32,9 +32,7 @@ This project is written in Typescript. So all declarations interfaces etc. are i
 
 ## Usage
 
-The data structures that this library provides are explained [here](./docs/data-types.md).
-
-A Documentation on all functions this library offers, can be found [here](./docs/functions.md).
+A complete guide on how to use this library, data types and functions, can be found [here](./docs/api.md).
 
 ## Development
 

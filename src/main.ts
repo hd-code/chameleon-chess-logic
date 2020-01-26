@@ -1,30 +1,31 @@
 import { makeBestMove } from "./ai";
 
-import { getBoard as getBoardModels } from "./models/Board";
+import { TBoard, getBoard as getBoardModels } from "./models/Board";
 import { EColor } from "./models/Color";
 import * as GS from "./models/GameState"
 import * as Pawns from "./models/Pawns"
 import { IPosition } from "./models/Position";
 
-/* --------------------------------- Types ---------------------------------- */
+// ----------------------------------- Types -----------------------------------
 
 export { EColor } from "./models/Color";
-export { ERole } from "./models/Roles";
+export { ERole, TRoles } from "./models/Roles";
+export { TBoard } from "./models/Board";
 export { IGameState } from "./models/GameState";
 export { ILimits } from "./models/Limits";
 export { IPawn } from "./models/Pawns";
 export { IPosition } from "./models/Position";
 
-/* ------------------------------- Functions -------------------------------- */
+// --------------------------------- Functions ---------------------------------
 
 /**
  * Returns a 2 dimensional array of colors. These colors represent the colors of
- * the tiles on the board. There are 8x8 tiles.
+ * the fields on the board. There are 8x8 fields.
  * 
  * This board has always the same layout in all games. So, this value might be
  * retrieved on startup of your application and stored for usage.
  */
-export function getBoard(): EColor[][] {
+export function getBoard(): TBoard {
     return getBoardModels();
 }
 
@@ -97,9 +98,8 @@ export function makeMove(gs: GS.IGameState, pawnIndex: number, destination: IPos
 /**
  * The computer will make a move and return the updated game state.
  * @param gs  The current game state
- * @param difficulty – not yet implemented
  */
-export function letComputerMakeMove(gs: GS.IGameState, difficulty?: number): GS.IGameState {
+export function letComputerMakeMove(gs: GS.IGameState): GS.IGameState {
     return makeBestMove(gs);
 }
 
