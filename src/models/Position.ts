@@ -2,8 +2,11 @@ import { isKeyOfObject, isNumber } from "../../lib/hd-helper";
 
 // -----------------------------------------------------------------------------
 
+/** Specifies a position (a specific field) on the game board. */
 export interface IPosition {
+    /** The row of the field on the game board. */
     row: number;
+    /** The column of the field on the game board. */
     col: number;
 }
 

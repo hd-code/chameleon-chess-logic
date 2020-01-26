@@ -7,9 +7,22 @@ import { isKeyOfObject, isArray, deepClone, flattenArray } from "../../lib/hd-he
 
 // -----------------------------------------------------------------------------
 
+/**
+ * Represents the current situation on the game board. This is the state between
+ * player turns.
+ */
 export interface IGameState {
+    /**
+     * The current limits of the board. Specify which of the fields on the board
+     * are still reachable and wich are out of bounds.
+     */
     limits: Limits.ILimits;
+    /**
+     * An array containing all pawns that are still in game and thus on the
+     * board.
+     */
     pawns: Pawns.IPawn[];
+    /** The color of the player, who is currently on turn. */
     whoseTurn: EColor;
 }
 

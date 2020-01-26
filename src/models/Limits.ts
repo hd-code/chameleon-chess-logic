@@ -5,8 +5,14 @@ import { isKeyOfObject } from "../../lib/hd-helper"
 
 // -----------------------------------------------------------------------------
 
+/**
+ * The current limits of the game board. Shows, which field are still part of
+ * the game and which are out of bounds.
+ */
 export interface ILimits {
+    /** The lowest row and column that is still part of the game board. */
     lower: IPosition;
+    /** The highest row and column that is still part of the game board. */
     upper: IPosition;
 }
 

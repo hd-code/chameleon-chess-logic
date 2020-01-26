@@ -3,6 +3,10 @@ import { IPosition } from './Position';
 
 // -----------------------------------------------------------------------------
 
+/**
+ * A two-dimensional array of colors. They present the 8x8 game board giving the
+ * color for each field.
+ */
 export type TBoard = EColor[][]
 
 export function getBoard(): TBoard {

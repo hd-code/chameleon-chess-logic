@@ -8,7 +8,6 @@ import { IPosition } from "./models/Position";
 
 /* --------------------------------- Types ---------------------------------- */
 
-// TODO: JS Doc type description
 export { EColor } from "./models/Color";
 export { ERole } from "./models/Roles";
 export { IGameState } from "./models/GameState";

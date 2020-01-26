@@ -8,9 +8,16 @@ import { isKeyOfObject, deepClone } from "../../lib/hd-helper";
 
 // -----------------------------------------------------------------------------
 
+/** Represents a pawn on the game board. */
 export interface IPawn {
+    /** The color of the player this pawn belongs to. */
     player:  EColor;
+    /** The position of the pawn on the game board. */
     position:IPosition;
+    /**
+     * The mapping of the field color to a specific role and movement pattern
+     * for this pawn.
+     */
     roles:   TRoles;
 }
 
