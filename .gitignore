@@ -3,6 +3,8 @@
 /package-lock.json
 /tmp
 
+/*.tgz
+
 # VSCode
 .vscode
 

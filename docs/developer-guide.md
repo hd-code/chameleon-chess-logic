@@ -22,7 +22,7 @@ In the root directory of this project you find the following files and directori
 - `lib/` contains auxiliary libraries and helper functions.
 - `docs/` contains all kinds of documentation files, like this guide. You will also find a description of the game and the basic rules. There is also a documentation on the public API (all available data types and functions for the users of this library).
 - `build/` is automatically generated during the build process. It contains the transpiled JavaScript files from `src/` plus a TypeScript declaration file. This also is the only directory exported in the final package. 
-- `.gitignore` should be self explaining.
+- `.gitignore` specifies files and directories, that should not be commited to git.
 - `package.json` is a file holding the settings, dependencies and options for NPM.
 - `README.md` gives an introduction to the project as well as an installation guide.
 - `tsconfig.json` holds the settings for the TypeScript compiler.
@@ -43,6 +43,23 @@ There are also some auxiliary commands:
 - `npm run minify` reduces the file size of all JavaScript files in `build/` by deleting whitespace, shortening local variables, functions etc.
 - `npm run mocha` will run all unit tests in directory `test/`.
 
+## Git repo
+
+Currently there are two branches in this git repository:
+
+- `master` is the main development branch.
+- `v1` is a stable release version.
+
+Please do not work on `v1`! Only make a pull request into `v1` under the following conditions:
+
+- All previous unit tests work.
+- All public (exported in `src/main.ts`) data types and functions are still there and work as they did previously.
+- Any new functionality is tested by a bunch of unit tests and all are passing.
+
+In other words do not make any breaking changes to branch `v1`.
+
+If you have to completely change any existing functionality, consider creating another branch, with another stable release version e.g. `v2` etc.
+
 ## General rules
 
 If the unit tests fail, the whole build process is terminated. So, always make sure that the unit tests work correctly.
@@ -60,8 +77,7 @@ The file `src/ai.ts` contains the current implementation of the computer opponen
 This library should be a functional programm. So, functions are **not allowed** to have any **side effects**.
 
 Side-effects include:
-- reading/writing to files or databases
-- reading/altering global variables
+- reading/writing to files, databases or global variables
 - producing any kind of screen output
 - altering input parameters
 
@@ -96,7 +112,7 @@ Always order your sections like this:
 2. constants
 3. functions
 
-````ts
+```ts
 import * as fs from "fs";
 
 // -----------------------------------------------------------------------------
@@ -121,4 +137,4 @@ const MAX_VALUE = 13;
 function sub(a: number, b: number): number {
     return a - b;
 }
-````
+```

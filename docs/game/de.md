@@ -43,7 +43,7 @@ Sobald sich eine Figur bewegt hat, befindet sie sich im nächsten Zug auf einem 
 
 ## Spielverlauf
 
-Es ist ein zug-basiertes Spiel. Spieler Rot beginnt. Danach wird im Uhrzeigersinn weitergespielt.
+Es ist ein zugbasiertes Spiel. Spieler Rot beginnt. Danach wird im Uhrzeigersinn weitergespielt.
 
 Wer an der Reihe ist, bewegt eine seiner Figuren entsprechend der aktuellen Rolle der Figur. Befindet sich auf dem Zielfeld eine gegnerische Figur, so wird diese geschlagen und ist aus dem Spiel.
 

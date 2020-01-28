@@ -30,7 +30,7 @@ This is a library that can be used to create an app, website or any other kind o
 
 This is a two-dimensional array, which contains the colors of the single fields ([Type EColor](#ecolor)). The game board has 8x8 fields, so the array is structured likewise.
 
-The board has a fixed layout in every game. That means this TBoard is basically a constant. You can get this constant on startup of your app by using the function [getBoard()](#getboard). Then you can save it in a variable and constant a use it the whole time. It never changes.
+The board has a fixed layout in every game. That means this TBoard is basically a constant. You can get this constant on startup of your app by using the function [getBoard()](#getboard). Then you can save it in a variable or constant and use it. It never changes.
 
 ### EColor
 
@@ -45,7 +45,7 @@ These colors are used to specify the color of a field on the game board.
 
 They are also used to mark a player. There can be up to four players in a game. There is no separate type for players. Instead a player is just specified by on of the four colors as well.
 
-So, this type used for both cases: field colors and player colors.
+So, this type is used for both cases: field colors and player colors.
 
 ### IGameState
 
@@ -73,7 +73,7 @@ The specified rows/columns are still part of the game. The limits are zero-based
 
 Consider this example:
 
-````TS
+```ts
 var limits = {
     lower: {
         row: 2, // the lowest row is 2 – so row 0 and 1 are no longer part of the game
@@ -85,7 +85,7 @@ var limits = {
         col: 6  // the highest reachable column is the 7th (zero-based) – so the right-most column is out
     },
 }
-````
+```
 
 ### IPawn
 
@@ -104,7 +104,7 @@ The position is given by two coordinates:
 - `row`: specifies the row on the game board, between 0 and 7.
 - `col`: specifies the column on the game board, between 0 and 7.
 
-Positions are 0-based. So, `row: 2` means the 3rd row.
+Positions are 0-based. So, `{ row: 2, col: 4 }` means the 3rd row and the 5th column.
 
 Since a pawn can only be located on one field and exactly on that field, only integers are valid numbers for positions.
 
@@ -116,16 +116,16 @@ Depending on the color of the field where a pawn currently stand on, it has a di
 
 Consider this example:
 
-````TS
+```ts
 var roles = {
     0:3, // on a red    field, this pawn is a rook
     1:0, // on a green  field, this pawn is a knight
     2:1, // on a yellow field, this pawn is a queen
     3:2  // on a blue   field, this pawn is a bishop
 }
-````
+```
 
-For further details on field colors, see [EColor](#ecolor).
+For further details on the field colors, see [EColor](#ecolor).
 
 For further details on the roles, see [ERole](#erole).
 
@@ -144,9 +144,9 @@ There are four different roles in this game:
 
 ### getBoard
 
-````TS
+```ts
 declare function getBoard(): TBoard;
-````
+```
 
 Returns the game board. It is a two-dimensional array of 8x8 field colors. See [TBoard](#tboard).
 
@@ -154,9 +154,9 @@ This board has always the same layout in all games and it does not change during
 
 ### initGame
 
-````TS
+```ts
 declare function initGame(red: boolean, green: boolean, yellow: boolean, blue: boolean): IGameState|null;
-````
+```
 
 Creates a new `IGameState`-Object ([see here for details](#igamestate)). Thus, it generates a new game in the starting configuration.
 
@@ -166,17 +166,17 @@ A minimum of two players are required for a game. If too few players were provid
 
 ### getIndexOfPawnAtPosition
 
-````TS
+```ts
 declare function getIndexOfPawnAtPosition(gs: IGameState, position: IPosition): number;
-````
+```
 
 This function gets a game state and a position passed. If there is a pawn at the given position, the index of that pawn in the pawn array of the game state (`gs.pawns[index]`) is returned. If there is no pawn at the given position, this function returns `-1`.
 
 ### getMoves
 
-````TS
+```ts
 declare function getMoves(gs: IGameState, pawnIndex: number): IPosition[];
-````
+```
 
 Returns an array of positions ([IPosition](#iposition)). These are the possible destinations the given pawn can reach (thus, the moves it can do).
 
@@ -186,9 +186,9 @@ If the given index is invalid, this function returns an empty array (`[]`).
 
 ### makeMove
 
-````TS
+```ts
 declare function makeMove(gs: IGameState, pawnIndex: number, destination: IPosition): IGameState|null;
-````
+```
 
 Advances the game by one turn. It moves the pawn to the destination and returns the updated game state. If anything goes wrong, it returns `null`.
 
@@ -198,13 +198,13 @@ Possible errors:
 - pawn doesn't exist or doesn't belong to the player whose turn it is 
 - destination is not available to the pawn right now
 
-As parameters you need to pass the current game state, the index of the pawn in the pawns array you want to move and the destination (`IPosition`) where the pawn should be moved to.
+As parameters you need to pass the current game state, the index of the pawn in the pawns array you want to move and the destination (`IPosition`), where the pawn should be moved to.
 
 ### letComputerMakeMove
 
-````TS
+```ts
 declare function letComputerMakeMove(gs: IGameState): IGameState;
-````
+```
 
 The computer will make a move and return the updated game state.
 
@@ -212,38 +212,38 @@ The computer will make a move and return the updated game state.
 
 ### arePlayersAlive
 
-````TS
+```ts
 declare function arePlayersAlive(gs: IGameState): {[player in EColor]: boolean};
-````
+```
 
 Checks which of the players are still alive in the current game state. Returns an object with an entry for each player (player color is the key). The value is a boolean indicating wether the player is still alive (`true`) or not (`false`).
 
 Example for the returned object:
 
-````TS
+```ts
 {
     0: true,  // player RED    is still alive
     1: false, // player GREEN  is dead
     2: true,  // player YELLOW is still alive
     3: false  // player BLUE   is dead
 }
-````
+```
 
 For more information on the player colors, see [EColor](#ecolor).
 
 ### isGameOver
 
-````TS
+```ts
 declare function isGameOver(gs: IGameState): boolean;
-````
+```
 
 Checks the given game state if the game is over or if it can still be played. This function returns `true` if the game is finished, `false` if it can still continue.
 
 ### isValidGameState
 
-````TS
+```ts
 declare function isValidGameState(gs: any): gs is IGameState;
-````
+```
 
 Checks if a given game state really is a game state. It checks all the types and keys. It also checks, if the information within the game state is valid.
 

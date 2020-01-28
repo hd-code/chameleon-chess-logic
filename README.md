@@ -14,21 +14,25 @@ The easiest way to use this library in your project, is by using NPM.
 
 So, if you have the current version of NPM installed, just run this in the terminal in the folder of your project:
 
-```` bash
-npm install git+https://github.com/hd-code/chameleon-chess-logic.git
-````
+``` shell
+npm install git+https://github.com/hd-code/chameleon-chess-logic.git#v1
+```
 
-Now you can use this module in your app by simply requiring or importing it.
+**`#v1`** specifies that we want to pull the branch called 'v1'. Branch 'v1' contains the current stable release of this library.
 
-```` JS
+Now you can use this module in your app by simply requiring...
+
+```js
 const ccl = require('chameleon-chess-logic');
-````
+```
 
-```` TS
+... or importing it.
+
+```ts
 import * as ccl from 'chameleon-chess-logic';
-````
+```
 
-This project is written in Typescript. So all declarations interfaces etc. are included in the build.
+This project is written in Typescript. So all declarations, interfaces etc. are included in the build.
 
 ## Usage
 
@@ -40,7 +44,7 @@ If you want to work on this module you need the current version of NPM installed
 
 Then open your terminal and do the following:
 
-````bash
+```shell
 # clone git repo
 git clone https://github.com/hd-code/chameleon-chess-logic.git
 
@@ -49,7 +53,7 @@ cd chameleon-chess-logic
 
 # install dev dependencies for npm module
 npm i
-````
+```
 
 Now, you can work on the project.
 
