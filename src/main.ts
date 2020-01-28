@@ -30,7 +30,8 @@ export function getBoard(): TBoard {
 }
 
 /**
- * Starts a new game and returns the corresponding game state object.
+ * Creates a new `IGameState`-Object. Thus, it generates a new game in the
+ * starting configuration.
  * 
  * Up to four players can play in a game. Players are linked to a color. So
  * there is a red, green, yellow and a blue player. For each player a boolean
@@ -52,9 +53,10 @@ export function initGame(red: boolean, green: boolean, yellow: boolean, blue: bo
 }
 
 /**
- * Checks if one of the pawns is located at the given position. If so, the index
- * of that pawn in the pawns array of the game state is returned. If the given
- * position is empty, this function returns `-1`.
+ * This function gets a game state and a position passed. If there is a pawn at
+ * the given position, the index of that pawn in the pawn array of the game
+ * state (`gs.pawns[index]`) is returned. If there is no pawn at the given
+ * position, this function returns `-1`.
  * @param gs       The current game state
  * @param position The field to search for a pawn
  */
@@ -63,9 +65,13 @@ export function getIndexOfPawnAtPosition(gs: GS.IGameState, position: IPosition)
 }
 
 /**
- * Returns an array of possible moves (type `IPosition`) for a given pawn. If
- * the pawn doesn't exist or anything else goes wrong, an empty array is
- * returned.
+ * Returns an array of positions. These are the possible destinations the given
+ * pawn can reach (thus, the moves it can do).
+ * 
+ * As parameters you need to pass the current game state and the index of the
+ * pawn in the pawns array of the game state.
+ * 
+ * If the given index is invalid, this function returns an empty array (`[]`).
  * @param gs        The current game state
  * @param pawnIndex The index of the pawn in the pawns array of the game state whose moves should be calculated.
  */
@@ -77,7 +83,7 @@ export function getMoves(gs: GS.IGameState, pawnIndex: number): IPosition[] {
 
 /**
  * Advances the game by one turn. It moves the pawn to the destination and
- * returns the updated game state. If anything is wrong, it returns `null`.
+ * returns the updated game state. If anything goes wrong, it returns `null`.
  * 
  * Possible errors:
  * - invalid game state, 
@@ -116,7 +122,7 @@ export function arePlayersAlive(gs: GS.IGameState): {[player in EColor]: boolean
 
 /**
  * Checks the given game state if the game is over or if it can still be played.
- * This function returns `true` if the game is finished, false if it can still
+ * This function returns `true` if the game is finished, `false` if it can still
  * continue.
  * @param gs The current game state
  */
@@ -127,9 +133,13 @@ export function isGameOver(gs: GS.IGameState): boolean {
 /**
  * Checks if a given game state really is a game state. It checks all the types
  * and keys. It also checks, if the information within the game state is valid.
+ * 
  * E.g. it checks if the player whose turn it is, is actually alive or if there
  * are any pawns at the same field or outside the limits (both rendering the
  * game state incorrect).
+ * 
+ * For a correct game state, this function returns `true`, for an invalid one,
+ * it returns `false`.
  * @param gs  The game state to be checked
  */
 export function isValidGameState(gs: any): gs is GS.IGameState {

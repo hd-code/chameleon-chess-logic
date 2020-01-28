@@ -1,4 +1,4 @@
-import { isKeyOfObject, isNumber } from "../../lib/hd-helper";
+import { isKeyOfObject, isInteger } from "../../lib/hd-helper";
 
 // -----------------------------------------------------------------------------
 
@@ -11,8 +11,8 @@ export interface IPosition {
 }
 
 export function isPosition(pos: any): pos is IPosition {
-    return isKeyOfObject(pos, 'row', isNumber)
-        && isKeyOfObject(pos, 'col', isNumber);
+    return isKeyOfObject(pos, 'row', isInteger)
+        && isKeyOfObject(pos, 'col', isInteger);
 }
 
 export function isSamePosition(a: IPosition, b: IPosition): boolean {

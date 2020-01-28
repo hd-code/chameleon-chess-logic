@@ -1,4 +1,4 @@
-/*! hd-helper v1.0.0 | Hannes Dröse | https://github.com/hd-code/hd-helper | MIT */
+/*! hd-helper v1.1.0 | Hannes Dröse | https://github.com/hd-code/hd-helper | MIT */
 /**
  * Deep-clones the passed object.
  *
@@ -16,6 +16,8 @@ export declare function flattenArray<T>(original: T[][]): T[];
 export declare function isBool(bool: any): bool is boolean;
 /** Type guard to check if a value is a `number`. */
 export declare function isNumber(num: any): num is number;
+/** Type guard to check if a value is a `number` with no decimals. */
+export declare function isInteger(num: any): num is number;
 /** Type guard to check if a value is a `string`. */
 export declare function isString(str: any): str is string;
 /** Type guard to check if a value is a JS Date type. */
