@@ -12,13 +12,16 @@
     "postinstall": "npm run ts",
     "start": "npm run prepare",
     "test": "npm run ts && npm run mocha",
-
     "minify": "for i in $(find ./build -name *.js); do uglifyjs $i -o $i -mc --comments '/^!/'; done",
     "mocha": "mocha $(find ./test -name *.js)",
     "ts": "rm -rf build && tsc",
     "ts:debug": "rm -rf build && tsc --sourceMap"
   },
   "author": "Hannes Dröse",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hd-code/chameleon-chess-logic"
+  },
   "license": "UNLICENSED",
   "devDependencies": {
     "mocha": "^7.0.0",

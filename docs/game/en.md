@@ -21,7 +21,7 @@ The game board of 8x8 colorful fields is placed in the center. The fields have e
 ![Game Board](./pics/board.png)
 *The Colorful Game Board*
 
-The players chose one of four colors (red, green, yellow, blue). Depending on the chosen color, the players are seated accordingly around the board. A side belongs to a player, if the left-most corder field matches the chosen color of the player.
+The players chose one of four colors (red, green, yellow, blue). Depending on the chosen color, the players are seated accordingly around the board. A side belongs to a player, if the left-most corner field matches the chosen color of the player.
 
 ![Game board with the players at the sides](./pics/board-players.png)
 *Game board with markings for the player's sides*
