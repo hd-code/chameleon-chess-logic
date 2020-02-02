@@ -9,7 +9,6 @@
   "main": "build/main.js",
   "scripts": {
     "prepare": "npm run ts && npm run minify && npm run mocha",
-    "postinstall": "npm run ts",
     "start": "npm run prepare",
     "test": "npm run ts && npm run mocha",
     "minify": "for i in $(find ./build -name *.js); do uglifyjs $i -o $i -mc --comments '/^!/'; done",
