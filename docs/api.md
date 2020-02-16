@@ -1,13 +1,13 @@
 # Chameleon Chess Logic – Usage
 
-This is a library that can be used to create an app, website or any other kind of medium to play the board game 'Chameleon Chess'. Therefore, this library offers you some basic data structures and functions that implement the game logic.
+This is a library that can be used to create an app, website or any other kind of medium to play the board game "Chameleon Chess". Therefore, this library offers you some basic data structures and functions that implement the game logic.
 
 ---
 
 - [Data Structures](#data-structures)
   - [TBoard](#tboard)
   - [EColor](#ecolor)
-  - [IGameState](#igamestate)
+  - [IGame](#igame)
   - [ILimits](#ilimits)
   - [IPawn](#ipawn)
   - [IPosition](#iposition)
@@ -22,7 +22,7 @@ This is a library that can be used to create an app, website or any other kind o
   - [letComputerMakeMove](#letcomputermakemove)
   - [arePlayersAlive](#areplayersalive)
   - [isGameOver](#isgameover)
-  - [isValidGameState](#isvalidgamestate)
+  - [isValidGame](#isvalidgame)
 
 ## Data Structures
 
@@ -47,9 +47,9 @@ They are also used to mark a player. There can be up to four players in a game. 
 
 So, this type is used for both cases: field colors and player colors.
 
-### IGameState
+### IGame
 
-This is the most important type. It describes the current situation on the game board. Each time a player has made move, a new IGameState is generated, containing the updated board situation.
+This is the most important type. It describes the current situation on the game board. Each time a player has made move, a new IGame is generated, containing the updated board situation.
 
 It is an object containing the following properties:
 - limits: specifies which fields of the board still belong to the game. [Type ILimits](#ilimits)
@@ -155,68 +155,68 @@ This board has always the same layout in all games and it does not change during
 ### initGame
 
 ```ts
-declare function initGame(red: boolean, green: boolean, yellow: boolean, blue: boolean): IGameState|null;
+declare function initGame(red: boolean, green: boolean, yellow: boolean, blue: boolean): IGame|null;
 ```
 
-Creates a new `IGameState`-Object ([see here for details](#igamestate)). Thus, it generates a new game in the starting configuration.
+Creates a new `IGame`-Object. Thus, it generates a new game in the starting configuration.
 
-Up to four players can play in a game. Players are linked to a color. So there is a red, green, yellow and a blue player. For each player a boolean is passed as a parameter to indicate, if this player takes part in the game or not. (`true` means the player takes part in the game)
+Up to four players can participate in a game. Players are linked to a color. So, there is a red, green, yellow and a blue player. For each player a boolean is passed as a parameter to indicate, if this player takes part in the game or not (`true` means the player takes part in the game).
 
 A minimum of two players are required for a game. If too few players were provided in the params, this function will return `null` as no game can be played anyway.
 
 ### getIndexOfPawnAtPosition
 
 ```ts
-declare function getIndexOfPawnAtPosition(gs: IGameState, position: IPosition): number;
+declare function getIndexOfPawnAtPosition(game: IGame, position: IPosition): number;
 ```
 
-This function gets a game state and a position passed. If there is a pawn at the given position, the index of that pawn in the pawn array of the game state (`gs.pawns[index]`) is returned. If there is no pawn at the given position, this function returns `-1`.
+This function gets a game object and a position passed. If there is a pawn at the given position, the index of that pawn in the pawn array of the game object (`game.pawns[index]`) is returned. If there is no pawn at the given position, this function returns `-1`.
 
 ### getMoves
 
 ```ts
-declare function getMoves(gs: IGameState, pawnIndex: number): IPosition[];
+declare function getMoves(game: IGame, pawnIndex: number): IPosition[];
 ```
 
 Returns an array of positions ([IPosition](#iposition)). These are the possible destinations the given pawn can reach (thus, the moves it can do).
 
-As parameters you need to pass the current game state and the index of the pawn in the pawns array of the game state.
+As parameters you need to pass the current game object and the index of the pawn in the pawns array of the game object.
 
 If the given index is invalid, this function returns an empty array (`[]`).
 
 ### makeMove
 
 ```ts
-declare function makeMove(gs: IGameState, pawnIndex: number, destination: IPosition): IGameState|null;
+declare function makeMove(game: IGame, pawnIndex: number, destination: IPosition): IGame|null;
 ```
 
-Advances the game by one turn. It moves the pawn to the destination and returns the updated game state. If anything goes wrong, it returns `null`.
+Advances the game by one turn. It moves the pawn to the destination and returns the updated game object. If anything goes wrong, it returns `null`.
 
 Possible errors:
-- invalid game state
+- invalid game object
 - game is already over
 - pawn doesn't exist or doesn't belong to the player whose turn it is 
 - destination is not available to the pawn right now
 
-As parameters you need to pass the current game state, the index of the pawn in the pawns array you want to move and the destination (`IPosition`), where the pawn should be moved to.
+As parameters you need to pass the current game object, the index of the pawn in the pawns array you want to move and the destination (`IPosition`), where the pawn should be moved to.
 
 ### letComputerMakeMove
 
 ```ts
-declare function letComputerMakeMove(gs: IGameState): IGameState;
+declare function letComputerMakeMove(game: IGame): IGame;
 ```
 
-The computer will make a move and return the updated game state.
+The computer will make a move and return the updated game object.
 
 **Note:** This feature somehow works. However, it will be replaced by a better algorithm in the future using machine learning techniques. The current implementation sometimes takes quite a lot of time to compute. Just be warned. ;-)
 
 ### arePlayersAlive
 
 ```ts
-declare function arePlayersAlive(gs: IGameState): {[player in EColor]: boolean};
+declare function arePlayersAlive(game: IGame): {[player in EColor]: boolean};
 ```
 
-Checks which of the players are still alive in the current game state. Returns an object with an entry for each player (player color is the key). The value is a boolean indicating wether the player is still alive (`true`) or not (`false`).
+Checks which of the players are still alive in the current game object. Returns an object with an entry for each player (player color is the key). The value is a boolean indicating wether the player is still alive (`true`) or not (`false`).
 
 Example for the returned object:
 
@@ -234,19 +234,19 @@ For more information on the player colors, see [EColor](#ecolor).
 ### isGameOver
 
 ```ts
-declare function isGameOver(gs: IGameState): boolean;
+declare function isGameOver(game: IGame): boolean;
 ```
 
-Checks the given game state if the game is over or if it can still be played. This function returns `true` if the game is finished, `false` if it can still continue.
+Checks the given game object if the game is over or if it can still be played. This function returns `true` if the game is finished, `false` if it can still continue.
 
-### isValidGameState
+### isValidGame
 
 ```ts
-declare function isValidGameState(gs: any): gs is IGameState;
+declare function isValidGame(game: any): game is IGame;
 ```
 
-Checks if a given game state really is a game state. It checks all the types and keys. It also checks, if the information within the game state is valid.
+Checks if a given game object really is a game object. It checks all the types and keys. It also checks, if the information within the game object is valid.
 
-E.g. it checks if the player whose turn it is, is actually alive or if there are any pawns at the same field or outside the limits (both rendering the game state incorrect).
+E.g. it checks if the player whose turn it is, is actually alive or if there are any pawns at the same field or outside the limits (both rendering the game object incorrect).
 
-For a correct game state, this function returns `true`, for an invalid one, it returns `false`.
+For a correct game object, this function returns `true`, for an invalid one, it returns `false`.

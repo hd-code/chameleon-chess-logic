@@ -1,4 +1,4 @@
-import { isNumber } from "../../lib/hd-helper";
+import { isNumber } from '../../lib/hd-helper';
 
 // -----------------------------------------------------------------------------
 

@@ -1,10 +1,10 @@
-import { getFieldColor } from "./Board";
-import { EColor, isColor } from "./Color";
-import { ILimits, isPositionWithinLimits, isSmallestFieldSize } from "./Limits";
-import { IPosition, isPosition, isSamePosition } from "./Position";
-import { ERole, TRoles, isRoles, getRoles } from "./Roles";
+import { getFieldColor } from './Board';
+import { EColor, isColor } from './Color';
+import { ILimits, isPositionWithinLimits, isSmallestFieldSize } from './Limits';
+import { IPosition, isPosition, isSamePosition } from './Position';
+import { ERole, TRoles, isRoles, getRoles } from './Roles';
 
-import { isKeyOfObject, deepClone } from "../../lib/hd-helper";
+import { isKeyOfObject, deepClone } from '../../lib/hd-helper';
 
 // -----------------------------------------------------------------------------
 

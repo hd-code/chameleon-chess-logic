@@ -6,10 +6,10 @@ const TestData = require('../test-data');
 // -----------------------------------------------------------------------------
 
 describe('models/Roles', () => {
-    const ROLES_KNIGHT_RED    = TestData.testMovesOfRoles.gameState.pawns[0].roles;
-    const ROLES_KNIGHT_GREEN  = TestData.testMovesOfRoles.gameState.pawns[1].roles;
-    const ROLES_KNIGHT_YELLOW = TestData.testMovesOfRoles.gameState.pawns[2].roles;
-    const ROLES_KNIGHT_BLUE   = TestData.testMovesOfRoles.gameState.pawns[3].roles;
+    const ROLES_KNIGHT_RED    = TestData.testMovesOfRoles.game.pawns[0].roles;
+    const ROLES_KNIGHT_GREEN  = TestData.testMovesOfRoles.game.pawns[1].roles;
+    const ROLES_KNIGHT_YELLOW = TestData.testMovesOfRoles.game.pawns[2].roles;
+    const ROLES_KNIGHT_BLUE   = TestData.testMovesOfRoles.game.pawns[3].roles;
 
     describe('isRoles()', () => {
         it('should return true for valid roles', () => {

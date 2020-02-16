@@ -1,3 +1,5 @@
+![logo](pics/logo-en.png)
+
 # Chameleon Chess
 
 Chameleon Chess is a chess-like board game for two to four players.
@@ -27,6 +29,9 @@ The players chose one of four colors (red, green, yellow, blue). Depending on th
 *Game board with markings for the player's sides*
 
 Now, each player gets the four pawns matching his color. The pawns are placed on the four left-most fields. The pawns have to be placed, such that all pawns initially have the role "Knight".
+
+![Game board with all pawns in starting position](./pics/board-start.png)
+*Game board with all pawns in starting position*
 
 ### The Pawns
 
