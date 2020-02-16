@@ -8,13 +8,13 @@ const TestData = require('../test-data');
 // -----------------------------------------------------------------------------
 
 describe('models/Pawns', () => {
-    const TEST_PAWNS = TestData.testMovesOfRoles.gameState.pawns;
+    const TEST_PAWNS = TestData.testMovesOfRoles.game.pawns;
     const PAWN1 = TEST_PAWNS[0];
     const PAWN2 = TEST_PAWNS[1]; // Knight
     const PAWN3 = TEST_PAWNS[2];
     const PAWN4 = TEST_PAWNS[3];
 
-    const START_LIMITS = TestData.testMovesOfRoles.gameState.limits;
+    const START_LIMITS = TestData.testMovesOfRoles.game.limits;
     const SMALL_LIMITS = { lower:START_LIMITS.lower, upper:{row:3,col:3} };
 
     describe('isPawn()', () => {
@@ -143,10 +143,10 @@ describe('models/Pawns', () => {
 
     it('getNumOfPawnsPerPlayer()', () => {
         it('should return correct number of pawns per player', () => {
-            const actual1 = Pawns.getNumOfPawnsPerPlayer(TestData.testMovesOfRoles.gameState.pawns);
+            const actual1 = Pawns.getNumOfPawnsPerPlayer(TestData.testMovesOfRoles.game.pawns);
             const expected1 = TestData.testMovesOfRoles.numOfPawnsPerPlayer;
 
-            const actual2 = Pawns.getNumOfPawnsPerPlayer(TestData.testAdvancedMoves.gameState.pawns);
+            const actual2 = Pawns.getNumOfPawnsPerPlayer(TestData.testAdvancedMoves.game.pawns);
             const expected2 = TestData.testAdvancedMoves.numOfPawnsPerPlayer;
 
             const actual3 = Pawns.getNumOfPawnsPerPlayer([]);
@@ -228,8 +228,8 @@ describe('models/Pawns', () => {
         it('should return -1 if the field is bigger than 3x3', () => {
             const actual1 = Pawns.getIndexOfPawnInDeadlock(TEST_PAWNS, START_LIMITS);
             const actual2 = Pawns.getIndexOfPawnInDeadlock(
-                TestData.testSpecialCase.gameState.pawns,
-                TestData.testSpecialCase.gameState.limits
+                TestData.testSpecialCase.game.pawns,
+                TestData.testSpecialCase.game.limits
             );
 
             assert.strictEqual(actual1, -1);
@@ -241,22 +241,22 @@ describe('models/Pawns', () => {
         const TestCase = TestData.testMovesOfRoles;
 
         describe('should return correct moves for knight', () => {
-            const moves = Pawns.getNextMoves(TestCase.pawnIKnight, TestCase.gameState.pawns, TestCase.gameState.limits);
+            const moves = Pawns.getNextMoves(TestCase.pawnIKnight, TestCase.game.pawns, TestCase.game.limits);
             assert.ok(TestData.isSameMoves(moves, TestCase.validKnightMoves));
         });
 
         describe('should return correct moves for bishop', () => {
-            const moves = Pawns.getNextMoves(TestCase.pawnIBishop, TestCase.gameState.pawns, TestCase.gameState.limits);
+            const moves = Pawns.getNextMoves(TestCase.pawnIBishop, TestCase.game.pawns, TestCase.game.limits);
             assert.ok(TestData.isSameMoves(moves, TestCase.validBishopMoves));
         });
 
         describe('should return correct moves for rook', () => {
-            const moves = Pawns.getNextMoves(TestCase.pawnIRook, TestCase.gameState.pawns, TestCase.gameState.limits);
+            const moves = Pawns.getNextMoves(TestCase.pawnIRook, TestCase.game.pawns, TestCase.game.limits);
             assert.ok(TestData.isSameMoves(moves, TestCase.validRookMoves));
         });
 
         describe('should return correct moves for queen', () => {
-            const moves = Pawns.getNextMoves(TestCase.pawnIQueen, TestCase.gameState.pawns, TestCase.gameState.limits);
+            const moves = Pawns.getNextMoves(TestCase.pawnIQueen, TestCase.game.pawns, TestCase.game.limits);
             assert.ok(TestData.isSameMoves(moves, TestCase.validQueenMoves));
         });
     });

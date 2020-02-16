@@ -1,7 +1,7 @@
-import { IPawn } from "./Pawns";
-import { IPosition, isPosition } from "./Position";
+import { IPawn } from './Pawns';
+import { IPosition, isPosition } from './Position';
 
-import { isKeyOfObject } from "../../lib/hd-helper"
+import { isKeyOfObject } from '../../lib/hd-helper'
 
 // -----------------------------------------------------------------------------
 

@@ -44,7 +44,7 @@ describe('main', () => {
                 ccl.initGame(true, false, true, true),
                 ccl.initGame(false, false, true, true),
             ];
-            actual.forEach(gs => assert.ok(ccl.isValidGameState(gs)));
+            actual.forEach(gs => assert.ok(ccl.isValidGame(gs)));
         });
 
         it('should return null if less than two players were requested', () => {
@@ -61,11 +61,11 @@ describe('main', () => {
 
     describe('getIndexOfPawnAtPosition()', () => {
         it('should return correct index', () => {
-            test(TestData.testAdvancedMoves.gameState);
-            test(TestData.testMovesOfRoles.gameState);
-            test(TestData.testShrinkingOfBoard.gameState);
-            test(TestData.testShrinkingOfBoard.gameState);
-            test(TestData.testSpecialCaseWinning.gameState);
+            test(TestData.testAdvancedMoves.game);
+            test(TestData.testMovesOfRoles.game);
+            test(TestData.testShrinkingOfBoard.game);
+            test(TestData.testShrinkingOfBoard.game);
+            test(TestData.testSpecialCaseWinning.game);
 
             function test(gs) {
                 gs.pawns.forEach((_,i) => {
@@ -76,11 +76,11 @@ describe('main', () => {
         });
 
         it('should return -1 if there is no pawn at position', () => {
-            test(TestData.testAdvancedMoves.gameState);
-            test(TestData.testMovesOfRoles.gameState);
-            test(TestData.testShrinkingOfBoard.gameState);
-            test(TestData.testShrinkingOfBoard.gameState);
-            test(TestData.testSpecialCaseWinning.gameState);
+            test(TestData.testAdvancedMoves.game);
+            test(TestData.testMovesOfRoles.game);
+            test(TestData.testShrinkingOfBoard.game);
+            test(TestData.testShrinkingOfBoard.game);
+            test(TestData.testSpecialCaseWinning.game);
 
             function test(gs) {
                 let pos1 = deepClone(gs.limits);
@@ -103,31 +103,31 @@ describe('main', () => {
         const TestCase = TestData.testMovesOfRoles;
 
         it('should return all valid knight moves', () => {
-            const actual = ccl.getMoves(TestCase.gameState, TestCase.pawnIKnight);
+            const actual = ccl.getMoves(TestCase.game, TestCase.pawnIKnight);
             assert.ok(TestData.isSameMoves(actual, TestCase.validKnightMoves));
         });
 
         it('should return all valid bishop moves', () => {
-            const actual = ccl.getMoves(TestCase.gameState, TestCase.pawnIBishop);
+            const actual = ccl.getMoves(TestCase.game, TestCase.pawnIBishop);
             assert.ok(TestData.isSameMoves(actual, TestCase.validBishopMoves));
         });
 
         it('should return all valid rook moves', () => {
-            const actual = ccl.getMoves(TestCase.gameState, TestCase.pawnIRook);
+            const actual = ccl.getMoves(TestCase.game, TestCase.pawnIRook);
             assert.ok(TestData.isSameMoves(actual, TestCase.validRookMoves));
         });
 
         it('should return all valid queen moves', () => {
-            const actual = ccl.getMoves(TestCase.gameState, TestCase.pawnIQueen);
+            const actual = ccl.getMoves(TestCase.game, TestCase.pawnIQueen);
             assert.ok(TestData.isSameMoves(actual, TestCase.validQueenMoves));
         });
 
         it('should return an empty array if there is no pawn at that index', () => {
-            test(TestData.testAdvancedMoves.gameState);
-            test(TestData.testMovesOfRoles.gameState);
-            test(TestData.testShrinkingOfBoard.gameState);
-            test(TestData.testShrinkingOfBoard.gameState);
-            test(TestData.testSpecialCaseWinning.gameState);
+            test(TestData.testAdvancedMoves.game);
+            test(TestData.testMovesOfRoles.game);
+            test(TestData.testShrinkingOfBoard.game);
+            test(TestData.testShrinkingOfBoard.game);
+            test(TestData.testSpecialCaseWinning.game);
 
             function test(gs) {
                 const actual1 = ccl.getMoves(gs, -1);
@@ -147,7 +147,7 @@ describe('main', () => {
 
     describe('makeMove()', () => {
         it('should make moves', () => {
-            const gs1 = TestData.testShrinkingOfBoard.gameState;
+            const gs1 = TestData.testShrinkingOfBoard.game;
             const cases1 = TestData.testShrinkingOfBoard;
 
             test(gs1, cases1.noShrinking);
@@ -160,7 +160,7 @@ describe('main', () => {
             test(gs1, cases1.shrinkingBeatingWinning);
             test(gs1, cases1.shrinkingOtherPawnsSetLimits);
 
-            const gs2 = TestData.testAdvancedMoves.gameState;
+            const gs2 = TestData.testAdvancedMoves.game;
             const cases2 = TestData.testAdvancedMoves;
 
             test(gs2, cases2.beating);
@@ -171,38 +171,38 @@ describe('main', () => {
 
             function test(gs, Case) {
                 const move = Case.move;
-                const expectedGS = Case.gameState;
+                const expectedGS = Case.game;
                 assert.deepStrictEqual(ccl.makeMove(gs, move.pawnI, move.destination), expectedGS);
             }
         });
 
         it('should remove center pawn if smallest field and knight', () => {
-            const gs = TestData.testSpecialCase.gameState
+            const gs = TestData.testSpecialCase.game
 
             const case1 = TestData.testSpecialCase.beatingAndBeingRemoved
             const move1 = case1.move
-            const expected1 = case1.gameState
+            const expected1 = case1.game
 
             const case2 = TestData.testSpecialCase.creatingSmallestBoardRemoveTrappedPawn
             const move2 = case2.move
-            const expected2 = case2.gameState
+            const expected2 = case2.game
             
             assert.deepStrictEqual(ccl.makeMove(gs, move1.pawnI, move1.destination), expected1);
             assert.deepStrictEqual(ccl.makeMove(gs, move2.pawnI, move2.destination), expected2);
         });
 
         it('should not remove center pawn if it is the winning move', () => {
-            const gs = TestData.testSpecialCaseWinning.gameState;
+            const gs = TestData.testSpecialCaseWinning.game;
 
             const Case = TestData.testSpecialCaseWinning.beatingBeingTrappedButWinning;
             const move = Case.move;
-            const expected = Case.gameState;
+            const expected = Case.game;
             
             assert.deepStrictEqual(ccl.makeMove(gs, move.pawnI, move.destination), expected);
         });
 
         it('should return null for invalid moves', () => {
-            const gs1 = TestData.testMovesOfRoles.gameState;
+            const gs1 = TestData.testMovesOfRoles.game;
             TestData.testMovesOfRoles.invalidMovesForAll.forEach(destination => {
                 assert.strictEqual(ccl.makeMove(gs1, 0, destination), null);
                 assert.strictEqual(ccl.makeMove(gs1, 1, destination), null);
@@ -210,7 +210,7 @@ describe('main', () => {
                 assert.strictEqual(ccl.makeMove(gs1, 3, destination), null);
             });
 
-            const gs2 = TestData.testAdvancedMoves.gameState;
+            const gs2 = TestData.testAdvancedMoves.game;
             TestData.testAdvancedMoves.invalidMoves.forEach(move => {
                 assert.strictEqual(ccl.makeMove(gs2, move.pawnI, move.destination), null);
             });
@@ -227,55 +227,55 @@ describe('main', () => {
         test(TestData.testSpecialCaseWinning);
 
         function test(Case) {
-            assert.deepStrictEqual(ccl.arePlayersAlive(Case.gameState), Case.arePlayersAlive);
+            assert.deepStrictEqual(ccl.arePlayersAlive(Case.game), Case.arePlayersAlive);
         }
     });
 
     describe('isGameOver()', () => {
         it('should return true if there is a winner', () => {
             const gss = [
-                TestData.testShrinkingOfBoard.shrinkingBeatingWinning.gameState,
-                TestData.testSpecialCaseWinning.beatingBeingTrappedButWinning.gameState
+                TestData.testShrinkingOfBoard.shrinkingBeatingWinning.game,
+                TestData.testSpecialCaseWinning.beatingBeingTrappedButWinning.game
             ];
             gss.forEach(gs => assert.ok(ccl.isGameOver(gs)));
         });
 
         it('should return false for game states with more than one players', () => {
-            assert.ok(!ccl.isGameOver(TestData.testAdvancedMoves.gameState));
-            assert.ok(!ccl.isGameOver(TestData.testMovesOfRoles.gameState));
-            assert.ok(!ccl.isGameOver(TestData.testShrinkingOfBoard.gameState));
-            assert.ok(!ccl.isGameOver(TestData.testSpecialCase.gameState));
-            assert.ok(!ccl.isGameOver(TestData.testSpecialCaseWinning.gameState));
+            assert.ok(!ccl.isGameOver(TestData.testAdvancedMoves.game));
+            assert.ok(!ccl.isGameOver(TestData.testMovesOfRoles.game));
+            assert.ok(!ccl.isGameOver(TestData.testShrinkingOfBoard.game));
+            assert.ok(!ccl.isGameOver(TestData.testSpecialCase.game));
+            assert.ok(!ccl.isGameOver(TestData.testSpecialCaseWinning.game));
         });
     });
 
-    describe('isValidGameState()', () => {
+    describe('isValidGame()', () => {
         it('should return true for all valid game states', () => {
-            assert.ok(ccl.isValidGameState(TestData.testAdvancedMoves.gameState));
-            assert.ok(ccl.isValidGameState(TestData.testMovesOfRoles.gameState));
-            assert.ok(ccl.isValidGameState(TestData.testShrinkingOfBoard.gameState));
-            assert.ok(ccl.isValidGameState(TestData.testSpecialCase.gameState));
-            assert.ok(ccl.isValidGameState(TestData.testSpecialCaseWinning.gameState));
+            assert.ok(ccl.isValidGame(TestData.testAdvancedMoves.game));
+            assert.ok(ccl.isValidGame(TestData.testMovesOfRoles.game));
+            assert.ok(ccl.isValidGame(TestData.testShrinkingOfBoard.game));
+            assert.ok(ccl.isValidGame(TestData.testSpecialCase.game));
+            assert.ok(ccl.isValidGame(TestData.testSpecialCaseWinning.game));
         });
 
         it('should return true for a valid game state, even when game is over', () => {
             const gss = [
-                TestData.testShrinkingOfBoard.shrinkingBeatingWinning.gameState,
-                TestData.testSpecialCaseWinning.beatingBeingTrappedButWinning.gameState
+                TestData.testShrinkingOfBoard.shrinkingBeatingWinning.game,
+                TestData.testSpecialCaseWinning.beatingBeingTrappedButWinning.game
             ];
-            gss.forEach(gs => assert.ok(ccl.isValidGameState(gs)));
+            gss.forEach(gs => assert.ok(ccl.isValidGame(gs)));
         });
 
-        const GS = TestData.testAdvancedMoves.gameState;
+        const GS = TestData.testAdvancedMoves.game;
 
         it('should return false for wrong types in keys', () => {
             const wrongLimits = {limits: GS.whoseTurn, pawns: GS.pawns, whoseTurn: GS.whoseTurn};
             const wrongPawns = {limits: GS.limits, pawns: GS.limits, whoseTurn: GS.whoseTurn};
             const wrongTurn = {limits: GS.limits, pawns: GS.pawns, whoseTurn: '2'};
 
-            assert.ok(!ccl.isValidGameState(wrongLimits));
-            assert.ok(!ccl.isValidGameState(wrongPawns));
-            assert.ok(!ccl.isValidGameState(wrongTurn));
+            assert.ok(!ccl.isValidGame(wrongLimits));
+            assert.ok(!ccl.isValidGame(wrongPawns));
+            assert.ok(!ccl.isValidGame(wrongTurn));
         });
 
         it('should return false for missing keys', () => {
@@ -283,21 +283,21 @@ describe('main', () => {
             const noPawns = {limit: GS.limits, whoseTurn: GS.whoseTurn};
             const noTurn = {limit: GS.limits, pawns: GS.pawns};
 
-            assert.ok(!ccl.isValidGameState(noLimits));
-            assert.ok(!ccl.isValidGameState(noPawns));
-            assert.ok(!ccl.isValidGameState(noTurn));
+            assert.ok(!ccl.isValidGame(noLimits));
+            assert.ok(!ccl.isValidGame(noPawns));
+            assert.ok(!ccl.isValidGame(noTurn));
         });
 
         it('should return false for wrong data types (obj,array,string,boolean,null,undefined)', () => {
             const DIFF_OBJ = {street: 'Baker Street', houseNo: 2};
             const DIFF_ARR = [1,2,3,4];
 
-            assert.ok(!ccl.isValidGameState(DIFF_OBJ));
-            assert.ok(!ccl.isValidGameState(DIFF_ARR));
-            assert.ok(!ccl.isValidGameState(' '));
-            assert.ok(!ccl.isValidGameState(true));
-            assert.ok(!ccl.isValidGameState(null));
-            assert.ok(!ccl.isValidGameState());
+            assert.ok(!ccl.isValidGame(DIFF_OBJ));
+            assert.ok(!ccl.isValidGame(DIFF_ARR));
+            assert.ok(!ccl.isValidGame(' '));
+            assert.ok(!ccl.isValidGame(true));
+            assert.ok(!ccl.isValidGame(null));
+            assert.ok(!ccl.isValidGame());
         });
     });
 });

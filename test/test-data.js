@@ -29,7 +29,7 @@ const CORNER_PAWNS = [
 ];
 
 public.testMovesOfRoles = {
-    gameState: {
+    game: {
         limits: START_LIMITS,
         pawns: [
             ...BLUE_PAWNS_ALL_ROLES,
@@ -148,7 +148,7 @@ public.testMovesOfRoles = {
 // -------------------------- Test Shrinking of Board --------------------------
 
 public.testShrinkingOfBoard = {
-    gameState: {
+    game: {
         limits: START_LIMITS,
         pawns: [
             { player: 3, roles:{ 0:2, 1:3, 2:0, 3:1 }, position: { row:6, col:0 } }, // ROOK
@@ -162,7 +162,7 @@ public.testShrinkingOfBoard = {
 
     shrinkColsRight: {
         move: { pawnI: 1, destination:{row:0, col:4} },
-        gameState: {
+        game: {
             limits: { lower:{row:0,col:0}, upper:{row:7,col:4} },
             pawns: [
                 { player: 3, roles:{ 0:2, 1:3, 2:0, 3:1 }, position: { row:6, col:0 } }, // ROOK
@@ -174,7 +174,7 @@ public.testShrinkingOfBoard = {
     },
     shrinkColsRightToSmallest: {
         move: { pawnI: 1, destination:{row:0, col:0} },
-        gameState: {
+        game: {
             limits: { lower:{row:0,col:0}, upper:{row:7,col:2} },
             pawns: [
                 { player: 3, roles:{ 0:2, 1:3, 2:0, 3:1 }, position: { row:6, col:0 } }, // ROOK
@@ -187,7 +187,7 @@ public.testShrinkingOfBoard = {
 
     shrinkRowsTop: {
         move: { pawnI: 1, destination:{row:3, col:7} },
-        gameState: {
+        game: {
             limits: { lower:{row:3,col:0}, upper:{row:7,col:7} },
             pawns: [
                 { player: 3, roles:{ 0:2, 1:3, 2:0, 3:1 }, position: { row:6, col:0 } }, // ROOK
@@ -199,7 +199,7 @@ public.testShrinkingOfBoard = {
     },
     shrinkRowsTopToSmallest: {
         move: { pawnI: 1, destination:{row:7, col:7} },
-        gameState: {
+        game: {
             limits: { lower:{row:5,col:0}, upper:{row:7,col:7} },
             pawns: [
                 { player: 3, roles:{ 0:2, 1:3, 2:0, 3:1 }, position: { row:6, col:0 } }, // ROOK
@@ -212,7 +212,7 @@ public.testShrinkingOfBoard = {
 
     shrinkRowsAndColsTopRight: {
         move: { pawnI: 1, destination:{row:3, col:4} },
-        gameState: {
+        game: {
             limits: { lower:{row:3,col:0}, upper:{row:7,col:4} },
             pawns: [
                 { player: 3, roles:{ 0:2, 1:3, 2:0, 3:1 }, position: { row:6, col:0 } }, // ROOK
@@ -224,7 +224,7 @@ public.testShrinkingOfBoard = {
     },
     shrinkRowsAndColsTopRightToSmallest: {
         move: { pawnI: 1, destination:{row:6, col:1} },
-        gameState: {
+        game: {
             limits: { lower:{row:5,col:0}, upper:{row:7,col:2} },
             pawns: [
                 { player: 3, roles:{ 0:2, 1:3, 2:0, 3:1 }, position: { row:6, col:0 } }, // ROOK
@@ -237,7 +237,7 @@ public.testShrinkingOfBoard = {
 
     noShrinking: {
         move: { pawnI: 2, destination:{row:7,col:7} },
-        gameState: {
+        game: {
             limits: START_LIMITS,
             pawns: [
                 { player: 3, roles:{ 0:2, 1:3, 2:0, 3:1 }, position: { row:6, col:0 } }, // ROOK
@@ -250,7 +250,7 @@ public.testShrinkingOfBoard = {
 
     shrinkingOtherPawnsSetLimits: {
         move: { pawnI: 2, destination:{row:4, col:3} },
-        gameState: {
+        game: {
             limits: { lower:{row:0,col:0}, upper:{row:6,col:7} },
             pawns: [
                 { player: 3, roles:{ 0:2, 1:3, 2:0, 3:1 }, position: { row:6, col:0 } }, // ROOK
@@ -263,7 +263,7 @@ public.testShrinkingOfBoard = {
 
     shrinkingBeatingWinning: {
         move: { pawnI: 2, destination:{row:6, col:0} },
-        gameState: {
+        game: {
             limits: { lower:{row:0,col:0}, upper:{row:6,col:7} },
             pawns: [
                 { player: 1, roles:{ 0:3, 1:0, 2:1, 3:2 }, position: { row:0, col:7 } }, // QUEEN
@@ -277,7 +277,7 @@ public.testShrinkingOfBoard = {
 // ---------------------------- Test advanced moves ----------------------------
 
 public.testAdvancedMoves = {
-    gameState: {
+    game: {
         limits: { lower:{row:2,col:1}, upper:{row:6,col:5} },
         pawns: [
             {player: 0, roles:{ 0:3, 1:0, 2:1, 3:2}, position: { row:2, col: 1 } },
@@ -292,7 +292,7 @@ public.testAdvancedMoves = {
 
     normalMove: {
         move: { pawnI: 0, destination: { row: 2, col: 3 } },
-        gameState: {
+        game: {
             limits: { lower:{row:2,col:1}, upper:{row:6,col:5} },
             pawns: [
                 {player: 0, roles:{ 0:3, 1:0, 2:1, 3:2}, position: { row:2, col: 3 } },
@@ -306,7 +306,7 @@ public.testAdvancedMoves = {
 
     shrinking: {
         move: { pawnI: 0, destination: { row: 3, col: 1 } },
-        gameState: {
+        game: {
             limits: { lower:{row:3,col:1}, upper:{row:6,col:5} },
             pawns: [
                 {player: 0, roles:{ 0:3, 1:0, 2:1, 3:2}, position: { row:3, col: 1 } },
@@ -320,7 +320,7 @@ public.testAdvancedMoves = {
 
     shrinkingToSmallestRow: {
         move: { pawnI: 0, destination: { row: 5, col: 1 } },
-        gameState: {
+        game: {
             limits: { lower:{row:4,col:1}, upper:{row:6,col:5} },
             pawns: [
                 {player: 0, roles:{ 0:3, 1:0, 2:1, 3:2}, position: { row:5, col: 1 } },
@@ -334,7 +334,7 @@ public.testAdvancedMoves = {
 
     beating: {
         move: { pawnI: 1, destination: { row: 6, col: 3 } },
-        gameState: {
+        game: {
             limits: { lower:{row:2,col:1}, upper:{row:6,col:5} },
             pawns: [
                 {player: 0, roles:{ 0:3, 1:0, 2:1, 3:2}, position: { row:2, col: 1 } },
@@ -347,7 +347,7 @@ public.testAdvancedMoves = {
 
     beatingAndShrinking: {
         move: { pawnI: 0, destination: { row: 6, col: 5 } },
-        gameState: {
+        game: {
             limits: { lower:{row:4,col:1}, upper:{row:6,col:5} },
             pawns: [
                 {player: 0, roles:{ 0:3, 1:0, 2:1, 3:2}, position: { row:6, col: 5 } },
@@ -375,7 +375,7 @@ public.testAdvancedMoves = {
 // ----------------------------- Test Special Case -----------------------------
 
 public.testSpecialCase = {
-    gameState: {
+    game: {
         limits: { lower:{row:2,col:0}, upper:{row:4,col:5} },
         pawns: [
             { player: 0, roles:{ 0:3, 1:0, 2:1, 3:2 }, position: { row:3, col:4 } }, // Knight !
@@ -392,7 +392,7 @@ public.testSpecialCase = {
         move: { pawnI: 3, destination: { row:3, col:4 } },
         numOfPawnsPerPlayer: { 0:1, 1:0, 2:1, 3:0 },
         numOfPawns: 2,
-        gameState: {
+        game: {
             limits: { lower:{row:2,col:3}, upper:{row:4,col:5} },
             pawns: [
                 { player: 0, roles:{ 0:2, 1:3, 2:0, 3:1 }, position: { row:4, col:3 } }, // Queen
@@ -406,7 +406,7 @@ public.testSpecialCase = {
         move: { pawnI: 3, destination: { row:3, col:3 } },
         numOfPawnsPerPlayer: { 0:1, 1:0, 2:2, 3:0 },
         numOfPawns: 3,
-        gameState: {
+        game: {
             limits: { lower:{row:2,col:3}, upper:{row:4,col:5} },
             pawns: [
                 { player: 0, roles:{ 0:2, 1:3, 2:0, 3:1 }, position: { row:4, col:3 } }, // Queen
@@ -419,7 +419,7 @@ public.testSpecialCase = {
 };
 
 public.testSpecialCaseWinning = {
-    gameState: {
+    game: {
         limits: { lower:{row:2,col:4}, upper:{row:4,col:6} },
         pawns: [
             { player: 0, roles:{ 0:2, 1:3, 2:0, 3:1 }, position: { row:4, col:4 } }, // Bishop, becomes knight !
@@ -434,7 +434,7 @@ public.testSpecialCaseWinning = {
         move: { pawnI: 0, destination:{row:3, col:5} },
         numOfPawnsPerPlayer: { 0:1, 1:0, 2:0, 3:0 },
         numOfPawns: 1,
-        gameState: {
+        game: {
             limits: { lower:{row:2,col:4}, upper:{row:4,col:6} },
             pawns: [
                 { player: 0, roles:{ 0:2, 1:3, 2:0, 3:1 }, position: { row:3, col:5 } },

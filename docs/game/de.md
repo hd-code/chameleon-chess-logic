@@ -1,3 +1,5 @@
+![logo](pics/logo-de.png)
+
 # Chamäleon Schach
 
 Chamäleon Schach ist ein schachähnliches Brettspiel für zwei bis vier Personen.
@@ -27,6 +29,9 @@ Die Spieler wählen sich jeweils eine von insgesamt vier Farben (rot, grün, gel
 *Spielbrett mit den Seiten, an denen die Spieler sitzen*
 
 Nun nehmen die Spieler sich die vier Spielfiguren in ihrer Farbe und platzieren sie auf den vier linken Feldern, beginnend beim linken Eckfeld. Dabei sind die Figuren so zu setzen, dass alle Figuren zu Beginn die Rolle "Springer" haben.
+
+![Das Spielbrett in Startaufstellung](./pics/board-start.png)
+*Spielbrett mit den Figuren aller Spieler in der Startaufstellung*
 
 ### Spielfiguren
 
