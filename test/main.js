@@ -28,7 +28,7 @@ describe('main', () => {
     });
 
     describe('initGame()', () => {
-        it('should return a valid game state for two or more players', () => {
+        it('should return a valid game object for two or more players', () => {
             const actual = [
                 ccl.initGame(true, true, true, true),
                 
@@ -240,7 +240,7 @@ describe('main', () => {
             gss.forEach(gs => assert.ok(ccl.isGameOver(gs)));
         });
 
-        it('should return false for game states with more than one players', () => {
+        it('should return false for game objects with more than one players', () => {
             assert.ok(!ccl.isGameOver(TestData.testAdvancedMoves.game));
             assert.ok(!ccl.isGameOver(TestData.testMovesOfRoles.game));
             assert.ok(!ccl.isGameOver(TestData.testShrinkingOfBoard.game));
@@ -250,7 +250,7 @@ describe('main', () => {
     });
 
     describe('isValidGame()', () => {
-        it('should return true for all valid game states', () => {
+        it('should return true for all valid game objects', () => {
             assert.ok(ccl.isValidGame(TestData.testAdvancedMoves.game));
             assert.ok(ccl.isValidGame(TestData.testMovesOfRoles.game));
             assert.ok(ccl.isValidGame(TestData.testShrinkingOfBoard.game));
@@ -258,7 +258,7 @@ describe('main', () => {
             assert.ok(ccl.isValidGame(TestData.testSpecialCaseWinning.game));
         });
 
-        it('should return true for a valid game state, even when game is over', () => {
+        it('should return true for a valid game object, even when game is over', () => {
             const gss = [
                 TestData.testShrinkingOfBoard.shrinkingBeatingWinning.game,
                 TestData.testSpecialCaseWinning.beatingBeingTrappedButWinning.game

@@ -22,7 +22,7 @@ describe('models/Game', () => {
 
     // One could make more test here, but tests are already done in main.js.
     describe('isGame()', () => {
-        it('should return true for valid game states', () => {
+        it('should return true for valid game objects', () => {
             assert.ok(Game.isGame(TestData.testAdvancedMoves.game));
             assert.ok(Game.isGame(TestData.testMovesOfRoles.game));
             assert.ok(Game.isGame(TestData.testShrinkingOfBoard.game));
