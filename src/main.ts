@@ -72,7 +72,7 @@ export function getIndexOfPawnAtPosition(game: Game.IGame, position: IPosition):
  * 
  * If the given index is invalid, this function returns an empty array (`[]`).
  * @param game      The current game object.
- * @param pawnIndex The index of the pawn in the pawns array of the game state whose moves should be calculated.
+ * @param pawnIndex The index of the pawn in the pawns array of the game object whose moves should be calculated.
  */
 export function getMoves(game: Game.IGame, pawnIndex: number): IPosition[] {
     return game.pawns[pawnIndex] !== undefined
