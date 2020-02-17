@@ -15,14 +15,14 @@ This is a library that can be used to create an app, website or any other kind o
   - [ERole](#erole)
 - [Functions](#functions)
   - [getBoard](#getboard)
-  - [initGame](#initgame)
+  - [createGame](#creategame)
   - [getIndexOfPawnAtPosition](#getindexofpawnatposition)
   - [getMoves](#getmoves)
   - [makeMove](#makemove)
-  - [letComputerMakeMove](#letcomputermakemove)
+  - [makeComputerMove](#makecomputermove)
   - [arePlayersAlive](#areplayersalive)
   - [isGameOver](#isgameover)
-  - [isValidGame](#isvalidgame)
+  - [isGame](#isgame)
 
 ## Data Structures
 
@@ -152,10 +152,10 @@ Returns the game board. It is a two-dimensional array of 8x8 field colors. See [
 
 This board has always the same layout in all games and it does not change during a game. It is implemented as a constant. So, you can call this function once on startup of your application and store it in a constant in your app. Then, you can just refer to that constant.
 
-### initGame
+### createGame
 
 ```ts
-declare function initGame(red: boolean, green: boolean, yellow: boolean, blue: boolean): IGame|null;
+declare function createGame(red: boolean, green: boolean, yellow: boolean, blue: boolean): IGame|null;
 ```
 
 Creates a new `IGame`-Object. Thus, it generates a new game in the starting configuration.
@@ -200,10 +200,10 @@ Possible errors:
 
 As parameters you need to pass the current game object, the index of the pawn in the pawns array you want to move and the destination (`IPosition`), where the pawn should be moved to.
 
-### letComputerMakeMove
+### makeComputerMove
 
 ```ts
-declare function letComputerMakeMove(game: IGame): IGame;
+declare function makeComputerMove(game: IGame): IGame;
 ```
 
 The computer will make a move and return the updated game object.
@@ -239,10 +239,10 @@ declare function isGameOver(game: IGame): boolean;
 
 Checks the given game object if the game is over or if it can still be played. This function returns `true` if the game is finished, `false` if it can still continue.
 
-### isValidGame
+### isGame
 
 ```ts
-declare function isValidGame(game: any): game is IGame;
+declare function isGame(game: any): game is IGame;
 ```
 
 Checks if a given game object really is a game object. It checks all the types and keys. It also checks, if the information within the game object is valid.

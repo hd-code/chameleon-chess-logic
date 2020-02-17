@@ -46,7 +46,7 @@ export function getBoard(): TBoard {
  * @param yellow If set to `true`, the yellow player takes part in this game.
  * @param blue   If set to `true`, the blue   player takes part in this game.
  */
-export function initGame(red: boolean, green: boolean, yellow: boolean, blue: boolean): Game.IGame|null {
+export function createGame(red: boolean, green: boolean, yellow: boolean, blue: boolean): Game.IGame|null {
     const game = Game.createGame(red, green, yellow, blue)
     return !Game.isGameOver(game) ? game : null
 }
@@ -103,7 +103,7 @@ export function makeMove(game: Game.IGame, pawnIndex: number, destination: IPosi
  * The computer will make a move and return the updated game object.
  * @param game The current game object.
  */
-export function letComputerMakeMove(game: Game.IGame): Game.IGame {
+export function makeComputerMove(game: Game.IGame): Game.IGame {
     return makeBestMove(game);
 }
 
@@ -140,6 +140,6 @@ export function isGameOver(game: Game.IGame): boolean {
  * it returns `false`.
  * @param game  The game object to be checked.
  */
-export function isValidGame(game: any): game is Game.IGame {
+export function isGame(game: any): game is Game.IGame {
     return Game.isGame(game);
 }
