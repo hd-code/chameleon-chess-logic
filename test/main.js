@@ -27,33 +27,33 @@ describe('main', () => {
         });
     });
 
-    describe('initGame()', () => {
+    describe('createGame()', () => {
         it('should return a valid game object for two or more players', () => {
             const actual = [
-                ccl.initGame(true, true, true, true),
+                ccl.createGame(true, true, true, true),
                 
-                ccl.initGame(true, true, true, false),
-                ccl.initGame(true, true, false, false),
-                ccl.initGame(true, false, true, false),
-                ccl.initGame(false, true, true, false),
+                ccl.createGame(true, true, true, false),
+                ccl.createGame(true, true, false, false),
+                ccl.createGame(true, false, true, false),
+                ccl.createGame(false, true, true, false),
                 
-                ccl.initGame(true, true, false, true),
-                ccl.initGame(true, false, false, true),
-                ccl.initGame(false, true, false, true),
+                ccl.createGame(true, true, false, true),
+                ccl.createGame(true, false, false, true),
+                ccl.createGame(false, true, false, true),
 
-                ccl.initGame(true, false, true, true),
-                ccl.initGame(false, false, true, true),
+                ccl.createGame(true, false, true, true),
+                ccl.createGame(false, false, true, true),
             ];
-            actual.forEach(gs => assert.ok(ccl.isValidGame(gs)));
+            actual.forEach(gs => assert.ok(ccl.isGame(gs)));
         });
 
         it('should return null if less than two players were requested', () => {
             const actual = [
-                ccl.initGame(false, false, false, false),
-                ccl.initGame(false, false, false, true),
-                ccl.initGame(false, false, true, false),
-                ccl.initGame(false, true, false, false),
-                ccl.initGame(true, false, false, false),
+                ccl.createGame(false, false, false, false),
+                ccl.createGame(false, false, false, true),
+                ccl.createGame(false, false, true, false),
+                ccl.createGame(false, true, false, false),
+                ccl.createGame(true, false, false, false),
             ];
             actual.forEach(gs => assert.strictEqual(gs, null));
         });
@@ -217,7 +217,7 @@ describe('main', () => {
         });
     });
 
-    describe('letComputerMakeMove()', () => {});
+    describe('makeComputerMove()', () => {});
 
     it('arePlayersAlive()', () => {
         test(TestData.testAdvancedMoves);
@@ -249,13 +249,13 @@ describe('main', () => {
         });
     });
 
-    describe('isValidGame()', () => {
+    describe('isGame()', () => {
         it('should return true for all valid game objects', () => {
-            assert.ok(ccl.isValidGame(TestData.testAdvancedMoves.game));
-            assert.ok(ccl.isValidGame(TestData.testMovesOfRoles.game));
-            assert.ok(ccl.isValidGame(TestData.testShrinkingOfBoard.game));
-            assert.ok(ccl.isValidGame(TestData.testSpecialCase.game));
-            assert.ok(ccl.isValidGame(TestData.testSpecialCaseWinning.game));
+            assert.ok(ccl.isGame(TestData.testAdvancedMoves.game));
+            assert.ok(ccl.isGame(TestData.testMovesOfRoles.game));
+            assert.ok(ccl.isGame(TestData.testShrinkingOfBoard.game));
+            assert.ok(ccl.isGame(TestData.testSpecialCase.game));
+            assert.ok(ccl.isGame(TestData.testSpecialCaseWinning.game));
         });
 
         it('should return true for a valid game object, even when game is over', () => {
@@ -263,7 +263,7 @@ describe('main', () => {
                 TestData.testShrinkingOfBoard.shrinkingBeatingWinning.game,
                 TestData.testSpecialCaseWinning.beatingBeingTrappedButWinning.game
             ];
-            gss.forEach(gs => assert.ok(ccl.isValidGame(gs)));
+            gss.forEach(gs => assert.ok(ccl.isGame(gs)));
         });
 
         const GS = TestData.testAdvancedMoves.game;
@@ -273,9 +273,9 @@ describe('main', () => {
             const wrongPawns = {limits: GS.limits, pawns: GS.limits, whoseTurn: GS.whoseTurn};
             const wrongTurn = {limits: GS.limits, pawns: GS.pawns, whoseTurn: '2'};
 
-            assert.ok(!ccl.isValidGame(wrongLimits));
-            assert.ok(!ccl.isValidGame(wrongPawns));
-            assert.ok(!ccl.isValidGame(wrongTurn));
+            assert.ok(!ccl.isGame(wrongLimits));
+            assert.ok(!ccl.isGame(wrongPawns));
+            assert.ok(!ccl.isGame(wrongTurn));
         });
 
         it('should return false for missing keys', () => {
@@ -283,21 +283,21 @@ describe('main', () => {
             const noPawns = {limit: GS.limits, whoseTurn: GS.whoseTurn};
             const noTurn = {limit: GS.limits, pawns: GS.pawns};
 
-            assert.ok(!ccl.isValidGame(noLimits));
-            assert.ok(!ccl.isValidGame(noPawns));
-            assert.ok(!ccl.isValidGame(noTurn));
+            assert.ok(!ccl.isGame(noLimits));
+            assert.ok(!ccl.isGame(noPawns));
+            assert.ok(!ccl.isGame(noTurn));
         });
 
         it('should return false for wrong data types (obj,array,string,boolean,null,undefined)', () => {
             const DIFF_OBJ = {street: 'Baker Street', houseNo: 2};
             const DIFF_ARR = [1,2,3,4];
 
-            assert.ok(!ccl.isValidGame(DIFF_OBJ));
-            assert.ok(!ccl.isValidGame(DIFF_ARR));
-            assert.ok(!ccl.isValidGame(' '));
-            assert.ok(!ccl.isValidGame(true));
-            assert.ok(!ccl.isValidGame(null));
-            assert.ok(!ccl.isValidGame());
+            assert.ok(!ccl.isGame(DIFF_OBJ));
+            assert.ok(!ccl.isGame(DIFF_ARR));
+            assert.ok(!ccl.isGame(' '));
+            assert.ok(!ccl.isGame(true));
+            assert.ok(!ccl.isGame(null));
+            assert.ok(!ccl.isGame());
         });
     });
 });
