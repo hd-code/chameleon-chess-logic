@@ -1,0 +1,26 @@
+{
+  "name": "chameleon-chess-logic",
+  "version": "0.0.1",
+  "private": true,
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "lib"
+  ],
+  "scripts": {
+    "build": "npm run clear && tsc && npm run minify",
+    "clear": "rm -rf dist",
+    "minify": "for i in $(find dist -name *.js); do uglifyjs $i -o $i -mc; done;",
+    "prepare": "npm run build",
+    "start": "npm test",
+    "test": "mocha -r ts-node/register 'test/**/*.ts'"
+  },
+  "devDependencies": {
+    "@types/mocha": "^7.0.2",
+    "@types/node": "^12.12.36",
+    "mocha": "^7.1.1",
+    "ts-node": "^8.9.0",
+    "typescript": "^3.8.3",
+    "uglify-js": "^3.9.1"
+  }
+}
