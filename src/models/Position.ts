@@ -1,15 +1,18 @@
-import { isNumber } from "../helper";
+import { isKeyOfObject, isInteger } from '../../lib/hd-helper';
 
 // -----------------------------------------------------------------------------
 
+/** Specifies a position (a specific field) on the game board. */
 export interface IPosition {
-    row: number
-    col: number
+    /** The row of the field on the game board. */
+    row: number;
+    /** The column of the field on the game board. */
+    col: number;
 }
 
-export function isPosition(pos: IPosition): pos is IPosition {
-    return 'row' in pos && isNumber(pos.row)
-        && 'col' in pos && isNumber(pos.col)
+export function isPosition(pos: any): pos is IPosition {
+    return isKeyOfObject(pos, 'row', isInteger)
+        && isKeyOfObject(pos, 'col', isInteger);
 }
 
 export function isSamePosition(a: IPosition, b: IPosition): boolean {

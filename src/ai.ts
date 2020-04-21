@@ -1,87 +1,88 @@
-import { deepClone } from "./helper";
+import { flattenArray } from '../lib/hd-helper';
 
-import { EColor } from "./models/Color";
-import { IGameState, isGameOver, getNextPossibleGameStates } from "./models/GameState";
-import { getNextMoves, getIndexOfPawnAtPosition} from "./models/Pawns";
+import { EColor } from './models/Color';
+import { IGame, isGameOver, getNextPossibleGames } from './models/Game';
+import { getNextMoves, getIndexOfPawn} from './models/Pawns';
 
 /* --------------------------------- Public --------------------------------- */
 
-export function makeBestMove(gs: IGameState): IGameState {
-    const nextGSs = getNextPossibleGameStates(gs)
-    const recursionDepth = getRecursionDepth(gs)
+export function makeBestMove(game: IGame): IGame {
+    const recursionDepth = getRecursionDepth(game);
 
-    const weightedGSs = nextGSs.map(cGS => ({
-        gs: cGS,
-        score: evalGS(cGS, recursionDepth)
-    }))
-    const orderedGSs = deepClone(weightedGSs).sort((a,b) => {
-        return calcPlayerScore(b.score, gs.whoseTurn)
-             - calcPlayerScore(a.score, gs.whoseTurn)
-    })
+    const possibleGames = getNextPossibleGames(game);
+    const scores = possibleGames.map(game => calcDeepScore(game, recursionDepth));
 
-    return orderedGSs[0].gs
+    const bestIndex = getIndexOfHighestScore(scores, game.whoseTurn);
+    return possibleGames[bestIndex];
 }
 
-/* --------------------------------- Intern --------------------------------- */
+// -----------------------------------------------------------------------------
 
-const PAWN_VALUE = 100
-function getRecursionDepth(gs: IGameState): number {
-    const numOfPawns = gs.pawns.length
-    return numOfPawns < 3 ? 5
-         : numOfPawns < 5 ? 3
-         : numOfPawns < 7 ? 2
+function getRecursionDepth(game: IGame): number {
+    const numOfPawns = game.pawns.length
+    return numOfPawns < 3 ? 4
+         : numOfPawns < 5 ? 2
+        //  : numOfPawns < 7 ? 2
          : 1
 }
 
-type Score = {[player in EColor]: number}
+const PAWN_VALUE = 100;
 
-function evalGS(gs: IGameState, depth: number): Score {
-    // if gameOver or depth = 0, getScore -> recursion anchor
-    if (isGameOver(gs.pawns) || depth <= 0)
-        return getScore(gs)
+type TScore = {[player in EColor]: number}
 
-    const moves = getNextPossibleGameStates(gs)
-    const moveScores = moves.map(move => evalGS(move, depth - 1))
-    const orderedScores = deepClone(moveScores).sort((a,b) => {
-        return calcPlayerScore(b, gs.whoseTurn) - calcPlayerScore(a, gs.whoseTurn)
-    })
+function getIndexOfHighestScore(scores: TScore[], player: EColor): number {
+    let indexScores = scores.map((score,i) => ({index: i, score: calcPlayerScore(score, player)}));
 
-    return orderedScores[0]
-}
+    indexScores.sort((a,b) => b.score - a.score);
 
-function getScore(gs:IGameState): Score {
-    return {
-        [EColor.RED]:   evalPlayer(gs, EColor.RED),
-        [EColor.GREEN]: evalPlayer(gs, EColor.GREEN),
-        [EColor.YELLOW]:evalPlayer(gs, EColor.YELLOW),
-        [EColor.BLUE]:  evalPlayer(gs, EColor.BLUE)
+    if (indexScores.length > 1 && indexScores[0].score === indexScores[1].score && Math.round(Math.random())) {
+        indexScores[0] = indexScores[1];
     }
-}
 
-//   counts pawns (-> PAWN_VALUE)
-// + counts the number of moves all pawns of a player can do
-function evalPlayer(gs: IGameState, player: EColor): number {
-    const pawns = gs.pawns.filter(pawn => pawn.player === player)
-    return pawns.length * PAWN_VALUE + countMovesOfAllPawns(player, gs)
-}
-
-function countMovesOfAllPawns(player: EColor, gs: IGameState): number {
-    const pawns = gs.pawns.filter(pawn => pawn.player === player)
-    const pawnsI = pawns.map(pawn => getIndexOfPawnAtPosition(pawn.position, gs.pawns))
-    return pawnsI.reduce((result, pawn) => result + countMovesOfPawn(pawn, gs), 0)
-}
-
-function countMovesOfPawn(pawnI: number, gs: IGameState): number {
-    return getNextMoves(pawnI, gs.pawns, gs.limits).length
+    return indexScores[0].index;
 }
 
 //       scoreOfPlayer - scoresOfOpponents
 // =     scoreOfPlayer - scoresOfAllPlayers + scoreOfPlayer
 // = 2 * scoreOfPlayer - scoresOfAllPlayers
-function calcPlayerScore(score: Score, player: EColor): number {
+function calcPlayerScore(score: TScore, player: EColor): number {
     return 2 * score[player] - calcScoreTotal(score)
 }
 
-function calcScoreTotal(score: Score): number {
+function calcScoreTotal(score: TScore): number {
     return score[EColor.RED] + score[EColor.GREEN] + score[EColor.YELLOW] + score[EColor.BLUE]
+}
+
+function calcDeepScore(game: IGame, depth: number): TScore {
+    if (isGameOver(game) || depth <= 0)
+        return calcScore(game);
+
+    const possibleGames = getNextPossibleGames(game);
+    const scores = possibleGames.map(game => calcDeepScore(game, depth - 1));
+
+    const bestIndex = getIndexOfHighestScore(scores, game.whoseTurn);
+    return scores[bestIndex];
+}
+
+function calcScore(game:IGame): TScore {
+    return {
+        [EColor.RED]:   evalPlayer(game, EColor.RED),
+        [EColor.GREEN]: evalPlayer(game, EColor.GREEN),
+        [EColor.YELLOW]:evalPlayer(game, EColor.YELLOW),
+        [EColor.BLUE]:  evalPlayer(game, EColor.BLUE)
+    };
+}
+
+//   count pawns (-> PAWN_VALUE)
+// + counts the number of moves all pawns of a player can do
+function evalPlayer(game: IGame, player: EColor): number {
+    const pawns = game.pawns.filter(pawn => pawn.player === player);
+    
+    if (pawns.length === 0)
+        return 0;
+    
+    const pawnsI = pawns.map(pawn => getIndexOfPawn(pawn, game.pawns));
+    const movesPerPawn = pawnsI.map(pawnI => getNextMoves(pawnI, game.pawns, game.limits));
+
+    return pawns.length * PAWN_VALUE + flattenArray(movesPerPawn).length;
 }

@@ -1,109 +1,60 @@
 # Chameleon Chess Logic
 
-This node.js module contains the basic logic and rules for the chameleon chess game.
+This node module contains the game logic for the board game "Chameleon Chess".
 
-It offers a basic data structure that represents a situation on the game board. It also provides means to update this game state, thus advancing the game.
+Here you can find a description of the game and its rules:
+- [english](./docs/game/en.md)
+- [deutsch](./docs/game/de.md)
 
-This module doesn't contain any visual rendering. It is just a micro-service for managing a game on the most basic level.
+However, this module doesn't provide any kind of visual rendering. Instead, it is a library that implements the game logic of Chameleon Chess. It offers the basic models (data structures and functions to work on these data structures) that can be used to create an App or Website or any other kind of format to play a game of Chameleon Chess.
 
-## The Rules: Chameleon Chess
+## Installation
 
-This game is a special adaptation of the most popular game of Chess. However it is somehow a bit faster to play, but also a little more challenging.
+The easiest way to use this library in your project, is by using NPM.
 
-### The Objective
+So, if you have the current version of NPM installed, just run this in the terminal in the folder of your project:
 
-The goal is quite simple: The last player who still has pawns on the board wins. So, the objective is to be the last (wo)man standing.
+``` shell
+npm install git+https://github.com/hd-code/chameleon-chess-logic.git#v1
+```
 
-### The Game Board
+**`#v1`** specifies that we want to pull the branch called 'v1'. Branch 'v1' contains the current stable release of this library.
 
-This game is played on a standard 8x8 chess board. However, there is a catch! Instead of the normal black and white colouring on normal chess boards, this game uses a quite colorful board:
+Now you can use this module in your app by simply requiring...
 
-![Picture of chameleon chess board]()
+```js
+const ccl = require('chameleon-chess-logic');
+```
 
-Instead of black and white there are four different colors to be found on the board. Them colors being: Red, Green, Yellow and Blue. The layout of these colors is not random, but has been determined by long hours of testing. So, there is a purpose behind the layout!
+... or importing it.
 
-### The Pawns
+```ts
+import * as ccl from 'chameleon-chess-logic';
+```
 
-What also differs, are the pawns. Instead of normal chess pawns, each player has only four pawns. These pawns are small chameleons themselves, meaning that they are shape shifters. Have a look at them:
+This project is written in Typescript. So all declarations, interfaces etc. are included in the build.
 
-![Picture of chameleon chess pawns]()
+## Usage
 
-They can be either one of four different chess pawns: Knight, Bishop, Rook or Queen. Which role they actually assume depends on the color of the field a pawn currently stands on.
+A complete guide on how to use this library, data types and functions, can be found [here](./docs/api.md).
 
-So, if the first pawn stands on a Red tile, it is a Knight. If it stands on a green tile it is a Queen etc. There are different combinations of field colors and roles, that differ from pawn to pawn.
+## Development
 
-The game can be played with two, three or four players. Each player has four pawns and this is the standard starting constellation:
+If you want to work on this module you need the current version of NPM installed on your machine.
 
-![Picture of the starting constellation for four players]()
+Then open your terminal and do the following:
 
-### Game Play
+```shell
+# clone git repo
+git clone https://github.com/hd-code/chameleon-chess-logic.git
 
-It is a turn based game. The Red player starts, then comes the Blue, the Yellow and the Green player. A turn consists of the player choosing one of his/her pawns and moving it accordingly to the pawn's role. For anyone not familiar with the different chess pawns and how they are allowed to move, see below.
+# change to project directory
+cd chameleon-chess-logic
 
-After the player has moved one of his/her pawns, the turn is over and the next player continues.
+# install dev dependencies for npm module
+npm i
+```
 
-Opponent's pawns can be beaten if one can reach the field they are standing on. So, if a pawn is moved to a field where an opponent's pawn is placed, the opponent's pawn is beaten and removed from the game.
+Now, you can work on the project.
 
-![Picture of a red pawn beating blue one]()
-
-If a player has no pawns left, he/she is out of the game.
-
-### The Limits
-
-To make the game more exciting, the game board also shrinks over time.
-
-Initially the board is 8x8 tiles in size. As soon as a player moves to the center and one or more of the outer most rows or columns become free (so there is no pawn anymore), the board shrinks. So, the outermost pawns determine the current board size.
-
-![Picture of a moving pawn and the shrinking board]()
-
-Once the board has shrunken, it never grows again (until a new game is started at least). The smallest size however is 3x3. So once the board has reached 3x3, it doesn't shrink any further.
-
-**Attention**: There is one special case in the end game. It might happen, that the board has reached the 3x3 size and a pawn will have the role of a knight in the center tile. In that case this pawn can't move anymore and is removed from the game!
-
-### Chess Pawns Movement
-
-Except for the Knight, pawns can't jump over other pieces. An opponents pawn, that blocks the way can be beaten, but will also stop the movement. The players own pawns simply block the way.
-
-**Knight:** A knight moves to the nearest square not on the same rank, file, or diagonal. (This can be thought of as moving two squares horizontally then one square vertically, or moving one square horizontally then two squares vertically—i.e. in an "L" pattern.) The knight is not blocked by other pieces: it jumps to the new location.
-
-![Picture of a Knight and how it can move]()
-
-**Bishop:** A bishop moves any number of vacant squares diagonally.
-
-![Picture of a Bishop and how it can move]()
-
-**Rook:** A rook moves any number of vacant squares horizontally or vertically.
-
-![Picture of a Rook and how it can move]()
-
-**Queen:** The queen moves any number of vacant squares horizontally, vertically, or diagonally. So, a queen is a combination of a bishop and a rook.
-
-![Picture of a Queen and how it can move]()
-
-## Data Structures
-
-According to these rules there are several needed data structures.
-
-**EColor:** An enum representing the four colors: RED, GREEN, YELLOW and BLUE. (0-3)
-
-**ERole:** An enum representing the four roles a pawn can have: KNIGHT, QUEEN, BISHOP and ROOK. (0-3)
-
-**IPosition:** Positions are represented by two numbers: `row` and `col`. They are 0-based, so `{ row: 2, col: 0 }` is the third row and the first column.
-
-**Board:** The board is a two-dimensional array of EColors. The first dimension being the `row` and the second dimension being the `col` as found in `IPosition`
-
-**ILimits:** The limits are represented by two `IPosition`s: `lower` and `upper`. The numbers in the limits are part of the active board. So, `{ lower: { row: 1, ... }` means that the lowest row, which is still part of the playing field, is the second row (zero-based).
-
-**IPawn:** A pawn holds three attributes:
-- `player` which is an `EColor` representing the player this pawn belongs to
-- `position` which is an `IPosition` representing the current position of this pawn on the board
-- `roles` which is a map that maps all four `EColor`s to the corresponding `ERole`, so this tells us on which field this pawn has which role
-
-**IGameState:** The central data structure. Holds all information to represent the current board situation.
-- `limits` which is an `ILimits` telling us how big the board currently is
-- `pawns` which is an array holding all `IPawn`s that are currently on the board, so beaten pawns are no longer part of this array
-- `whoseTurn` an `EColor` which represents the player whose turn it currently is (so this one has to make a move to advance the game)
-
-## Functions
-
-All available functions can be found in `src/main.ts`.
+Please read the [Developer Guide](./docs/developer-guide.md) for an explanation of the project structure and further important information.
