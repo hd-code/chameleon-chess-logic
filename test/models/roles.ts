@@ -28,12 +28,11 @@ describe('models/roles', () => {
         });
         
         it('should return false for wrong data types (obj,array,string,boolean,null,undefined)', () => {
-            assert(!Roles.isRole({street:'Baker Street',houseNo:2}));
-            assert(!Roles.isRole([1,2,3,4]));
-            assert(!Roles.isRole(' '));
-            assert(!Roles.isRole(true));
-            assert(!Roles.isRole(null));
-            assert(!Roles.isRole(undefined));
+            const DATA = [
+                {street:'Baker Street',houseNo:2}, [1,2,3,4], ' ',
+                true, null, undefined
+            ];
+            DATA.forEach(data => assert(!Roles.isRole(data)));
         });
     });
 
@@ -52,12 +51,11 @@ describe('models/roles', () => {
         });
 
         it('should return false for wrong data types (obj,array,string,boolean,null,undefined)', () => {
-            assert(!Roles.isRoles({street:'Baker Street',houseNo:2}));
-            assert(!Roles.isRoles([1,2,3,4]));
-            assert(!Roles.isRoles(' '));
-            assert(!Roles.isRoles(true));
-            assert(!Roles.isRoles(null));
-            assert(!Roles.isRoles(undefined));
+            const DATA = [
+                {street:'Baker Street',houseNo:2}, [1,2,3,4], ' ',
+                true, null, undefined
+            ];
+            DATA.forEach(data => assert(!Roles.isRoles(data)));
         });
     });
 

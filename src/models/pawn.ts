@@ -3,6 +3,7 @@ import { ILimits, isWithinLimits, isSmallestLimits } from './limits';
 import { EPlayer, isPlayer } from './player';
 import { ERole, TRoles, isRoles, getRoles } from './roles';
 
+import { deepClone } from '../../lib/aux';
 import { hasKey } from '../../lib/type-guards';
 
 // -----------------------------------------------------------------------------
@@ -39,7 +40,7 @@ export function isPawn(pawn: any): pawn is IPawn {
 
 /** Returns the pawns in start position for a given player. */
 export function getPawns(player: EPlayer): IPawn[] {
-    return START_PAWNS[player];
+    return deepClone(START_PAWNS[player]);
 }
 
 /** Checks if a pawn is on a given field. If so, the index of the pawn in the

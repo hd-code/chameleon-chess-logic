@@ -26,12 +26,11 @@ describe('models/board', () => {
         });
         
         it('should return false for wrong data types (obj,array,string,boolean,null,undefined)', () => {
-            assert(!Board.isFieldColor({street:'Baker Street',houseNo:2}));
-            assert(!Board.isFieldColor([1,2,3,4]));
-            assert(!Board.isFieldColor(' '));
-            assert(!Board.isFieldColor(true));
-            assert(!Board.isFieldColor(null));
-            assert(!Board.isFieldColor(undefined));
+            const DATA = [
+                {street:'Baker Street',houseNo:2}, [1,2,3,4], ' ',
+                true, null, undefined
+            ];
+            DATA.forEach(data => assert(!Board.isFieldColor(data)));
         });
     });
 
@@ -123,12 +122,11 @@ describe('models/board', () => {
         });
 
         it('should return false for wrong data types (obj,array,string,boolean,null,undefined)', () => {
-            assert(!Board.isPosition({street:'Baker Street',houseNo:2}));
-            assert(!Board.isPosition([1,2,3,4]));
-            assert(!Board.isPosition(' '));
-            assert(!Board.isPosition(true));
-            assert(!Board.isPosition(null));
-            assert(!Board.isPosition(undefined));
+            const DATA = [
+                {street:'Baker Street',houseNo:2}, [1,2,3,4], ' ',
+                true, null, undefined
+            ];
+            DATA.forEach(data => assert(!Board.isPosition(data)));
         });
     });
 

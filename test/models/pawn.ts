@@ -135,12 +135,11 @@ describe('models/pawn', () => {
         });
 
         it('should return false for wrong data types (obj,array,string,boolean,null,undefined)', () => {
-            assert(!Pawn.isPawn({street:'Baker Street',houseNo:2}));
-            assert(!Pawn.isPawn([1,2,3,4]));
-            assert(!Pawn.isPawn(' '));
-            assert(!Pawn.isPawn(true));
-            assert(!Pawn.isPawn(null));
-            assert(!Pawn.isPawn(undefined));
+            const DATA = [
+                {street:'Baker Street',houseNo:2}, [1,2,3,4], ' ',
+                true, null, undefined
+            ];
+            DATA.forEach(data => assert(!Pawn.isPawn(data)));
         });
     });
 
@@ -152,8 +151,10 @@ describe('models/pawn', () => {
 
         function test(player: EPlayer) {
             const pawns = Pawn.getPawns(player);
+            
             assert.strictEqual(pawns.length, 4);
-            pawns.forEach(pawn => assert.strictEqual(pawn.player, player));
+            pawns.forEach(pawn => Pawn.isPawn(pawn) && assert.strictEqual(pawn.player, player));
+
             assert(noSamePosition(pawns));
             assert(noSameRoles(pawns));
         }

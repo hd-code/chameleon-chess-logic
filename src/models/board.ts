@@ -1,3 +1,4 @@
+import { deepClone } from '../../lib/aux';
 import { isInteger, hasKey } from '../../lib/type-guards';
 
 // -----------------------------------------------------------------------------
@@ -18,7 +19,7 @@ export function isFieldColor(fieldColor: any): fieldColor is EFieldColor {
 
 /** Returns the color of the field on the game board at a given position. */
 export function getFieldColor(position: IPosition): EFieldColor {
-    return getBoard()[position.row][position.col];
+    return BOARD[position.row][position.col];
 }
 
 // -----------------------------------------------------------------------------
@@ -34,7 +35,7 @@ export function getFieldColor(position: IPosition): EFieldColor {
  * once on application startup and store the board in a constant.
  */
 export function getBoard(): EFieldColor[][] {
-    return BOARD;
+    return deepClone(BOARD);
 }
 
 /** Returns the number of rows and columns of the game board. */

@@ -29,12 +29,11 @@ describe('models/player', () => {
         });
         
         it('should return false for wrong data types (obj,array,string,boolean,null,undefined)', () => {
-            assert(!Player.isPlayer({street:'Baker Street',houseNo:2}));
-            assert(!Player.isPlayer([1,2,3,4]));
-            assert(!Player.isPlayer(' '));
-            assert(!Player.isPlayer(true));
-            assert(!Player.isPlayer(null));
-            assert(!Player.isPlayer(undefined));
+            const DATA = [
+                {street:'Baker Street',houseNo:2}, [1,2,3,4], ' ',
+                true, null, undefined
+            ];
+            DATA.forEach(data => assert(!Player.isPlayer(data)));
         });
     });
 

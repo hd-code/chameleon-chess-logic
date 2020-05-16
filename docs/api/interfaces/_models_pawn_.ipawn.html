@@ -1,0 +1,285 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>IPawn | chameleon-chess-logic</title>
+	<meta name="description" content="Documentation for chameleon-chess-logic">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">chameleon-chess-logic</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../globals.html">Globals</a>
+				</li>
+				<li>
+					<a href="../modules/_models_pawn_.html">&quot;models/pawn&quot;</a>
+				</li>
+				<li>
+					<a href="_models_pawn_.ipawn.html">IPawn</a>
+				</li>
+			</ul>
+			<h1>Interface IPawn</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>This data structure represents a pawn. Each player has four of these initially.</p>
+					</div>
+					<p>A pawn has the following properties:</p>
+					<ul>
+						<li><code>player</code>: the player this pawn belongs to (type: <code>EPlayer</code>)</li>
+						<li><code>position</code>: the current position of the pawn on the game board (type: <code>IPosition</code>)</li>
+						<li><code>roles</code>: an object that maps a field color (<code>EFieldColor</code>) to the role (<code>ERole</code>)
+						the pawn has, when it is on a field of that color</li>
+					</ul>
+					<p>The pawns are stored in the game state object (<code>IGameState</code>). However, only
+						alive pawns are stored there. So, if a pawn is beaten, it will be removed
+						from the array. Therefore, pawns do <strong>not</strong> need an <code>alive</code>-flag or something
+					similar.</p>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">IPawn</span>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_models_pawn_.ipawn.html#player" class="tsd-kind-icon">player</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_models_pawn_.ipawn.html#position" class="tsd-kind-icon">position</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_models_pawn_.ipawn.html#roles" class="tsd-kind-icon">roles</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="player" class="tsd-anchor"></a>
+					<h3>player</h3>
+					<div class="tsd-signature tsd-kind-icon">player<span class="tsd-signature-symbol">:</span> <a href="../enums/_models_player_.eplayer.html" class="tsd-signature-type">EPlayer</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/hd-code/chameleon-chess-logic/blob/59c6c4e/src/models/pawn.ts#L27">models/pawn.ts:27</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>the player this pawn belongs to</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="position" class="tsd-anchor"></a>
+					<h3>position</h3>
+					<div class="tsd-signature tsd-kind-icon">position<span class="tsd-signature-symbol">:</span> <a href="_models_board_.iposition.html" class="tsd-signature-type">IPosition</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/hd-code/chameleon-chess-logic/blob/59c6c4e/src/models/pawn.ts#L29">models/pawn.ts:29</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>the current position of the pawn on the game board</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="roles" class="tsd-anchor"></a>
+					<h3>roles</h3>
+					<div class="tsd-signature tsd-kind-icon">roles<span class="tsd-signature-symbol">:</span> <a href="../modules/_models_roles_.html#troles" class="tsd-signature-type">TRoles</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/hd-code/chameleon-chess-logic/blob/59c6c4e/src/models/pawn.ts#L31">models/pawn.ts:31</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>an object that maps a field color (<code>EFieldColor</code>) to the role (<code>ERole</code>) the pawn has, when it is on a field of that color</p>
+						</div>
+					</div>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/_ai_.html">&quot;ai&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/_index_.html">&quot;index&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/_models_board_.html">&quot;models/board&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/_models_game_state_.html">&quot;models/game-<wbr>state&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/_models_limits_.html">&quot;models/limits&quot;</a>
+					</li>
+					<li class="current tsd-kind-module">
+						<a href="../modules/_models_pawn_.html">&quot;models/pawn&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/_models_player_.html">&quot;models/player&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/_models_roles_.html">&quot;models/roles&quot;</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-enum tsd-parent-kind-module tsd-is-not-exported">
+						<a href="../enums/_models_pawn_.movetype.html" class="tsd-kind-icon">Move<wbr>Type</a>
+					</li>
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-interface tsd-parent-kind-module">
+						<a href="_models_pawn_.ipawn.html" class="tsd-kind-icon">IPawn</a>
+						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_models_pawn_.ipawn.html#player" class="tsd-kind-icon">player</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_models_pawn_.ipawn.html#position" class="tsd-kind-icon">position</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_models_pawn_.ipawn.html#roles" class="tsd-kind-icon">roles</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+					<li class=" tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+						<a href="../modules/_models_pawn_.html#createpawn" class="tsd-kind-icon">create<wbr>Pawn</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+						<a href="../modules/_models_pawn_.html#getbishopmoves" class="tsd-kind-icon">get<wbr>Bishop<wbr>Moves</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/_models_pawn_.html#getindexofpawnatposition" class="tsd-kind-icon">get<wbr>Index<wbr>OfPawn<wbr>AtPosition</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/_models_pawn_.html#getindexofpawnindeadlock" class="tsd-kind-icon">get<wbr>Index<wbr>OfPawn<wbr>InDeadlock</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+						<a href="../modules/_models_pawn_.html#getknightmoves" class="tsd-kind-icon">get<wbr>Knight<wbr>Moves</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+						<a href="../modules/_models_pawn_.html#getmovetype" class="tsd-kind-icon">get<wbr>Move<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/_models_pawn_.html#getmoves" class="tsd-kind-icon">get<wbr>Moves</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/_models_pawn_.html#getpawns" class="tsd-kind-icon">get<wbr>Pawns</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+						<a href="../modules/_models_pawn_.html#getrookmoves" class="tsd-kind-icon">get<wbr>Rook<wbr>Moves</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/_models_pawn_.html#ispawn" class="tsd-kind-icon">is<wbr>Pawn</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+						<a href="../modules/_models_pawn_.html#movegenerator" class="tsd-kind-icon">move<wbr>Generator</a>
+					</li>
+					<li class=" tsd-kind-object-literal tsd-parent-kind-module tsd-is-not-exported">
+						<a href="../modules/_models_pawn_.html#start_pawns" class="tsd-kind-icon">START_<wbr>PAWNS</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>

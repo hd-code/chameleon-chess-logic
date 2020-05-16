@@ -1,0 +1,549 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>&quot;models/game-state&quot; | chameleon-chess-logic</title>
+	<meta name="description" content="Documentation for chameleon-chess-logic">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">chameleon-chess-logic</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../globals.html">Globals</a>
+				</li>
+				<li>
+					<a href="_models_game_state_.html">&quot;models/game-state&quot;</a>
+				</li>
+			</ul>
+			<h1>Module &quot;models/game-state&quot;</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Interfaces</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/_models_game_state_.igamestate.html" class="tsd-kind-icon">IGame<wbr>State</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Functions</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="_models_game_state_.html#begingame" class="tsd-kind-icon">begin<wbr>Game</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="_models_game_state_.html#getindexofpawnatposition" class="tsd-kind-icon">get<wbr>Index<wbr>OfPawn<wbr>AtPosition</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="_models_game_state_.html#getmoves" class="tsd-kind-icon">get<wbr>Moves</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="_models_game_state_.html#getnextgamestates" class="tsd-kind-icon">get<wbr>Next<wbr>Game<wbr>States</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="_models_game_state_.html#isgameover" class="tsd-kind-icon">is<wbr>Game<wbr>Over</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="_models_game_state_.html#isgamestate" class="tsd-kind-icon">is<wbr>Game<wbr>State</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module tsd-is-not-exported"><a href="_models_game_state_.html#isvalidmove" class="tsd-kind-icon">is<wbr>Valid<wbr>Move</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="_models_game_state_.html#makemove" class="tsd-kind-icon">make<wbr>Move</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module tsd-is-not-exported"><a href="_models_game_state_.html#nopawnsonsamefield" class="tsd-kind-icon">no<wbr>Pawns<wbr>OnSame<wbr>Field</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module tsd-is-not-exported"><a href="_models_game_state_.html#nopawnsoutsideoflimits" class="tsd-kind-icon">no<wbr>Pawns<wbr>Outside<wbr>OfLimits</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module tsd-is-not-exported"><a href="_models_game_state_.html#updategamestate" class="tsd-kind-icon">update<wbr>Game<wbr>State</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Functions</h2>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="begingame" class="tsd-anchor"></a>
+					<h3>begin<wbr>Game</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">begin<wbr>Game<span class="tsd-signature-symbol">(</span>red<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, green<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, yellow<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, blue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_models_game_state_.igamestate.html" class="tsd-signature-type">IGameState</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hd-code/chameleon-chess-logic/blob/59c6c4e/src/models/game-state.ts#L60">models/game-state.ts:60</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Begins a new game and returns the starting game state.</p>
+								</div>
+								<p>Four parameters need to be passed. One for each player (red, green, yellow,
+									blue). The parameter is a simple boolean that indicates whether a player
+								should take part in the game or not (true means the player should take part).</p>
+								<p><em>Important</em>: ...</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>red: <span class="tsd-signature-type">boolean</span></h5>
+								</li>
+								<li>
+									<h5>green: <span class="tsd-signature-type">boolean</span></h5>
+								</li>
+								<li>
+									<h5>yellow: <span class="tsd-signature-type">boolean</span></h5>
+								</li>
+								<li>
+									<h5>blue: <span class="tsd-signature-type">boolean</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_models_game_state_.igamestate.html" class="tsd-signature-type">IGameState</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="getindexofpawnatposition" class="tsd-anchor"></a>
+					<h3>get<wbr>Index<wbr>OfPawn<wbr>AtPosition</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Index<wbr>OfPawn<wbr>AtPosition<span class="tsd-signature-symbol">(</span>gameState<span class="tsd-signature-symbol">: </span><a href="../interfaces/_models_game_state_.igamestate.html" class="tsd-signature-type">IGameState</a>, position<span class="tsd-signature-symbol">: </span><a href="../interfaces/_models_board_.iposition.html" class="tsd-signature-type">IPosition</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hd-code/chameleon-chess-logic/blob/59c6c4e/src/models/game-state.ts#L80">models/game-state.ts:80</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Checks is a pawn is at the given position. If so, the index of that pawn in
+									the array in <code>gameState.pawns</code> is returned.</p>
+								</div>
+								<p>If the provided field is empty, this function returns -1.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>gameState: <a href="../interfaces/_models_game_state_.igamestate.html" class="tsd-signature-type">IGameState</a></h5>
+								</li>
+								<li>
+									<h5>position: <a href="../interfaces/_models_board_.iposition.html" class="tsd-signature-type">IPosition</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="getmoves" class="tsd-anchor"></a>
+					<h3>get<wbr>Moves</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Moves<span class="tsd-signature-symbol">(</span>gameState<span class="tsd-signature-symbol">: </span><a href="../interfaces/_models_game_state_.igamestate.html" class="tsd-signature-type">IGameState</a>, pawnIndex<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_models_board_.iposition.html" class="tsd-signature-type">IPosition</a><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hd-code/chameleon-chess-logic/blob/59c6c4e/src/models/game-state.ts#L90">models/game-state.ts:90</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns all the moves a pawn could make. Moves are an array of <code>IPosition</code>s,
+									which represent the fields this pawn can reach currently.</p>
+								</div>
+								<p>If an invalid index is given, this function returns an empty array.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>gameState: <a href="../interfaces/_models_game_state_.igamestate.html" class="tsd-signature-type">IGameState</a></h5>
+								</li>
+								<li>
+									<h5>pawnIndex: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_models_board_.iposition.html" class="tsd-signature-type">IPosition</a><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="getnextgamestates" class="tsd-anchor"></a>
+					<h3>get<wbr>Next<wbr>Game<wbr>States</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Next<wbr>Game<wbr>States<span class="tsd-signature-symbol">(</span>gameState<span class="tsd-signature-symbol">: </span><a href="../interfaces/_models_game_state_.igamestate.html" class="tsd-signature-type">IGameState</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_models_game_state_.igamestate.html" class="tsd-signature-type">IGameState</a><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hd-code/chameleon-chess-logic/blob/59c6c4e/src/models/game-state.ts#L120">models/game-state.ts:120</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>This is for the AI. It returns all possible game states that could succeed
+										the current one. Ergo, it returns the resulting game states for all moves
+										that can be made in the current game state. The AI now has to choose
+									intelligently, which game state to select to continue.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>gameState: <a href="../interfaces/_models_game_state_.igamestate.html" class="tsd-signature-type">IGameState</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_models_game_state_.igamestate.html" class="tsd-signature-type">IGameState</a><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="isgameover" class="tsd-anchor"></a>
+					<h3>is<wbr>Game<wbr>Over</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Game<wbr>Over<span class="tsd-signature-symbol">(</span>gameState<span class="tsd-signature-symbol">: </span><a href="../interfaces/_models_game_state_.igamestate.html" class="tsd-signature-type">IGameState</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hd-code/chameleon-chess-logic/blob/59c6c4e/src/models/game-state.ts#L106">models/game-state.ts:106</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Checks if the game is over. It returns true if so, false if not.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>gameState: <a href="../interfaces/_models_game_state_.igamestate.html" class="tsd-signature-type">IGameState</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="isgamestate" class="tsd-anchor"></a>
+					<h3>is<wbr>Game<wbr>State</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Game<wbr>State<span class="tsd-signature-symbol">(</span>gameState<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">gameState</span><span class="tsd-signature-symbol"> is </span><span class="tsd-signature-type">IGameState</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hd-code/chameleon-chess-logic/blob/59c6c4e/src/models/game-state.ts#L42">models/game-state.ts:42</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Type guard for <code>IGameState</code>.</p>
+								</div>
+								<p>It checks all the keys and types of the object. It will also perform further
+									checks to confirm the validity of the game state, that go beyond simple type
+								checking.</p>
+								<p>E.g. if there are several pawns on the same field (which is not possible
+								according to the game rules), this function will return false, as well.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>gameState: <span class="tsd-signature-type">any</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">gameState</span><span class="tsd-signature-symbol"> is </span><span class="tsd-signature-type">IGameState</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+					<a name="isvalidmove" class="tsd-anchor"></a>
+					<h3>is<wbr>Valid<wbr>Move</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Valid<wbr>Move<span class="tsd-signature-symbol">(</span>game<span class="tsd-signature-symbol">: </span><a href="../interfaces/_models_game_state_.igamestate.html" class="tsd-signature-type">IGameState</a>, pawnI<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, destination<span class="tsd-signature-symbol">: </span><a href="../interfaces/_models_board_.iposition.html" class="tsd-signature-type">IPosition</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hd-code/chameleon-chess-logic/blob/59c6c4e/src/models/game-state.ts#L157">models/game-state.ts:157</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>game: <a href="../interfaces/_models_game_state_.igamestate.html" class="tsd-signature-type">IGameState</a></h5>
+								</li>
+								<li>
+									<h5>pawnI: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>destination: <a href="../interfaces/_models_board_.iposition.html" class="tsd-signature-type">IPosition</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="makemove" class="tsd-anchor"></a>
+					<h3>make<wbr>Move</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">make<wbr>Move<span class="tsd-signature-symbol">(</span>gameState<span class="tsd-signature-symbol">: </span><a href="../interfaces/_models_game_state_.igamestate.html" class="tsd-signature-type">IGameState</a>, pawnIndex<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, destination<span class="tsd-signature-symbol">: </span><a href="../interfaces/_models_board_.iposition.html" class="tsd-signature-type">IPosition</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_models_game_state_.igamestate.html" class="tsd-signature-type">IGameState</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hd-code/chameleon-chess-logic/blob/59c6c4e/src/models/game-state.ts#L99">models/game-state.ts:99</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Does a move and returns the updated game state.</p>
+								</div>
+								<p>If the move is not valid, this function returns <code>null</code>.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>gameState: <a href="../interfaces/_models_game_state_.igamestate.html" class="tsd-signature-type">IGameState</a></h5>
+								</li>
+								<li>
+									<h5>pawnIndex: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>destination: <a href="../interfaces/_models_board_.iposition.html" class="tsd-signature-type">IPosition</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_models_game_state_.igamestate.html" class="tsd-signature-type">IGameState</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+					<a name="nopawnsonsamefield" class="tsd-anchor"></a>
+					<h3>no<wbr>Pawns<wbr>OnSame<wbr>Field</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">no<wbr>Pawns<wbr>OnSame<wbr>Field<span class="tsd-signature-symbol">(</span>pawns<span class="tsd-signature-symbol">: </span><a href="../interfaces/_models_pawn_.ipawn.html" class="tsd-signature-type">IPawn</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hd-code/chameleon-chess-logic/blob/59c6c4e/src/models/game-state.ts#L145">models/game-state.ts:145</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>pawns: <a href="../interfaces/_models_pawn_.ipawn.html" class="tsd-signature-type">IPawn</a><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+					<a name="nopawnsoutsideoflimits" class="tsd-anchor"></a>
+					<h3>no<wbr>Pawns<wbr>Outside<wbr>OfLimits</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">no<wbr>Pawns<wbr>Outside<wbr>OfLimits<span class="tsd-signature-symbol">(</span>pawns<span class="tsd-signature-symbol">: </span><a href="../interfaces/_models_pawn_.ipawn.html" class="tsd-signature-type">IPawn</a><span class="tsd-signature-symbol">[]</span>, limits<span class="tsd-signature-symbol">: </span><a href="../interfaces/_models_limits_.ilimits.html" class="tsd-signature-type">ILimits</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hd-code/chameleon-chess-logic/blob/59c6c4e/src/models/game-state.ts#L136">models/game-state.ts:136</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>pawns: <a href="../interfaces/_models_pawn_.ipawn.html" class="tsd-signature-type">IPawn</a><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+								<li>
+									<h5>limits: <a href="../interfaces/_models_limits_.ilimits.html" class="tsd-signature-type">ILimits</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+					<a name="updategamestate" class="tsd-anchor"></a>
+					<h3>update<wbr>Game<wbr>State</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">update<wbr>Game<wbr>State<span class="tsd-signature-symbol">(</span>game<span class="tsd-signature-symbol">: </span><a href="../interfaces/_models_game_state_.igamestate.html" class="tsd-signature-type">IGameState</a>, pawnI<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, destination<span class="tsd-signature-symbol">: </span><a href="../interfaces/_models_board_.iposition.html" class="tsd-signature-type">IPosition</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_models_game_state_.igamestate.html" class="tsd-signature-type">IGameState</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hd-code/chameleon-chess-logic/blob/59c6c4e/src/models/game-state.ts#L164">models/game-state.ts:164</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Just makes the move. No validity check! Use isValidMove() to check validity first.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>game: <a href="../interfaces/_models_game_state_.igamestate.html" class="tsd-signature-type">IGameState</a></h5>
+								</li>
+								<li>
+									<h5>pawnI: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>destination: <a href="../interfaces/_models_board_.iposition.html" class="tsd-signature-type">IPosition</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_models_game_state_.igamestate.html" class="tsd-signature-type">IGameState</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_ai_.html">&quot;ai&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_index_.html">&quot;index&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_models_board_.html">&quot;models/board&quot;</a>
+					</li>
+					<li class="current tsd-kind-module">
+						<a href="_models_game_state_.html">&quot;models/game-<wbr>state&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_models_limits_.html">&quot;models/limits&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_models_pawn_.html">&quot;models/pawn&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_models_player_.html">&quot;models/player&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_models_roles_.html">&quot;models/roles&quot;</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/_models_game_state_.igamestate.html" class="tsd-kind-icon">IGame<wbr>State</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="_models_game_state_.html#begingame" class="tsd-kind-icon">begin<wbr>Game</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="_models_game_state_.html#getindexofpawnatposition" class="tsd-kind-icon">get<wbr>Index<wbr>OfPawn<wbr>AtPosition</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="_models_game_state_.html#getmoves" class="tsd-kind-icon">get<wbr>Moves</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="_models_game_state_.html#getnextgamestates" class="tsd-kind-icon">get<wbr>Next<wbr>Game<wbr>States</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="_models_game_state_.html#isgameover" class="tsd-kind-icon">is<wbr>Game<wbr>Over</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="_models_game_state_.html#isgamestate" class="tsd-kind-icon">is<wbr>Game<wbr>State</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+						<a href="_models_game_state_.html#isvalidmove" class="tsd-kind-icon">is<wbr>Valid<wbr>Move</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="_models_game_state_.html#makemove" class="tsd-kind-icon">make<wbr>Move</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+						<a href="_models_game_state_.html#nopawnsonsamefield" class="tsd-kind-icon">no<wbr>Pawns<wbr>OnSame<wbr>Field</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+						<a href="_models_game_state_.html#nopawnsoutsideoflimits" class="tsd-kind-icon">no<wbr>Pawns<wbr>Outside<wbr>OfLimits</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+						<a href="_models_game_state_.html#updategamestate" class="tsd-kind-icon">update<wbr>Game<wbr>State</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>

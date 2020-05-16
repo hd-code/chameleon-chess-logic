@@ -67,12 +67,11 @@ describe('models/limits', () => {
         });
 
         it('should return false for wrong data types (obj,array,string,boolean,null,undefined)', () => {
-            assert(!Limits.isLimits({street:'Baker Street',houseNo:2}));
-            assert(!Limits.isLimits([1,2,3,4]));
-            assert(!Limits.isLimits(' '));
-            assert(!Limits.isLimits(true));
-            assert(!Limits.isLimits(null));
-            assert(!Limits.isLimits(undefined));
+            const DATA = [
+                {street:'Baker Street',houseNo:2}, [1,2,3,4], ' ',
+                true, null, undefined
+            ];
+            DATA.forEach(data => assert(!Limits.isLimits(data)));
         });
     });
 
