@@ -104,7 +104,7 @@ export function makeMove(gameState: IGameState, pawnIndex: number, destination: 
 
 /** Checks if the game is over. It returns true if so, false if not. */
 export function isGameOver(gameState: IGameState): boolean {
-    const player = gameState.pawns[0].player;
+    const player = gameState.pawns[0]?.player;
     for (let i = 1, ie = gameState.pawns.length; i < ie; i++) {
         if (player !== gameState.pawns[i].player) return false;
     }
