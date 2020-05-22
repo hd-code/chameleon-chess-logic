@@ -1,7 +1,7 @@
-import { IGameState, isGameOver, getNextGameStates } from "./models/game-state";
-import { EPlayer } from "./models/player";
-import { getMoves } from "./models/pawn";
-import { flattenArray, deepClone } from "../lib/aux";
+import { isGameOver, getNextGameStates } from './models/game-state';
+import { getMoves } from './models/pawn';
+import { IGameState, EPlayer } from './types';
+import { flattenArray, deepClone } from '../lib/aux';
 
 // -----------------------------------------------------------------------------
 
@@ -128,6 +128,6 @@ function evalPlayer(game: IGameState, player: EPlayer): number {
         (result, pawn, i) => pawn.player === player ? [i, ...result] : result,
         <number[]>[]
     );
-    const movesPerPawn = pawnIs.map(pawnI => getMoves(game.pawns, pawnI, game.limits));
+    const movesPerPawn = pawnIs.map(pawnI => getMoves(pawnI, game.pawns, game.limits));
     return pawnIs.length * PAWN_VALUE + flattenArray(movesPerPawn).length;
 }
