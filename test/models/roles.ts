@@ -13,30 +13,6 @@ describe('models/roles', () => {
     const ROLES_INVALID_ORDER = { 0:0, 1:1, 2:3, 3:2 };
     const ROLES_BACKWARDS_ORDER = { 0:3, 1:2, 2:1, 3:0 };
 
-    describe('isRole()', () => {
-        it('should return true if role is KNIGHT, QUEEN, BISHOP or ROOK', () => {
-            assert(Roles.isRole(0));
-            assert(Roles.isRole(1));
-            assert(Roles.isRole(2));
-            assert(Roles.isRole(3));
-        });
-
-        it('should return false for invalid values (-1, 2.3, 5)', () => {
-            assert(!Roles.isRole(-1));
-            assert(!Roles.isRole(2.3));
-            assert(!Roles.isRole(5));
-        });
-        
-        it('should return false for wrong data types (obj,array,string,boolean,null,undefined)', () => {
-            assert(!Roles.isRole({street:'Baker Street',houseNo:2}));
-            assert(!Roles.isRole([1,2,3,4]));
-            assert(!Roles.isRole(' '));
-            assert(!Roles.isRole(true));
-            assert(!Roles.isRole(null));
-            assert(!Roles.isRole(undefined));
-        });
-    });
-
     describe('isRoles()', () => {
         it('should return true for valid roles', () => {
             assert(Roles.isRoles(ROLES_KNIGHT_RED));
@@ -52,12 +28,11 @@ describe('models/roles', () => {
         });
 
         it('should return false for wrong data types (obj,array,string,boolean,null,undefined)', () => {
-            assert(!Roles.isRoles({street:'Baker Street',houseNo:2}));
-            assert(!Roles.isRoles([1,2,3,4]));
-            assert(!Roles.isRoles(' '));
-            assert(!Roles.isRoles(true));
-            assert(!Roles.isRoles(null));
-            assert(!Roles.isRoles(undefined));
+            const DATA = [
+                {street:'Baker Street',houseNo:2}, [1,2,3,4], ' ',
+                true, null, undefined
+            ];
+            DATA.forEach(data => assert(!Roles.isRoles(data)));
         });
     });
 

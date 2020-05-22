@@ -1,35 +1,10 @@
-import { getBoardSize, IPosition } from './board';
-import { IPawn } from './pawn';
+import { ILimits, IPawn, IPosition } from '../types';
+
+import { getBoardSize } from './board';
 
 import { hasKey } from '../../lib/type-guards';
 
 // -----------------------------------------------------------------------------
-
-/**
- * The board shrinks during the course of the game. This data structure will
- * store the current min and max values of the rows and the columns. So the
- * current board size and what fields still belong to the game, can be retrieved
- * from this data structure.
- * 
- * It has the following properties:
- * - `minRow`: the lowest row, that is still part of the game
- * - `maxRow`: the highest row, that is still part of the game
- * - `minCol`: the lowest column, that is still part of the game
- * - `maxCol`: the highest column, that is still part of the game
- * 
- * _Important_: these properties are 'including'. So, `minRow: 1` means that the
- * rows with an index of **1 or higher** are still part of the game.
- */
-export interface ILimits {
-    /** the lowest row, that is still part of the game */
-    minRow: number;
-    /** the highest row, that is still part of the game */
-    maxRow: number;
-    /** the lowest column, that is still part of the game */
-    minCol: number;
-    /** the highest column, that is still part of the game */
-    maxCol: number;
-}
 
 /** Type guard for `ILimits`. Checks types and validity according to the game rules. */
 export function isLimits(limits: any): limits is ILimits {
@@ -41,8 +16,6 @@ export function isLimits(limits: any): limits is ILimits {
         && !isLimitsGreaterThanAllowed(limits)
 }
 
-/** Returns true if a given position is within the limits, thus a valid
- * available field on the board. */
 export function isWithinLimits(position: IPosition, limits: ILimits) {
     return limits.minRow <= position.row && position.row <= limits.maxRow
         && limits.minCol <= position.col && position.col <= limits.maxCol;
@@ -54,7 +27,6 @@ export function isSmallestLimits(limits: ILimits): boolean {
         && limits.maxCol - limits.minCol === MIN_DIFF_BETWEEN_MIN_MAX;
 }
 
-/** Returns the initial limits, when the board has not yet shrunken. */
 export function getStartLimits(): ILimits {
     const boardSize = getBoardSize();
     return {

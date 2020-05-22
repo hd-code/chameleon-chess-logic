@@ -1,7 +1,7 @@
 import assert from 'assert';
 import * as Limits from '../../src/models/limits';
 
-import { getPawns } from '../../src/models/pawn';
+import { getStartPawns } from '../../src/models/pawn';
 
 import { deepClone } from '../../lib/aux';
 
@@ -67,12 +67,11 @@ describe('models/limits', () => {
         });
 
         it('should return false for wrong data types (obj,array,string,boolean,null,undefined)', () => {
-            assert(!Limits.isLimits({street:'Baker Street',houseNo:2}));
-            assert(!Limits.isLimits([1,2,3,4]));
-            assert(!Limits.isLimits(' '));
-            assert(!Limits.isLimits(true));
-            assert(!Limits.isLimits(null));
-            assert(!Limits.isLimits(undefined));
+            const DATA = [
+                {street:'Baker Street',houseNo:2}, [1,2,3,4], ' ',
+                true, null, undefined
+            ];
+            DATA.forEach(data => assert(!Limits.isLimits(data)));
         });
     });
 
@@ -163,10 +162,10 @@ describe('models/limits', () => {
     });
 
     describe('calcLimits()', () => {
-        const PAWNS_RED = getPawns(0);
-        const PAWNS_GREEN = getPawns(1);
-        const PAWNS_YELLOW = getPawns(2);
-        const PAWNS_BLUE = getPawns(3);
+        const PAWNS_RED = getStartPawns(0);
+        const PAWNS_GREEN = getStartPawns(1);
+        const PAWNS_YELLOW = getStartPawns(2);
+        const PAWNS_BLUE = getStartPawns(3);
 
         it('should not shrink limits, when all pawns still are at the edge of the board', () => {
             const expected = START_LIMITS;

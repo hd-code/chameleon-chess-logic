@@ -1,9 +1,9 @@
 import assert from 'assert';
 import * as Pawn from '../../src/models/pawn';
 
-import { sortPositions, isSamePosition } from '../../src/models/board';
+import { sortPositions, isSamePosition } from '../../src/models/position';
 import { calcLimits, getStartLimits } from '../../src/models/limits';
-import { EPlayer } from '../../src/models/player';
+import { IPawn, EPlayer } from '../../src/types';
 
 import { deepClone } from '../../lib/aux';
 
@@ -135,30 +135,31 @@ describe('models/pawn', () => {
         });
 
         it('should return false for wrong data types (obj,array,string,boolean,null,undefined)', () => {
-            assert(!Pawn.isPawn({street:'Baker Street',houseNo:2}));
-            assert(!Pawn.isPawn([1,2,3,4]));
-            assert(!Pawn.isPawn(' '));
-            assert(!Pawn.isPawn(true));
-            assert(!Pawn.isPawn(null));
-            assert(!Pawn.isPawn(undefined));
+            const DATA = [
+                {street:'Baker Street',houseNo:2}, [1,2,3,4], ' ',
+                true, null, undefined
+            ];
+            DATA.forEach(data => assert(!Pawn.isPawn(data)));
         });
     });
 
-    describe('getPawns()', () => {
+    describe('getStartPawns()', () => {
         it('should return all 4 pawns for red', () => test(0));
         it('should return all 4 pawns for green', () => test(1));
         it('should return all 4 pawns for yellow', () => test(2));
         it('should return all 4 pawns for blue', () => test(3));
 
         function test(player: EPlayer) {
-            const pawns = Pawn.getPawns(player);
+            const pawns = Pawn.getStartPawns(player);
+            
             assert.strictEqual(pawns.length, 4);
-            pawns.forEach(pawn => assert.strictEqual(pawn.player, player));
+            pawns.forEach(pawn => Pawn.isPawn(pawn) && assert.strictEqual(pawn.player, player));
+
             assert(noSamePosition(pawns));
             assert(noSameRoles(pawns));
         }
 
-        function noSamePosition(_pawns: Pawn.IPawn[]): boolean {
+        function noSamePosition(_pawns: IPawn[]): boolean {
             let pawns = deepClone(_pawns);
             pawns.sort((a,b) => sortPositions(a.position, b.position));
             for (let i = 1, ie = pawns.length; i < ie; i++) {
@@ -167,7 +168,7 @@ describe('models/pawn', () => {
             return true;
         }
 
-        function noSameRoles(_pawns: Pawn.IPawn[]): boolean {
+        function noSameRoles(_pawns: IPawn[]): boolean {
             let pawns = deepClone(_pawns);
             pawns.sort((a,b) => a.roles[0] - b.roles[0]);
             for (let i = 1, ie = pawns.length; i < ie; i++) {
@@ -177,12 +178,12 @@ describe('models/pawn', () => {
         }
     });
 
-    describe('getIndexOfPawnAtPosition()', () => {
+    describe('getPawnsIAtPosition()', () => {
         it('should return 0 when the first pawn is at the specified position', () => {
             const pawnIndex = 0;
 
             const position = TEST_PAWNS[pawnIndex].position;
-            const actual = Pawn.getIndexOfPawnAtPosition(TEST_PAWNS, position);
+            const actual = Pawn.getPawnsIAtPosition(TEST_PAWNS, position);
             const expected = pawnIndex;
 
             assert.strictEqual(actual, expected);
@@ -192,7 +193,7 @@ describe('models/pawn', () => {
             const pawnIndex = 2;
 
             const position = TEST_PAWNS[pawnIndex].position;
-            const actual = Pawn.getIndexOfPawnAtPosition(TEST_PAWNS, position);
+            const actual = Pawn.getPawnsIAtPosition(TEST_PAWNS, position);
             const expected = pawnIndex;
 
             assert.strictEqual(actual, expected);
@@ -202,7 +203,7 @@ describe('models/pawn', () => {
             const pawnIndex = 5;
 
             const position = TEST_PAWNS[pawnIndex].position;
-            const actual = Pawn.getIndexOfPawnAtPosition(TEST_PAWNS, position);
+            const actual = Pawn.getPawnsIAtPosition(TEST_PAWNS, position);
             const expected = pawnIndex;
 
             assert.strictEqual(actual, expected);
@@ -211,7 +212,7 @@ describe('models/pawn', () => {
         it('should return -1 when there is no pawn at the specified position (3,3)', () => {
             const position = { row: 3, col: 3 };
 
-            const actual = Pawn.getIndexOfPawnAtPosition(TEST_PAWNS, position);
+            const actual = Pawn.getPawnsIAtPosition(TEST_PAWNS, position);
             const expected = -1;
 
             assert.strictEqual(actual, expected);
@@ -220,7 +221,7 @@ describe('models/pawn', () => {
         it('should return -1 when there is no pawn at the specified position (0,0)', () => {
             const position = { row: 0, col: 0 };
 
-            const actual = Pawn.getIndexOfPawnAtPosition(TEST_PAWNS, position);
+            const actual = Pawn.getPawnsIAtPosition(TEST_PAWNS, position);
             const expected = -1;
 
             assert.strictEqual(actual, expected);
@@ -229,7 +230,7 @@ describe('models/pawn', () => {
         it('should return -1 when there is no pawn at the specified position (4,6)', () => {
             const position = { row: 0, col: 0 };
 
-            const actual = Pawn.getIndexOfPawnAtPosition(TEST_PAWNS, position);
+            const actual = Pawn.getPawnsIAtPosition(TEST_PAWNS, position);
             const expected = -1;
 
             assert.strictEqual(actual, expected);
@@ -241,7 +242,7 @@ describe('models/pawn', () => {
             const pawnIndex = 0;
             let expected = KNIGHT_MOVES;
 
-            let actual = Pawn.getMoves(TEST_PAWNS, pawnIndex, TEST_LIMITS);
+            let actual = Pawn.getMoves(pawnIndex, TEST_PAWNS, TEST_LIMITS);
 
             actual.sort(sortPositions);
             expected.sort(sortPositions);
@@ -253,7 +254,7 @@ describe('models/pawn', () => {
             const pawnIndex = 4;
             let expected = QUEEN_MOVES;
 
-            let actual = Pawn.getMoves(TEST_PAWNS, pawnIndex, TEST_LIMITS);
+            let actual = Pawn.getMoves(pawnIndex, TEST_PAWNS, TEST_LIMITS);
 
             actual.sort(sortPositions);
             expected.sort(sortPositions);
@@ -265,7 +266,7 @@ describe('models/pawn', () => {
             const pawnIndex = 3;
             let expected = BISHOP_MOVES;
 
-            let actual = Pawn.getMoves(TEST_PAWNS, pawnIndex, TEST_LIMITS);
+            let actual = Pawn.getMoves(pawnIndex, TEST_PAWNS, TEST_LIMITS);
 
             actual.sort(sortPositions);
             expected.sort(sortPositions);
@@ -277,7 +278,7 @@ describe('models/pawn', () => {
             const pawnIndex = 1;
             let expected = ROOK_MOVES;
 
-            let actual = Pawn.getMoves(TEST_PAWNS, pawnIndex, TEST_LIMITS);
+            let actual = Pawn.getMoves(pawnIndex, TEST_PAWNS, TEST_LIMITS);
 
             actual.sort(sortPositions);
             expected.sort(sortPositions);
@@ -286,7 +287,7 @@ describe('models/pawn', () => {
         });
 
         it('should return an empty array if the indexed pawn does not exist', () => {
-            const actual = Pawn.getMoves(TEST_PAWNS, 10, TEST_LIMITS);
+            const actual = Pawn.getMoves(10, TEST_PAWNS, TEST_LIMITS);
             const expected: any[] = [];
             assert.deepStrictEqual(actual, expected);
         });

@@ -1,18 +1,19 @@
 import assert from 'assert';
 import * as Player from '../../src/models/player';
 
-import { getPawns } from '../../src/models/pawn';
+import { getStartPawns } from '../../src/models/pawn';
+import { EPlayer } from '../../src/types';
 
 // -----------------------------------------------------------------------------
 
 describe('models/player', () => {
     const [R,G,Y,B] = [
-        Player.EPlayer.RED, Player.EPlayer.GREEN,
-        Player.EPlayer.YELLOW, Player.EPlayer.BLUE
+        EPlayer.RED, EPlayer.GREEN,
+        EPlayer.YELLOW, EPlayer.BLUE
     ];
 
-    const START_PAWNS_ALL = getPawns(R).concat(getPawns(G)).concat(getPawns(Y)).concat(getPawns(B));
-    const START_PAWNS_R_Y = getPawns(R).concat(getPawns(Y));
+    const START_PAWNS_ALL = getStartPawns(R).concat(getStartPawns(G)).concat(getStartPawns(Y)).concat(getStartPawns(B));
+    const START_PAWNS_R_Y = getStartPawns(R).concat(getStartPawns(Y));
 
     describe('isPlayer()', () => {
         it('should return true if player is RED, GREEN, YELLOW or BLUE', () => {
@@ -29,12 +30,11 @@ describe('models/player', () => {
         });
         
         it('should return false for wrong data types (obj,array,string,boolean,null,undefined)', () => {
-            assert(!Player.isPlayer({street:'Baker Street',houseNo:2}));
-            assert(!Player.isPlayer([1,2,3,4]));
-            assert(!Player.isPlayer(' '));
-            assert(!Player.isPlayer(true));
-            assert(!Player.isPlayer(null));
-            assert(!Player.isPlayer(undefined));
+            const DATA = [
+                {street:'Baker Street',houseNo:2}, [1,2,3,4], ' ',
+                true, null, undefined
+            ];
+            DATA.forEach(data => assert(!Player.isPlayer(data)));
         });
     });
 
@@ -104,7 +104,7 @@ describe('models/player', () => {
         });
 
         it('should return true only for player green, if just one green pawn is left', () => {
-            const pawns = [ getPawns(G)[0] ];
+            const pawns = [ getStartPawns(G)[0] ];
             const expected = { 0: false, 1: true, 2: false, 3: false };
             const actual = Player.isPlayersAlive(pawns);
             assert.deepStrictEqual(actual, expected);
@@ -134,14 +134,14 @@ describe('models/player', () => {
         });
 
         it('should return blue after yellow, when only pawns of these two are left', () => {
-            const pawns = getPawns(Y).concat(getPawns(B));
+            const pawns = getStartPawns(Y).concat(getStartPawns(B));
             const expected = B;
             const actual = Player.getNextPlayer(Y, pawns);
             assert.strictEqual(actual, expected);
         });
 
         it('should always return green, when green is the only player left', () => {
-            const pawns = getPawns(G);
+            const pawns = getStartPawns(G);
             const expected = G;
             const actual = Player.getNextPlayer(R, pawns);
             const actual2 = Player.getNextPlayer(G, pawns);
