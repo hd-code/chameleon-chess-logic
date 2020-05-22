@@ -8,6 +8,8 @@ import { isPlayersAlive as isPlayersAlivePlayer } from './models/player';
 
 // -----------------------------------------------------------------------------
 
+// TODO: Document everything more in detail
+
 /** Export all the types. */
 export * from './types';
 

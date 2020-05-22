@@ -22,29 +22,40 @@ However, this module doesn't provide any kind of visual rendering. Instead, it i
 - Wrapper Methoden testen ? Best Practices ?
 
 
+
+
+
+
+
+
+
+
+
 ---
 
 **Überarbeitung erforderlich**
 
 ## Installation
 
-The easiest way to use this library in your project, is by using NPM.
+Add this library to your project by running:
 
-So, if you have the current version of NPM installed, just run this in the terminal in the folder of your project:
-
-``` shell
-npm install git+https://github.com/hd-code/chameleon-chess-logic.git#v1
+```sh
+npm install git+https://github.com/hd-code/chameleon-chess-logic.git
 ```
 
-**`#v1`** specifies that we want to pull the branch called 'v1'. Branch 'v1' contains the current stable release of this library.
+If you are using the very first version of the chameleon chess app, you need to install the legacy version by running:
 
-Now you can use this module in your app by simply requiring...
+```sh
+npm install git+https://github.com/hd-code/chameleon-chess-logic.git#legacy
+```
+
+## Usage
+
+Now you can use this module in your app by simply requiring or importing it:
 
 ```js
 const ccl = require('chameleon-chess-logic');
 ```
-
-... or importing it.
 
 ```ts
 import * as ccl from 'chameleon-chess-logic';
@@ -52,9 +63,9 @@ import * as ccl from 'chameleon-chess-logic';
 
 This project is written in Typescript. So all declarations, interfaces etc. are included in the build.
 
-## Usage
+## API Documentation
 
-A complete guide on how to use this library, data types and functions, can be found [here](./docs/api.md).
+A complete guide on how to use this library, data types and functions, can be found [here](./docs/api/index.html).
 
 ## Development
 
@@ -70,7 +81,7 @@ git clone https://github.com/hd-code/chameleon-chess-logic.git
 cd chameleon-chess-logic
 
 # install dev dependencies for npm module
-npm i
+npm install
 ```
 
 Now, you can work on the project.

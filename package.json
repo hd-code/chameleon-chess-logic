@@ -10,7 +10,8 @@
   "scripts": {
     "build": "npm run clear && tsc && npm run minify",
     "clear": "rm -rf dist",
-    "docs": "typedoc --out docs/api src",
+    "docs": "open docs/api/index.html",
+    "docs:make": "typedoc --out docs/api src",
     "minify": "for i in $(find dist -name *.js); do uglifyjs $i -o $i -mc; done;",
     "prepare": "npm run build",
     "start": "npm test",
