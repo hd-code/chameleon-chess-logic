@@ -118,3 +118,9 @@ export function isGameState(gameState: any): gameState is IGameState {
 export function isPlayersAlive(gameState: IGameState): {[player in EPlayer]: boolean} {
     return isPlayersAlivePlayer(gameState.pawns);
 }
+
+// -----------------------------------------------------------------------------
+// Export for AI Module
+// -----------------------------------------------------------------------------
+
+export { getNextGameStates } from './models/game-state';
