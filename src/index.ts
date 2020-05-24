@@ -54,10 +54,10 @@ export function beginGame(red: boolean, green: boolean, yellow: boolean, blue: b
  * 
  * If the provided field is empty, this function returns -1.
  * 
- * @param position 
  * @param gameState 
+ * @param position 
  */
-export function getIndexOfPawnAtPosition(position: IPosition, gameState: IGameState): number {
+export function getIndexOfPawnAtPosition(gameState: IGameState, position: IPosition): number {
     return getPawnsIAtPosition(gameState.pawns, position);
 }
 
@@ -67,20 +67,20 @@ export function getIndexOfPawnAtPosition(position: IPosition, gameState: IGameSt
  * 
  * If an invalid index is given, this function returns an empty array.
  * 
- * @param pawnsIndex 
  * @param gameState 
+ * @param pawnsIndex 
  */
-export function getMoves(pawnsIndex: number, gameState: IGameState): IPosition[] {
+export function getMoves(gameState: IGameState, pawnsIndex: number): IPosition[] {
     return getMovesPawn(pawnsIndex, gameState.pawns, gameState.limits);
 }
 
 /**
  * 
- * @param destination 
- * @param pawnsIndex 
  * @param gameState 
+ * @param pawnsIndex 
+ * @param destination 
  */
-export function makeMove(destination: IPosition, pawnsIndex: number, gameState: IGameState): IGameState|null {
+export function makeMove(gameState: IGameState, pawnsIndex: number, destination: IPosition ): IGameState|null {
     return GS.isValidMove(gameState, pawnsIndex, destination) 
         ? GS.updateGameState(gameState, pawnsIndex, destination)
         : null;
