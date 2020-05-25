@@ -1,0 +1,7 @@
+{
+    "exclude": ["./src/+(ai|models)/*.ts","./src/index.ts"],
+    "excludeNotExported": true,
+    "inputFiles": ["./src"],
+    "mode": "modules",
+    "out": "./docs/api"
+  }

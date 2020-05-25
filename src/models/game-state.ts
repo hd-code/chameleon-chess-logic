@@ -1,7 +1,7 @@
 import { IGameState, IPawn, EPlayer, IPosition } from '../types';
 
 import { isLimits, isWithinLimits, calcLimits, getStartLimits } from './limits';
-import { isPawn, getStartPawns, getPawnsIAtPosition as getIndexOfP, getMoves as getM, getIndexOfPawnInDeadlock } from './pawn';
+import * as Pawn from './pawn';
 import { isPlayer, isPlayerAlive, getNextPlayer } from './player';
 import { isInPositions, sortPositions, isSamePosition } from './position';
 
@@ -22,7 +22,7 @@ import { hasKey, isArray } from '../../lib/type-guards';
  */
 export function isGameState(gs: any): gs is IGameState {
     return hasKey(gs, 'limits', isLimits)
-        && hasKey(gs, 'pawns') && isArray(gs.pawns, isPawn)
+        && hasKey(gs, 'pawns') && isArray(gs.pawns, Pawn.isPawn)
         && hasKey(gs, 'player', isPlayer)
         && noPawnsOutsideOfLimits(gs)
         && noPawnsOnSameField(gs)
@@ -31,10 +31,10 @@ export function isGameState(gs: any): gs is IGameState {
 
 export function getStartGameState(players: {[player in EPlayer]: boolean}): IGameState {
     let pawns: IPawn[] = [];
-    if (players[0]) pawns = pawns.concat(getStartPawns(EPlayer.RED));
-    if (players[1]) pawns = pawns.concat(getStartPawns(EPlayer.GREEN));
-    if (players[2]) pawns = pawns.concat(getStartPawns(EPlayer.YELLOW));
-    if (players[3]) pawns = pawns.concat(getStartPawns(EPlayer.BLUE));
+    if (players[0]) pawns = pawns.concat(Pawn.getStartPawns(EPlayer.RED));
+    if (players[1]) pawns = pawns.concat(Pawn.getStartPawns(EPlayer.GREEN));
+    if (players[2]) pawns = pawns.concat(Pawn.getStartPawns(EPlayer.YELLOW));
+    if (players[3]) pawns = pawns.concat(Pawn.getStartPawns(EPlayer.BLUE));
 
     if (pawns.length < 1) return { pawns, limits: getStartLimits(), player: EPlayer.RED };
 
@@ -46,12 +46,12 @@ export function getStartGameState(players: {[player in EPlayer]: boolean}): IGam
 export function isValidMove(gs: IGameState, pawnI: number, destination: IPosition): boolean {
     return !isGameOver(gs) // game is still on
         && gs.pawns[pawnI]?.player === gs.player // pawn belongs to player on turn
-        && isInPositions(destination, getM(pawnI, gs.pawns, gs.limits));
+        && isInPositions(destination, Pawn.getMoves(pawnI, gs.pawns, gs.limits));
 }
 
 /** Just makes the move. No validity check! Use isValidMove() to check validity first. */
 export function updateGameState(gs: IGameState, pawnI: number, destination: IPosition): IGameState {
-    const beatenPawnIndex = getIndexOfP(gs.pawns, destination);
+    const beatenPawnIndex = Pawn.getPawnsIAtPosition(gs.pawns, destination);
 
     let pawns = deepClone(gs.pawns);
     pawns[pawnI].position = destination;
@@ -59,7 +59,7 @@ export function updateGameState(gs: IGameState, pawnI: number, destination: IPos
 
     const limits = calcLimits(pawns, gs.limits);
 
-    const pawnIInDeadlock = getIndexOfPawnInDeadlock(pawns, limits);
+    const pawnIInDeadlock = Pawn.getIndexOfPawnInDeadlock(pawns, limits);
     if (pawnIInDeadlock !== -1 && !isGameOver({limits, pawns, player: gs.player})) {
         pawns.splice(pawnIInDeadlock, 1);
     }
@@ -89,7 +89,7 @@ export function getNextGameStates(gs: IGameState): IGameState[] {
     for (let i = 0, ie = gs.pawns.length; i < ie; i++) {
         if (gs.pawns[i].player !== gs.player) continue;
 
-        const moves = getM(i, gs.pawns, gs.limits);
+        const moves = Pawn.getMoves(i, gs.pawns, gs.limits);
         const gameStates = moves.map(move => updateGameState(gs, i, move));
         result = result.concat(gameStates);
     }

@@ -11,7 +11,7 @@
     "build": "npm run clear && tsc && npm run minify",
     "clear": "rm -rf dist",
     "docs": "open docs/api/index.html",
-    "docs:make": "typedoc --out docs/api src",
+    "docs:make": "typedoc",
     "minify": "for i in $(find dist -name *.js); do uglifyjs $i -o $i -mc; done;",
     "prepare": "npm run build",
     "start": "npm test",
@@ -20,7 +20,7 @@
   "devDependencies": {
     "@types/mocha": "^7.0.2",
     "@types/node": "^12.12.42",
-    "mocha": "^7.1.2",
+    "mocha": "^7.2.0",
     "ts-node": "^8.10.1",
     "typedoc": "^0.17.7",
     "typescript": "^3.9.3",
