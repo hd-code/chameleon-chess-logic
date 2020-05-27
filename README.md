@@ -14,6 +14,9 @@ TODO: explain project structure here
 TODO: explain NPM commands
 TODO: DevGuide?
 TODO: Code Style? (Lint?)
+TODO: add game rules to typedoc with external include ???
+TODO: Test Game State model
+TODO: Test public API
 
 **Überarbeitung erforderlich**
 

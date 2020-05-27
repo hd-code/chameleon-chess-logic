@@ -10,10 +10,12 @@
   "scripts": {
     "build": "npm run clear && tsc && npm run minify",
     "clear": "rm -rf dist",
-    "docs": "open docs/api/index.html",
+    "docs": "npm run docs:open || npm run docs:make && npm run docs:open",
     "docs:make": "typedoc",
+    "docs:open": "open docs/api/index.html",
     "minify": "for i in $(find dist -name *.js); do uglifyjs $i -o $i -mc; done;",
     "prepare": "npm run build",
+    "setup": "npm install && npm run build && npm run docs:make",
     "start": "npm test",
     "test": "mocha -r ts-node/register 'test/**/*.ts'"
   },
@@ -24,6 +26,6 @@
     "ts-node": "^8.10.1",
     "typedoc": "^0.17.7",
     "typescript": "^3.9.3",
-    "uglify-js": "^3.9.3"
+    "uglify-es": "^3.3.9"
   }
 }
