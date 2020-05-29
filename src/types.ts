@@ -1,5 +1,18 @@
 /**
- * TODO: general description... und bessere Beschreibung
+ * This library is implemented in a functional style. Meaning that there is a
+ * strict separation between data structures and functions. This file explains
+ * all the data types, that are used to represent the game.
+ * See [[./functions.ts]] for all functions in this library.
+ * 
+ * The most important type is {@link IGameState} as it holds all the information about
+ * the game right now. It is an aggregation of subsequent types – all are
+ * described here.
+ * 
+ * _Note:_ Players are only represented by the enum {@link EPlayer}. This library does
+ * not offer a more detailed data structure, because it is not needed for the
+ * functionality. So, one of the first things you want to do, when implementing
+ * an app/website or whatever, is to define your own player model.
+ * @packageDocumentation
  */
 
 // -----------------------------------------------------------------------------
@@ -8,9 +21,9 @@
 
 /**
  * This type represents the game board. It is a two-dimensional array of field
- * colors {@link EFieldColor} (@see EFieldColor). There are 8 rows with 8 columns.
+ * colors {@link EFieldColor}. There are 8 rows with 8 columns.
  * 
- * Use the function {@link getBoard} (@see getBoard ) to get the array. The board layout never
+ * Use the function {@link getBoard} to get the array. The board layout never
  * changes. So, this is actually a constant.
  */
 export type TBoard = EFieldColor[][]
@@ -34,7 +47,7 @@ export enum EFieldColor { RED, GREEN, YELLOW, BLUE }
  * 
  * It holds the following properties:
  * - `limits`: specify the current size of the game board (see {@link ILimits})
- * - `pawns`: an array with all the pawns that are still in play/alive (see {@link IPawn})
+ * - `pawns`:  an array with all the pawns that are still in play/alive (see {@link IPawn})
  * - `player`: the player who is currently on turn (see {@link EPlayer})
  * 
  * All other information about the current game, can be derived from this game
@@ -59,9 +72,9 @@ export interface IGameState {
  * from this data structure.
  * 
  * It has the following properties:
- * - `minRow`: the lowest row, that is still part of the game
- * - `maxRow`: the highest row, that is still part of the game
- * - `minCol`: the lowest column, that is still part of the game
+ * - `minRow`: the lowest     row, that is still part of the game
+ * - `maxRow`: the highest    row, that is still part of the game
+ * - `minCol`: the lowest  column, that is still part of the game
  * - `maxCol`: the highest column, that is still part of the game
  * 
  * _Important_: these properties are 'including'. So, `minRow: 1` means that the
@@ -101,10 +114,10 @@ export interface IPawn {
 
 /**
  * An enum which represents the four different players.
- * - `RED`: 0
- * - `GREEN`: 1
+ * - `RED`:    0
+ * - `GREEN`:  1
  * - `YELLOW`: 2
- * - `BLUE`: 3
+ * - `BLUE`:   3
  */
 export enum EPlayer { RED, GREEN, YELLOW, BLUE }
 
@@ -132,7 +145,7 @@ export interface IPosition {
  * procedure. Each pawn has a very specific mapping from a field color to a
  * particular role. A map-type, called `MRoles`, stores this mapping. It is an
  * object with the four field colors `EFieldColor` as keys and the corresponding
- * role `ERole` as values. (@see EFieldColor and @see ERole)
+ * role `ERole` as values. (see {@link EFieldColor} and {@link ERole})
  * 
  * To find out, what role a pawn currently has, get the color of the field the
  * pawn currently is on. Then, lookup the mapped role in the `MRoles` object.
@@ -142,8 +155,8 @@ export type MRoles = {[fieldColor in EFieldColor]: ERole}
 /**
  * An enum, which represents the four chess roles a pawn could have.
  * - `KNIGHT`: 0
- * - `QUEEN`: 1
+ * - `QUEEN`:  1
  * - `BISHOP`: 2
- * - `ROOK`: 3
+ * - `ROOK`:   3
  */
 export enum ERole { KNIGHT, QUEEN, BISHOP, ROOK }

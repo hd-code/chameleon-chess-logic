@@ -2,11 +2,12 @@ import assert from 'assert';
 import * as GS from '../../src/models/game-state';
 
 import { getStartLimits, calcLimits } from '../../src/models/limits';
+import { getMoves } from '../../src/models/pawn';
 import { EPlayer } from '../../src/types';
 
-import { dec2binArray } from '../../lib/aux';
+import { dec2binArray, flattenArray, deepClone } from '../../lib/aux';
 
-import * as TestData from '../test-data';
+import { TestData } from '../test-data';
 
 // -----------------------------------------------------------------------------
 
@@ -51,21 +52,21 @@ describe('models/game-state', () => {
         });
         
         it('should return false for incomplete game states', () => {
-            const DATA = [
+            const testData = [
                 { limits: {}, pawns:[], player: 0 },
                 { limits: {}, pawns:[] },
                 { limits: {},           player: 0 },
                 {             pawns:[], player: 0 },
             ];
-            DATA.forEach(limits => assert(!GS.isGameState(limits)));
+            testData.forEach(limits => assert(!GS.isGameState(limits)));
         });
 
         it('should return false for wrong data types (obj,array,string,boolean,null,undefined)', () => {
-            const DATA = [
+            const testData = [
                 {street:'Baker Street',houseNo:2}, [1,2,3,4], ' ',
                 true, null, undefined
             ];
-            DATA.forEach(data => assert(!GS.isGameState(data)));
+            testData.forEach(data => assert(!GS.isGameState(data)));
         });
     });
 
@@ -141,13 +142,56 @@ describe('models/game-state', () => {
         });
     });
 
-    // TODO: testing
-    describe('isValidMove()', () => {});
+    describe('isValidMove() - uses the TestMoves data set', () => {
+        const gs = TestData.gameState;
+
+        it('should return true for all valid knight moves', () => {
+            const pawnIndex = TestData.knightIndex;
+            const moves = TestData.knightMoves;
+            moves.forEach(move => assert(GS.isValidMove(gs, pawnIndex, move)));
+        });
+
+        it('should return true for all valid rook moves', () => {
+            const pawnIndex = TestData.rookIndex;
+            const moves = TestData.rookMoves;
+            moves.forEach(move => assert(GS.isValidMove(gs, pawnIndex, move)));
+        });
+
+        it('should return false for all valid bishop moves (player not on turn)', () => {
+            const pawnIndex = TestData.bishopIndex;
+            const moves = TestData.bishopMoves;
+            moves.forEach(move => assert(!GS.isValidMove(gs, pawnIndex, move)));
+        });
+
+        it('should return false for all valid queen moves (player not on turn)', () => {
+            const pawnIndex = TestData.queenIndex;
+            const moves = TestData.queenMoves;
+            moves.forEach(move => assert(!GS.isValidMove(gs, pawnIndex, move)));
+        });
+
+        it('should return false when the pawn does not exist', () => {
+            const pawnIndex = gs.pawns.length;
+            const moves = TestData.knightMoves.concat(TestData.rookMoves);
+            moves.forEach(move => assert(!GS.isValidMove(gs, pawnIndex, move)));
+        });
+
+        it('should return false when the moves can not be done by the pawn', () => {
+            const pawnIndex = TestData.knightIndex;
+            let moves = deepClone(TestData.knightMoves);
+            moves.forEach(move => move.row += 1);
+            moves.forEach(move => assert(!GS.isValidMove(gs, pawnIndex, move)));
+        });
+    });
 
     // TODO: testing
     describe('updateGameState()', () => {});
 
     describe('isGameOver()', () => {
+        it('should return false for a normal game state in the course of a game', () => {
+            const gs = TestData.gameState;
+            assert(!GS.isGameOver(gs));
+        });
+
         it('should return false for a new 4 player game', () => {
             const gs = GS.getStartGameState([true, true, true, true]);
             assert(!GS.isGameOver(gs));
@@ -161,6 +205,12 @@ describe('models/game-state', () => {
         it('should return false for a new 2 player game', () => {
             const gs = GS.getStartGameState([true, false, true, false]);
             assert(!GS.isGameOver(gs));
+        });
+
+        it('should return true when there is only one pawn left', () => {
+            let gs = deepClone(TestData.gameState);
+            gs.pawns = [gs.pawns[0]];
+            assert(GS.isGameOver(gs));
         });
 
         it('should return true for a new 1 player game (red)', () => {
@@ -177,20 +227,18 @@ describe('models/game-state', () => {
             const gs = GS.getStartGameState([false, true, false, false]);
             assert(GS.isGameOver(gs));
         });
-
-        // TODO: test other, none initial game states
     });
 
-    // TODO: do further tests
-    it('getNextGameStates()', () => {
-        const Games = GS.getNextGameStates(TestData.testMovesOfRoles.game);
+    describe('getNextGameStates()', () => {
+        it('should return as many game states as possible pawn moves of the player on turn', () => {
+            const gs = TestData.gameState;
+            const pawnsOnTurn = gs.pawns.filter(pawn => pawn.player === gs.player);
+            const moves = pawnsOnTurn.map((_, i) => getMoves(i, gs.pawns, gs.limits));
 
-        const numOfMoves = 0
-            + TestData.testMovesOfRoles.validBishopMoves.length
-            + TestData.testMovesOfRoles.validKnightMoves.length
-            + TestData.testMovesOfRoles.validRookMoves.length
-            + TestData.testMovesOfRoles.validQueenMoves.length;
+            const expected = flattenArray(moves).length;
+            const actual = GS.getNextGameStates(gs).length;
 
-        assert.strictEqual(Games.length, numOfMoves);
+            assert.strictEqual(actual, expected);
+        });
     });
 });

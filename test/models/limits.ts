@@ -5,6 +5,8 @@ import { getStartPawns } from '../../src/models/pawn';
 
 import { deepClone } from '../../lib/aux';
 
+import { TestData } from '../test-data';
+
 // -----------------------------------------------------------------------------
 
 describe('models/limits', () => {
@@ -57,21 +59,21 @@ describe('models/limits', () => {
         });
 
         it('should return false for incomplete limits', () => {
-            const DATA = [
+            const testData = [
                 { minRow: 0, minCol: 0, maxRow: 7 },
                 { minRow: 0, minCol: 0,            maxCol: 7 },
                 { minRow: 0,            maxRow: 7, maxCol: 7 },
                 {            minCol: 0, maxRow: 7, maxCol: 7 },
             ];
-            DATA.forEach(limits => assert(!Limits.isLimits(limits)));
+            testData.forEach(limits => assert(!Limits.isLimits(limits)));
         });
 
         it('should return false for wrong data types (obj,array,string,boolean,null,undefined)', () => {
-            const DATA = [
+            const testData = [
                 {street:'Baker Street',houseNo:2}, [1,2,3,4], ' ',
                 true, null, undefined
             ];
-            DATA.forEach(data => assert(!Limits.isLimits(data)));
+            testData.forEach(data => assert(!Limits.isLimits(data)));
         });
     });
 
@@ -120,14 +122,12 @@ describe('models/limits', () => {
     });
 
     describe('isSmallestLimits()', () => {
-        it('should return true for 3x3 field (row: 3-5, col: 5-7)', () => {
-            const limits = { minRow: 3, maxRow: 5, minCol: 5, maxCol: 7 };
-            assert(Limits.isSmallestLimits(limits));
-        });
-
-        it('should return true for 3x3 field (row: 0-2, col: 0-2)', () => {
-            const limits = { minRow: 0, maxRow: 2, minCol: 0, maxCol: 2 };
-            assert(Limits.isSmallestLimits(limits));
+        it('should return true for 3x3 boards (row: 3-5, col: 5-7),(row: 0-2, col: 0-2)', () => {
+            const testData = [
+                { minRow: 3, maxRow: 5, minCol: 5, maxCol: 7 },
+                { minRow: 0, maxRow: 2, minCol: 0, maxCol: 2 },
+            ];
+            testData.forEach(limits => assert(Limits.isSmallestLimits(limits)));
         });
 
         it('should return false for start limits (row: 0-7, col: 0-7)', () => {
@@ -167,7 +167,7 @@ describe('models/limits', () => {
         const PAWNS_YELLOW = getStartPawns(2);
         const PAWNS_BLUE = getStartPawns(3);
 
-        it('should not shrink limits, when all pawns still are at the edge of the board', () => {
+        it('should not shrink limits when all pawns still are at the edge of the board', () => {
             const expected = START_LIMITS;
             const pawns = [...PAWNS_RED, ...PAWNS_GREEN, ...PAWNS_YELLOW, ...PAWNS_BLUE];
             const actual = Limits.calcLimits(pawns, START_LIMITS);
@@ -208,6 +208,18 @@ describe('models/limits', () => {
             pawn.position = { row: 4, col: 5 };
             const pawns = [pawn];
             const actual = Limits.calcLimits(pawns, START_LIMITS);
+            assert.deepStrictEqual(actual, expected);
+        });
+
+        it('should center the limits around a pawn when only one is present (this is for testing only)', () => {
+            const pawn = TestData.gameState.pawns[1];
+            
+            const expected = {
+                minRow: pawn.position.row - 1, maxRow: pawn.position.row + 1,
+                minCol: pawn.position.col - 1, maxCol: pawn.position.col + 1,
+            };
+            const actual = Limits.calcLimits([pawn], START_LIMITS);
+
             assert.deepStrictEqual(actual, expected);
         });
     });

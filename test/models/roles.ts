@@ -28,11 +28,11 @@ describe('models/roles', () => {
         });
 
         it('should return false for wrong data types (obj,array,string,boolean,null,undefined)', () => {
-            const DATA = [
+            const testData = [
                 {street:'Baker Street',houseNo:2}, [1,2,3,4], ' ',
                 true, null, undefined
             ];
-            DATA.forEach(data => assert(!Roles.isRoles(data)));
+            testData.forEach(data => assert(!Roles.isRoles(data)));
         });
     });
 

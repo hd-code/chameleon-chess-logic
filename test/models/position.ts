@@ -2,6 +2,7 @@ import assert from 'assert';
 import * as Position from '../../src/models/position';
 
 import { IPosition } from '../../src/types';
+import { deepClone } from '../../lib/aux';
 
 // -----------------------------------------------------------------------------
 
@@ -18,46 +19,46 @@ describe('models/board', () => {
         });
 
         it('should return false for incomplete positions', () => {
-            const DATA = [
+            const testData = [
                 {         col: 3 },
                 { row: 1         }
             ];
-            DATA.forEach(data => assert(!Position.isPosition(data)));
+            testData.forEach(data => assert(!Position.isPosition(data)));
         });
 
         it('should return false for positions with decimals' , () => {
-            const DATA = [
-                { row: 1.5, col: 3 },
+            const testData = [
+                { row: 1.5, col: 3   },
                 { row: 1  , col: 3.2 },
                 { row: 1.5, col: 3.2 }
             ];
-            DATA.forEach(data => assert(!Position.isPosition(data)));
+            testData.forEach(data => assert(!Position.isPosition(data)));
         });
 
         it('should return false for positions with negative values' , () => {
-            const DATA = [
+            const testData = [
                 { row:-1, col: 3 },
                 { row: 1, col:-3 },
                 { row:-1, col:-3 }
             ];
-            DATA.forEach(data => assert(!Position.isPosition(data)));
+            testData.forEach(data => assert(!Position.isPosition(data)));
         });
 
         it('should return false for positions with too high values (>7)' , () => {
-            const DATA = [
+            const testData = [
                 { row:10, col: 3 },
                 { row: 1, col:30 },
                 { row:10, col:30 }
             ];
-            DATA.forEach(data => assert(!Position.isPosition(data)));
+            testData.forEach(data => assert(!Position.isPosition(data)));
         });
 
         it('should return false for wrong data types (obj,array,string,boolean,null,undefined)', () => {
-            const DATA = [
+            const testData = [
                 {street:'Baker Street',houseNo:2}, [1,2,3,4], ' ',
                 true, null, undefined
             ];
-            DATA.forEach(data => assert(!Position.isPosition(data)));
+            testData.forEach(data => assert(!Position.isPosition(data)));
         });
     });
 
@@ -83,17 +84,17 @@ describe('models/board', () => {
 
     describe('isInPositions()', () => {
         it('should return true, when the position is also in the array', () => {
-            const POS_ARRAY = [ TEST_POS1, TEST_POS2, TEST_POS3 ];
-            assert(Position.isInPositions(TEST_POS1, POS_ARRAY));
-            assert(Position.isInPositions(TEST_POS2, POS_ARRAY));
-            assert(Position.isInPositions(TEST_POS3, POS_ARRAY));
+            const positions = [ TEST_POS1, TEST_POS2, TEST_POS3 ];
+            assert(Position.isInPositions(TEST_POS1, positions));
+            assert(Position.isInPositions(TEST_POS2, positions));
+            assert(Position.isInPositions(TEST_POS3, positions));
         });
 
         it('should return true, when the position has the same values as one in the array', () => {
-            const POS_ARRAY = [ TEST_POS1, TEST_POS2, TEST_POS3 ];
-            assert(Position.isInPositions({...TEST_POS1}, POS_ARRAY));
-            assert(Position.isInPositions({...TEST_POS2}, POS_ARRAY));
-            assert(Position.isInPositions({...TEST_POS3}, POS_ARRAY));
+            const positions = [ TEST_POS1, TEST_POS2, TEST_POS3 ];
+            assert(Position.isInPositions({...TEST_POS1}, positions));
+            assert(Position.isInPositions({...TEST_POS2}, positions));
+            assert(Position.isInPositions({...TEST_POS3}, positions));
         });
 
         it('should return false, when the position does not match any one in the array', () => {
@@ -111,17 +112,6 @@ describe('models/board', () => {
 
     describe('sortPositions()', () => {
         it('should sort positions by row ascending and by col ascending when rows are equal', () => {
-            const data = [
-                { row: 6, col: 1 },
-                { row: 0, col: 0 },
-                { row: 0, col: 2 },
-                { row: 0, col: 1 },
-                { row: 6, col: 2 },
-                { row: 1, col: 7 },
-                { row: 0, col: 1 },
-                { row: 1, col: 5 },
-            ];
-
             const expected = [
                 { row: 0, col: 0 },
                 { row: 0, col: 1 },
@@ -132,11 +122,20 @@ describe('models/board', () => {
                 { row: 6, col: 1 },
                 { row: 6, col: 2 },
             ];
+            
+            let actual = [
+                { row: 6, col: 1 },
+                { row: 0, col: 0 },
+                { row: 0, col: 2 },
+                { row: 0, col: 1 },
+                { row: 6, col: 2 },
+                { row: 1, col: 7 },
+                { row: 0, col: 1 },
+                { row: 1, col: 5 },
+            ];
+            actual.sort(Position.sortPositions);
 
-            let sort = JSON.parse(JSON.stringify(data));
-            sort.sort(Position.sortPositions);
-
-            assert.deepStrictEqual(sort, expected);
+            assert.deepStrictEqual(actual, expected);
         });
     });
 });
