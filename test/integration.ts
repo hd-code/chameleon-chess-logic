@@ -24,10 +24,14 @@ describe('Integration test', () => {
             const pawnIndex = ccl.getIndexOfPawnAtPosition(gs, pawn.position);
 
             const moves = ccl.getMoves(gs, pawnIndex);
-            const move = moves[getRandomIndex(moves)];
+            const moveI = getRandomIndex(moves);
+            const move = moves[moveI];
 
             const nextGS = ccl.makeMove(gs, pawnIndex, move);
-            if (nextGS === null) throw new Error('failed to make a move');
+
+            // it can happen, that a pawn is blocked by other pawns completely
+            // if that happens, we just try again
+            if (nextGS === null) continue;
 
             gs = nextGS;
         }
