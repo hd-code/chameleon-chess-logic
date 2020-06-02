@@ -38,7 +38,7 @@ describe('Integration test', () => {
 
 // -----------------------------------------------------------------------------
 
-const MAX_TURNS = 100;
+const MAX_TURNS = 1000;
 
 function getRandomIndex<T>(array: T[]): number {
     return Math.floor(Math.random() * array.length);

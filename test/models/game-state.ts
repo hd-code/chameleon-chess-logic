@@ -7,7 +7,7 @@ import { EPlayer } from '../../src/types';
 
 import { dec2binArray, flattenArray, deepClone } from '../../lib/aux';
 
-import { TestData } from '../test-data';
+import { TestData, TestMoves } from '../test-data';
 
 // -----------------------------------------------------------------------------
 
@@ -181,10 +181,23 @@ describe('models/game-state', () => {
             moves.forEach(move => move.row += 1);
             moves.forEach(move => assert(!GS.isValidMove(gs, pawnIndex, move)));
         });
+
+        it('should return true for all test moves', () => {
+            TestMoves.allMoves.forEach(testCase => {
+                assert(GS.isValidMove(testCase.gameState, testCase.pawnIndex, testCase.destination));
+            });
+        });
     });
 
-    // TODO: testing
-    describe('updateGameState()', () => {});
+    describe('updateGameState()', () => {
+        it('should return the correct game state for all test moves', () => {
+            TestMoves.allMoves.forEach((testCase, index) => {
+                const expected = testCase.resultGS;
+                const actual = GS.updateGameState(testCase.gameState, testCase.pawnIndex, testCase.destination);
+                assert.deepStrictEqual(actual, expected, 'testCase ' + index + ' failed');
+            });
+        });
+    });
 
     describe('isGameOver()', () => {
         it('should return false for a normal game state in the course of a game', () => {
@@ -232,13 +245,33 @@ describe('models/game-state', () => {
     describe('getNextGameStates()', () => {
         it('should return as many game states as possible pawn moves of the player on turn', () => {
             const gs = TestData.gameState;
-            const pawnsOnTurn = gs.pawns.filter(pawn => pawn.player === gs.player);
-            const moves = pawnsOnTurn.map((_, i) => getMoves(i, gs.pawns, gs.limits));
+
+            const pawnsIOnTurn = gs.pawns.reduce((result, pawn, i) => {
+                return pawn.player === gs.player
+                    ? result.concat(i)
+                    : result;
+            }, <number[]>[]);
+            
+            const moves = pawnsIOnTurn.map(pawnI => getMoves(pawnI, gs.pawns, gs.limits));
 
             const expected = flattenArray(moves).length;
             const actual = GS.getNextGameStates(gs).length;
 
             assert.strictEqual(actual, expected);
+        });
+
+        it('should return the next possible game states, so, the test move should be among them', () => {
+            TestMoves.allMoves.forEach(testCase => {
+                let gameStateFound = false;
+                const nextGSs = GS.getNextGameStates(testCase.gameState);
+                nextGSs.forEach(gs => {
+                    try {
+                        assert.deepStrictEqual(gs, testCase.resultGS);
+                        gameStateFound = true;
+                    } catch (e) {}
+                });
+                assert(gameStateFound);
+            });
         });
     });
 });

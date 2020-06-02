@@ -2,7 +2,6 @@ import assert from 'assert';
 import * as Position from '../../src/models/position';
 
 import { IPosition } from '../../src/types';
-import { deepClone } from '../../lib/aux';
 
 // -----------------------------------------------------------------------------
 

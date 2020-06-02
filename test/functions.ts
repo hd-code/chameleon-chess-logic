@@ -6,7 +6,7 @@ import { isGameState } from '../src/models/game-state';
 
 import { isArray, hasKey, isBool } from '../lib/type-guards';
 
-import { TestData } from './test-data';
+import { TestData, TestMoves } from './test-data';
 import { EPlayer } from '../src/types';
 
 // -----------------------------------------------------------------------------
@@ -83,9 +83,50 @@ describe('API', () => {
         });
     });
     
-    // TODO
     describe('makeMove()', () => {
+        it('should return an altered game state for all possible moves', () => {
+            const gs = TestData.gameState;
 
+            const pawnsIOnTurn = gs.pawns.reduce((result, pawn, i) => {
+                return pawn.player === gs.player
+                    ? result.concat(i)
+                    : result;
+            }, <number[]>[]);
+
+            pawnsIOnTurn.forEach(pawnI => {
+                const moves = API.getMoves(gs, pawnI);
+                moves.forEach(move => {
+                    const resultingGS = API.makeMove(gs, pawnI, move);
+                    assert.notDeepStrictEqual(resultingGS, gs);
+                });
+            });
+        });
+
+        it('should return null for all possible moves of pawns not on turn', () => {
+            const gs = TestData.gameState;
+
+            const pawnsINotOnTurn = gs.pawns.reduce((result, pawn, i) => {
+                return pawn.player !== gs.player
+                    ? result.concat(i)
+                    : result;
+            }, <number[]>[]);
+
+            pawnsINotOnTurn.forEach(pawnI => {
+                const moves = API.getMoves(gs, pawnI);
+                moves.forEach(move => {
+                    const result = API.makeMove(gs, pawnI, move);
+                    assert.strictEqual(result, null);
+                });
+            });
+        });
+
+        it('should do all test moves correctly', () => {
+            TestMoves.allMoves.forEach((testCase, index) => {
+                const expected = testCase.resultGS;
+                const actual = API.makeMove(testCase.gameState, testCase.pawnIndex, testCase.destination);
+                assert.deepStrictEqual(actual, expected, 'testCase ' + index + ' failed');
+            });
+        });
     });
     
     describe('makeComputerMove()', () => {
