@@ -4,6 +4,7 @@ import * as API from '../src/functions';
 import { isFieldColor } from '../src/models/board';
 import { isGameState } from '../src/models/game-state';
 
+import { deepClone } from '../lib/aux';
 import { isArray, hasKey, isBool } from '../lib/type-guards';
 
 import { TestData, TestMoves } from './test-data';
@@ -11,7 +12,10 @@ import { EPlayer } from '../src/types';
 
 // -----------------------------------------------------------------------------
 
+// TODO: focus more on testing the public API
+
 describe('API', () => {
+    // TODO
     describe('getBoard()', () => {
         it('should return an 2 dimensional array (8x8) of field colors', () => {
             const numRowsAndCols = 8;
@@ -26,38 +30,48 @@ describe('API', () => {
         });
     });
 
+    // TODO
     describe('beginGame()', () => {
         it('should return valid game states for two players or more', () => {
             const testCases = [
-                API.beginGame(true, true, true, true),
-                API.beginGame(false, true, true, true),
-                API.beginGame(false, false, true, true),
-                API.beginGame(false, true, false, true),
-                API.beginGame(false, true, true, false),
-                API.beginGame(true, false, true, true),
-                API.beginGame(true, false, false, true),
-                API.beginGame(true, false, true, false),
-                API.beginGame(true, true, false, true),
-                API.beginGame(true, true, false, false),
-                API.beginGame(true, true, true, false),
+                [ false, false, true, true ],
+                [ false, true, false, true ],
+                [ true, false, false, true ],
+                [ false, true, true, false ],
+                [ true, false, true, false ],
+                [ true, true, false, false ],
+
+                [ false, true, true, true ],
+                [ true, false, true, true ],
+                [ true, true, false, true ],
+                [ true, true, true, false ],
+
+                [ true, true, true, true ],
             ];
-            testCases.forEach(testCase => assert(isGameState(testCase)));
+            testCases.forEach(([a,b,c,d]) => {
+                const gs = API.beginGame(a,b,c,d);
+                assert(isGameState(gs));
+            });
         });
 
         it('should return null for games with less than two players', () => {
             const testCases = [
-                API.beginGame(false, false, false, false),
-                API.beginGame(true, false, false, false),
-                API.beginGame(false, true, false, false),
-                API.beginGame(false, false, true, false),
-                API.beginGame(false, false, false, true),
+                [ false, false, false, false ],
+                [ false, false, false, true ],
+                [ false, false, true, false ],
+                [ false, true, false, false ],
+                [ true, false, false, false ],
             ];
-            testCases.forEach(testCase => assert.strictEqual(testCase, null));
+            testCases.forEach(([a,b,c,d]) => {
+                const gs = API.beginGame(a,b,c,d);
+                assert.strictEqual(gs, null);
+            });
         });
 
         it('is tested thoroughly in models/game-state', () => {});
     });
 
+    // TODO
     describe('getIndexOfPawnAtPosition()', () => {
         it('should return the correct index for a pawn at the given position', () => {
             const gs = TestData.gameState;
@@ -83,6 +97,7 @@ describe('API', () => {
         });
     });
     
+    // TODO
     describe('makeMove()', () => {
         it('should return an altered game state for all possible moves', () => {
             const gs = TestData.gameState;
@@ -129,18 +144,58 @@ describe('API', () => {
         });
     });
     
+    // TODO
     describe('makeComputerMove()', () => {
         it('cannot be tested with mocha – worker scripts cannot be initialized', () => {});
     });
     
+    // TODO
     describe('isGameOver()', () => {
-        it('is tested thoroughly in models/game-state', () => {});
+        it('should return false for newly started games', () => {
+            const testCases = [
+                [ false, false, true, true ],
+                [ false, true, false, true ],
+                [ true, false, false, true ],
+                [ false, true, true, false ],
+                [ true, false, true, false ],
+                [ true, true, false, false ],
+
+                [ false, true, true, true ],
+                [ true, false, true, true ],
+                [ true, true, false, true ],
+                [ true, true, true, false ],
+
+                [ true, true, true, true ],
+            ];
+
+            testCases.forEach(([a,b,c,d]) => {
+                const gs = API.beginGame(a,b,c,d);
+                assert(!API.isGameOver(gs));
+            });
+        });
+
+        it('should return false for all test move game states', () => {
+            TestMoves.allMoves.forEach(testCase => {
+                assert(!API.isGameOver(testCase.gameState));
+            });
+        });
+
+        it('should return true for any game state when there are just pawns of a single player left', () => {
+            const testCases = TestMoves.allMoves.map(move => {
+                let gs = deepClone(move.gameState);
+                gs.pawns = gs.pawns.filter(pawn => pawn.player === gs.player);
+                return gs;
+            });
+            testCases.forEach(gs => assert(API.isGameOver(gs)));
+        });
     });
     
+    // TODO
     describe('isGameState()', () => {
         it('is tested thoroughly in models/game-state', () => {});
     });
     
+    // TODO
     describe('isPlayersAlive()', () => {
         it('should return a map from EPlayer to boolean', () => {
             const gs = TestData.gameState;

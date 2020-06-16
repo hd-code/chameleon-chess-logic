@@ -9,7 +9,6 @@ Here you can find a description of the game and its rules:
 However, this module doesn't provide any kind of visual rendering. Instead, it is a library that implements the game logic of Chameleon Chess. It offers the basic models (data structures and functions to work on these data structures) that can be used to create an App or Website or any other kind of format to play a game of Chameleon Chess.
 
 
-TODO: Test cases for making moves
 TODO: explain project structure here
 TODO: explain NPM commands
 TODO: DevGuide?

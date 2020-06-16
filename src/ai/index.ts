@@ -1,4 +1,5 @@
 import { IGameState } from '../types';
+
 import Worker from './worker';
 
 // -----------------------------------------------------------------------------

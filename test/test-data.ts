@@ -21,28 +21,19 @@ export namespace TestData {
     
     export const knightIndex = 0;
     export const knightMoves = <IPosition[]>[
-        // starting on upper left-most move, then going clockwise --------------
-        // { row: 4, col: 1 }, // own pawn
-        { row: 3, col: 2 },
+        // starting on upmost right move, then going clockwise -----------------
         { row: 3, col: 4 },
         { row: 4, col: 5 }, // opponent's pawn
         // { row: 6, col: 5 }, // outside of limits
         // { row: 7, col: 4 }, // outside of limits
         // { row: 7, col: 2 }, // outside of limits
         // { row: 6, col: 1 }, // outside of limits
+        // { row: 4, col: 1 }, // own pawn
+        { row: 3, col: 2 },
     ];
     
     export const rookIndex = 1;
     export const rookMoves = <IPosition[]>[
-        // to the left ---------------------------------------------------------
-        { row: 4, col: 0 },
-    
-        // upwards -------------------------------------------------------------
-        { row: 3, col: 1 },
-        // { row: 2, col: 1 }, // own pawn
-        // { row: 1, col: 1 }, // own pawn is blocking the way
-        // { row: 0, col: 1 }, // outside of limits
-        
         // to the right --------------------------------------------------------
         { row: 4, col: 2 },
         { row: 4, col: 3 },
@@ -54,14 +45,19 @@ export namespace TestData {
         // downwards -----------------------------------------------------------
         { row: 5, col: 1 },
         // { row: 6, col: 1 }, // outside of limits
+
+        // to the left ---------------------------------------------------------
+        { row: 4, col: 0 },
+
+        // upwards -------------------------------------------------------------
+        { row: 3, col: 1 },
+        // { row: 2, col: 1 }, // own pawn
+        // { row: 1, col: 1 }, // own pawn is blocking the way
+        // { row: 0, col: 1 }, // outside of limits
     ];
     
     export const bishopIndex = 3;
     export const bishopMoves = <IPosition[]>[
-        // left and upwards ----------------------------------------------------
-        { row: 1, col: 2 },
-        // { row: 0, col: 1 }, // outside of limits
-    
         // right and upwards ---------------------------------------------------
         { row: 1, col: 4 },
         // { row: 0, col: 5 }, // outside of limits
@@ -76,29 +72,14 @@ export namespace TestData {
         { row: 3, col: 2 },
         { row: 4, col: 1 }, // opponent's pawn'
         // { row: 5, col: 0 }, // opponent's pawn is blocking the way'
+
+        // left and upwards ----------------------------------------------------
+        { row: 1, col: 2 },
+        // { row: 0, col: 1 }, // outside of limits
     ];
     
     export const queenIndex = 4;
     export const queenMoves = <IPosition[]>[
-        // left ----------------------------------------------------------------
-        { row: 4, col: 4 },
-        { row: 4, col: 3 },
-        { row: 4, col: 2 },
-        { row: 4, col: 1 }, // opponent's pawn'
-        // { row: 4, col: 0 }, // opponent's pawn is blocking the way
-    
-        // left and upwards ----------------------------------------------------
-        { row: 3, col: 4 },
-        // { row: 2, col: 3 }, // own pawn
-        // { row: 1, col: 2 }, // own pawn is blocking the way
-        // { row: 0, col: 1 }, // outside of limits
-    
-        // upwards -------------------------------------------------------------
-        { row: 3, col: 5 },
-        { row: 2, col: 5 },
-        { row: 1, col: 5 },
-        // { row: 0, col: 5 }, // outside of limits
-    
         // right and upwards ---------------------------------------------------
         { row: 3, col: 6 },
         // { row: 2, col: 7 }, // outside of limits
@@ -118,6 +99,25 @@ export namespace TestData {
         // left and downwards --------------------------------------------------
         { row: 5, col: 4 },
         // { row: 6, col: 3 }, // outside of limits
+
+        // left ----------------------------------------------------------------
+        { row: 4, col: 4 },
+        { row: 4, col: 3 },
+        { row: 4, col: 2 },
+        { row: 4, col: 1 }, // opponent's pawn'
+        // { row: 4, col: 0 }, // opponent's pawn is blocking the way
+    
+        // left and upwards ----------------------------------------------------
+        { row: 3, col: 4 },
+        // { row: 2, col: 3 }, // own pawn
+        // { row: 1, col: 2 }, // own pawn is blocking the way
+        // { row: 0, col: 1 }, // outside of limits
+    
+        // upwards -------------------------------------------------------------
+        { row: 3, col: 5 },
+        { row: 2, col: 5 },
+        { row: 1, col: 5 },
+        // { row: 0, col: 5 }, // outside of limits
     ];
 };
 

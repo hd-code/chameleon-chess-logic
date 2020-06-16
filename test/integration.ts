@@ -10,7 +10,7 @@ describe('Integration test', () => {
         const startGS = ccl.beginGame(true, true, true, true);
         if (!startGS) throw new Error('game state could not be created');
 
-        let gs = startGS
+        let gs = startGS;
 
         // these functions are just called, to make sure no exceptions are thrown
         ccl.isGameState(gs);
