@@ -3,7 +3,7 @@ import * as Board from '../../src/models/board';
 
 import { EFieldColor } from '../../src/types';
 
-import { isArray } from '../../lib/type-guards';
+import { isArray } from '../../lib/obray';
 
 // -----------------------------------------------------------------------------
 

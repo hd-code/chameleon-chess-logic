@@ -1,13 +1,12 @@
 import { TBoard, EFieldColor, IPosition } from '../types';
 
-import { deepClone } from '../../lib/aux';
-import { isInteger } from '../../lib/type-guards';
+import { deepClone } from '../../lib/obray';
 
 // -----------------------------------------------------------------------------
 
 /** Type guard for `EPlayer`. */
 export function isFieldColor(fieldColor: any): fieldColor is EFieldColor {
-    return isInteger(fieldColor) && EFieldColor[fieldColor] !== undefined;
+    return typeof fieldColor === 'number' && EFieldColor[fieldColor] !== undefined;
 }
 
 export function getBoard(): TBoard {

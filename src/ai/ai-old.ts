@@ -1,7 +1,7 @@
 import { isGameOver, getNextGameStates } from '../models/game-state';
 import { getMoves } from '../models/pawn';
 import { IGameState, EPlayer } from '../types';
-import { flattenArray, deepClone } from '../../lib/aux';
+import { flattenArray, deepClone } from '../../lib/obray';
 
 // -----------------------------------------------------------------------------
 

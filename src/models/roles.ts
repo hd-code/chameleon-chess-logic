@@ -1,7 +1,6 @@
 import { EFieldColor, ERole, MRoles } from '../types';
 
-import { deepClone } from '../../lib/aux';
-import { isInteger, hasKey } from '../../lib/type-guards';
+import { deepClone, hasKey } from '../../lib/obray';
 
 // -----------------------------------------------------------------------------
 
@@ -54,7 +53,7 @@ const KNIGHT_COLOR_TO_ROLES = {
 
 /** Type guard for `ERole`. */
 function isRole(role: any): role is ERole {
-    return isInteger(role) && ERole[role] !== undefined;
+    return typeof role === 'number' && ERole[role] !== undefined;
 }
 
 function isValidRoles(roles: MRoles): boolean {

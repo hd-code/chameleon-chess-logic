@@ -1,13 +1,13 @@
 import assert from 'assert';
 import * as Pawn from '../../src/models/pawn';
+import { TestData } from '../test-data';
+
+import { IPawn, EPlayer } from '../../src/types';
 
 import { sortPositions, isSamePosition } from '../../src/models/position';
 import { calcLimits, getStartLimits } from '../../src/models/limits';
-import { IPawn, EPlayer } from '../../src/types';
 
-import { deepClone } from '../../lib/aux';
-
-import { TestData } from '../test-data';
+import { deepClone } from '../../lib/obray';
 
 // -----------------------------------------------------------------------------
 

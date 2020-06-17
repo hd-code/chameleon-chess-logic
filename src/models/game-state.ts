@@ -5,8 +5,7 @@ import * as Pawn from './pawn';
 import { isPlayer, isPlayerAlive, getNextPlayer } from './player';
 import { isInPositions, sortPositions, isSamePosition } from './position';
 
-import { deepClone } from '../../lib/aux';
-import { hasKey, isArray } from '../../lib/type-guards';
+import { deepClone, hasKey, isArray } from '../../lib/obray';
 
 // -----------------------------------------------------------------------------
 

@@ -2,7 +2,7 @@ import { IPosition } from '../types';
 
 import { getBoardSize } from './board';
 
-import { isInteger, hasKey } from '../../lib/type-guards';
+import { hasKey } from '../../lib/obray';
 
 // -----------------------------------------------------------------------------
 
@@ -28,4 +28,10 @@ export function isInPositions(postion: IPosition, positions: IPosition[]): boole
 
 export function sortPositions(a: IPosition, b: IPosition): number {
     return a.row !== b.row ? a.row - b.row : a.col - b.col;
+}
+
+// -----------------------------------------------------------------------------
+
+function isInteger(int: any): int is number {
+    return typeof int === 'number' && Math.floor(int) === int;
 }

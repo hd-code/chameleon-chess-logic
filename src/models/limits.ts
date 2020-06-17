@@ -2,7 +2,7 @@ import { ILimits, IPawn, IPosition } from '../types';
 
 import { getBoardSize } from './board';
 
-import { hasKey } from '../../lib/type-guards';
+import { hasKey } from '../../lib/obray';
 
 // -----------------------------------------------------------------------------
 

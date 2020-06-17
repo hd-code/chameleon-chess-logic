@@ -1,14 +1,13 @@
 import assert from 'assert';
 import * as API from '../src/functions';
+import { TestData, TestMoves } from './test-data';
+
+import { EPlayer, IGameState } from '../src/types';
 
 import { isFieldColor } from '../src/models/board';
 import { isGameState } from '../src/models/game-state';
 
-import { deepClone } from '../lib/aux';
-import { isArray, hasKey, isBool } from '../lib/type-guards';
-
-import { TestData, TestMoves } from './test-data';
-import { EPlayer } from '../src/types';
+import { deepClone, hasKey, isArray } from '../lib/obray';
 
 // -----------------------------------------------------------------------------
 
@@ -167,10 +166,9 @@ describe('API', () => {
 
                 [ true, true, true, true ],
             ];
-
             testCases.forEach(([a,b,c,d]) => {
                 const gs = API.beginGame(a,b,c,d);
-                assert(!API.isGameOver(gs));
+                assert(!API.isGameOver(gs as IGameState));
             });
         });
 
@@ -206,6 +204,10 @@ describe('API', () => {
             assert(hasKey(actual, EPlayer.GREEN, isBool));
             assert(hasKey(actual, EPlayer.YELLOW, isBool));
             assert(hasKey(actual, EPlayer.BLUE, isBool));
+
+            function isBool(bool: any): bool is boolean {
+                return typeof bool === 'boolean';
+            }
         });
 
         it('is tested thoroughly in models/player', () => {});

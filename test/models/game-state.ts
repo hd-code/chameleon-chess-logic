@@ -1,13 +1,14 @@
 import assert from 'assert';
 import * as GS from '../../src/models/game-state';
+import { TestData, TestMoves } from '../test-data';
+
+import { EPlayer } from '../../src/types';
 
 import { getStartLimits, calcLimits } from '../../src/models/limits';
 import { getMoves } from '../../src/models/pawn';
-import { EPlayer } from '../../src/types';
 
-import { dec2binArray, flattenArray, deepClone } from '../../lib/aux';
-
-import { TestData, TestMoves } from '../test-data';
+import { dec2binArray } from '../../lib/math';
+import { flattenArray, deepClone } from '../../lib/obray';
 
 // -----------------------------------------------------------------------------
 

@@ -6,8 +6,7 @@ import { isPlayer } from './player';
 import { isPosition, isSamePosition } from './position';
 import { isRoles, getRoles } from './roles';
 
-import { deepClone } from '../../lib/aux';
-import { hasKey } from '../../lib/type-guards';
+import { deepClone, hasKey } from '../../lib/obray';
 
 // -----------------------------------------------------------------------------
 

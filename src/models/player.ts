@@ -1,12 +1,10 @@
 import { EPlayer, IPawn } from '../types';
 
-import { isInteger } from '../../lib/type-guards';
-
 // -----------------------------------------------------------------------------
 
 /** Type guard for `EPlayer`. */
 export function isPlayer(player: any): player is EPlayer {
-    return isInteger(player) && EPlayer[player] !== undefined;
+    return typeof player === 'number' && EPlayer[player] !== undefined;
 }
 
 /** If you need to check the alive status of all players, use `isPlayersAlive()`. */

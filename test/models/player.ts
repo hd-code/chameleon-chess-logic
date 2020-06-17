@@ -1,8 +1,9 @@
 import assert from 'assert';
 import * as Player from '../../src/models/player';
 
-import { getStartPawns } from '../../src/models/pawn';
 import { EPlayer } from '../../src/types';
+
+import { getStartPawns } from '../../src/models/pawn';
 
 // -----------------------------------------------------------------------------
 

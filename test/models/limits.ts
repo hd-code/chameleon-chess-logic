@@ -1,11 +1,10 @@
 import assert from 'assert';
 import * as Limits from '../../src/models/limits';
+import { TestData } from '../test-data';
 
 import { getStartPawns } from '../../src/models/pawn';
 
-import { deepClone } from '../../lib/aux';
-
-import { TestData } from '../test-data';
+import { deepClone } from '../../lib/obray';
 
 // -----------------------------------------------------------------------------
 
