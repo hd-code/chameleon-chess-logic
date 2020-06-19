@@ -9,6 +9,7 @@
   ],
   "scripts": {
     "build": "npm run clear && tsc && npm run minify",
+    "build:fast": "tsc --incremental",
     "clear": "rm -rf dist",
     "docs": "npm run docs:open || npm run docs:make && npm run docs:open",
     "docs:make": "typedoc",

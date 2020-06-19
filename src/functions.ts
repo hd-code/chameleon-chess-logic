@@ -104,14 +104,14 @@ export function makeMove(gameState: IGameState, pawnsIndex: number, destination:
 }
 
 /**
- * This function will calculate a computer move in a separate thread.
+ * This function will calculate a computer move in separate threads.
  * 
  * The calculation takes a little more than 1 second. It will not block the main
  * thread.
  * 
  * The result is returned as a promise. The promise may fail, when for some
  * reason the calculation takes longer than 5 seconds. Make sure to handle that
- * error case.
+ * error case. E.g. by doing a random move, when an error occurs.
  * 
  * _Note:_ This library does not handle, which of the players are human ones and
  * which are computer players. So, this is an information you need to implement
@@ -120,11 +120,10 @@ export function makeMove(gameState: IGameState, pawnsIndex: number, destination:
  * with you in your specific app.
  * 
  * @param gameState the current game state, where the computer should calculate the next move for.
- * @param difficulty _Not yet implemented_
  * @returns a promise that resolves when the calculation is done
  */
-export async function makeComputerMove(gameState: IGameState, difficulty: 1|2|3 = 2): Promise<IGameState> {
-    return makeComputerMoveAI(gameState); // TODO: add correct algorithm ones known
+export async function makeComputerMove(gameState: IGameState): Promise<IGameState> {
+    return makeComputerMoveAI(gameState);
 }
 
 /**

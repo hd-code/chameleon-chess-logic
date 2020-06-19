@@ -1,154 +1,65 @@
-/*! worker-template v1.0.0 from hd-snippets-js | MIT | © Hannes Dröse https://github.com/hd-code/hd-snippets-js */
-
-/**
- * @fileoverview
- * This is a template to be used for running a Worker in Node.js. Workers are
- * scripts that are executed in a separate thread. They are called from the main
- * thread. Run their calculation and return the result via a callback function
- * to the main thread.
- * 
- * Handleing of workers can be a little challenging. Therefore, this script is
- * designed to simplify the process:
- * 
- * Copy the template file to your application and rename it to your liking.
- * Now you enter your code in the corresponding section of this file (see below).
- * Only one kind of function can be implemented here. If you want workers to
- * handle separate tasks, create one copy of this template for each and
- * implement it in the corresponding files.
- * 
- * Now you can use the worker in your application by importing the corresponding
- * file.
- * 
- * _Important:_ Worker scripts do not work in ts-node, so they always have to be
- * compiled and run with node traditionally.
- * 
- * Example:
- * ```ts
- * import WorkerTemplate from 'worker-template';
- * 
- * const worker = new WorkerTemplate();
- * 
- * worker.registerCallback(onWorkerIsFinished);
- * function onWorkerIsFinished(result: number) {
- *      // code to be run once the worker is done...
- * }
- * 
- * // ...
- * 
- * // can be called multiple times, tasks will be chained
- * worker.run('input parameter you specified in worker template');
- * 
- * // check if worker is currently executing
- * worker.isRunning(); // check if worker is currently executing
- * 
- * // ...
- * 
- * // Always run this function, when the worker is no longer needed!
- * // Otherwise, the worker will keep your application running infinitely.
- * worker.delete();
- * ```
- */
-
 import { isMainThread, parentPort, Worker } from 'worker_threads';
-import { IGameState } from '../types';
-import { getNextGameStates } from '../models/game-state';
+
+import { IGameState, EPlayer } from '../types';
+
+import { maxNIS } from './max-n-is';
+import { TPlayerScore } from './player-score';
 
 // -----------------------------------------------------------------------------
-// Worker Implementation – This is, where you insert your code !!!
+// Public API
 // -----------------------------------------------------------------------------
 
-/**
- * Specify the input parameter type for the worker script.
- * 
- * If you want to pass several input parameters, just pass them as an object.
- * 
- * Example:
- * ```ts
- * type TInput = { param1: type1, param2: type2 }
- * ```
- */
-type TInput  = IGameState;
-
-/**
- * Specify the output type of the worker script.
- */
-type TOutput = IGameState;
-
-/**
- * This is the cpu intensive script, that has to be executed in a separate thread.
- * 
- * **Do not change the function signature!** Otherwise, the script will not work.
- * 
- * Make sure to return your specified output value!
- */
-function main(input: TInput): TOutput {
-    return makeRandomMove(input);
+export interface WorkerInput {
+    player: EPlayer;
+    gameStates: {
+        index: number;
+        gameState: IGameState;
+    }[];
 }
 
-function makeRandomMove(gameState: IGameState): IGameState {
-    const nextGSs = getNextGameStates(gameState);
-    const index = Math.floor(Math.random() * nextGSs.length);
-    return nextGSs[index];
+export interface WorkerOutput {
+    index: number;
+    score: TPlayerScore;
+}
+
+/**
+ * Initializes a new worker thread to calculate scores for a list game states.
+ */
+export function initWorker(callback: (data: WorkerOutput) => void): Worker {
+    const worker = new Worker(__filename);
+    worker.on('message', callback);
+    return worker;
 }
 
 // -----------------------------------------------------------------------------
-// Public API - Do not alter anything here !!!
+// Execution of Worker Script
 // -----------------------------------------------------------------------------
 
-/**
- * Execute CPU-intensive tasks in a separate thread and get noticed once it is
- * done.
- */
-export default class Script {
-    private worker: Worker;
-    private running: boolean;
-    private callback: (data: TOutput) => void = () => {};
+!isMainThread && parentPort?.on('message', main);
 
-    /** Creates a new separate thread. */
-    constructor() {
-        this.worker = new Worker(__filename);
-        this.worker.on('message', data => {
-            this.running = false;
-            this.callback(data);
-        });
-        this.running = false;
-    }
+// -----------------------------------------------------------------------------
 
-    /** Register a callback function to be called when the worker is finished.
-     * The computed result is passed to the callback as the first parameter. */
-    registerCallback(callback: (data: TOutput) => void) {
-        this.callback = callback;
-    }
+const MAX_DEPTH = 50;
 
-    /** Run the task in a separate thread. */
-    run(input: TInput) {
-        this.running = true;
-        this.worker.postMessage(input);
-    }
+function main(input: WorkerInput) {
+    const player = input.player;
+    let depth = 1;
 
-    /** Returns true if the script is currently running, false if not. */
-    isRunning(): boolean {
-        return this.running;
-    }
+    // runs until max depth is reached or the worker script is terminated in the
+    // main thread
+    while (depth < MAX_DEPTH) {
+        let bestScore = 0;
+        for (let i = 0, ie = input.gameStates.length; i < ie; i++) {
+            const { index, gameState } = input.gameStates[i];
 
-    /**
-     * Stops the script and closes the parallel thread.
-     * 
-     * _Important_: always call this function, when the script is no longer
-     * needed. Otherwise it will keep the whole node program running.
-     */
-    delete() {
-        this.worker.terminate();
+            const score = maxNIS(gameState, depth, bestScore);
+            if (bestScore < score[player]) {
+                bestScore = score[player];
+            }
+
+            // always post a new score when it is available
+            parentPort?.postMessage(<WorkerOutput>{ index, score });
+        }
+        depth += 1;
     }
 }
-
-// -----------------------------------------------------------------------------
-// Execution of Worker Script – Do not alter anything here !!!
-// -----------------------------------------------------------------------------
-
-function onMessage(input: TInput) {
-    const result = main(input);
-    parentPort?.postMessage(result);
-}
-
-!isMainThread && parentPort?.on('message', onMessage);
