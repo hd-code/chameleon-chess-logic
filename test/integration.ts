@@ -1,3 +1,14 @@
+/**
+ * @file
+ * This file holds integration tests. That means that instead of the typescript
+ * code, the transpiled javascript code is used. So, these tests can only be run
+ * after a build.
+ * 
+ * This allows also the computer opponent to be tested as worker threads are
+ * available in this case.
+ */
+
+import assert from 'assert';
 import * as ccl from '../dist';
 
 // -----------------------------------------------------------------------------
@@ -37,6 +48,19 @@ describe('Integration test', () => {
         }
 
         if (turn >= MAX_TURNS) throw new Error('game did not finish');
+    });
+
+    it('should be able to do 1 computer move in about 1 second', async () => {
+        const startGS = ccl.beginGame(true, true, true, true);
+        if (startGS === null) throw new Error('start game state was null');
+
+        const begin = Date.now();
+        const nextGS = await ccl.makeComputerMove(startGS);
+        const time = Date.now() - begin;
+
+        assert(ccl.isGameState(nextGS));
+        assert.notDeepStrictEqual(nextGS, startGS);
+        assert.strictEqual(Math.round(time / 1000), 1);
     });
 });
 

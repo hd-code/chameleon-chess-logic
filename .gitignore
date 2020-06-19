@@ -1,15 +1,13 @@
+/dist
 /docs/api
 
 # macOS
 .DS_STORE
 
-# node.js
+# npm
 node_modules
 package-lock.json
 *.tgz
-
-# typescript
-/dist
 
 # vscode
 .vscode

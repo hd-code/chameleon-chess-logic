@@ -53,8 +53,9 @@ export enum EFieldColor { RED, GREEN, YELLOW, BLUE }
  * All other information about the current game, can be derived from this game
  * state object.
  * 
- * _Important_: Only living pawns are stored in the `pawns` array. If a pawn is
- * beaten, it gets removed from the `pawns` array.
+ * _Important_: Only living pawns are stored in the {@link IGameState.pawns}
+ * array. If a pawn is beaten, it gets removed from the {@link IGameState.pawns}
+ * array.
  */
 export interface IGameState {
     /** specifies the current size of the game board */

@@ -4,8 +4,8 @@
  * written in a functional style, meaning that their output only depends on
  * their input parameters. Also, the passed parameters are never altered.
  * 
- * E.g. the function `makeMove` will not alter the game state, that is passed as
- * a parameter. It will return a new updated game state instead.
+ * E.g. the function {@link makeMove} will not alter the game state, that is
+ * passed as a parameter. It will return a new updated game state instead.
  * @packageDocumentation
  */
 
@@ -22,7 +22,7 @@ import { isPlayersAlive as isPlayersAlivePlayer } from './models/player';
 // -----------------------------------------------------------------------------
 
 /**
- * Returns the game board, which is a two-dimensional array of `EFieldColor`s.
+ * Returns the game board, which is a two-dimensional array of {@link EFieldColor}'s.
  * 
  * The board layout never changes. So, it is sufficient to call this function
  * once on application startup and store the board in a constant.
@@ -57,20 +57,20 @@ export function beginGame(red: boolean, green: boolean, yellow: boolean, blue: b
 
 /**
  * Checks is a pawn is at the given position. If so, the index of that pawn in
- * the array in `gameState.pawns` is returned.
+ * the array in {@link IGameState.pawns} is returned.
  * 
  * If the provided field is empty, this function returns -1.
  * 
  * @param gameState the current game state
  * @param position  the position to be checked for a pawn
- * @returns the index of the pawn in `gameState.pawns` or -1 if field is empty
+ * @returns the index of the pawn in {@link IGameState.pawns} or -1 if field is empty
  */
 export function getIndexOfPawnAtPosition(gameState: IGameState, position: IPosition): number {
     return getPawnsIAtPosition(gameState.pawns, position);
 }
 
 /**
- * Returns all the moves a pawn could do. Moves are an array of `IPosition`s,
+ * Returns all the moves a pawn could do. Moves are an array of {@link IPosition}'s,
  * which represent the fields this pawn could reach currently.
  * 
  * If an invalid index is given, this function returns an empty array.
@@ -85,7 +85,7 @@ export function getMoves(gameState: IGameState, pawnsIndex: number): IPosition[]
 
 /**
  * Advances the game by one turn. It moves the pawn to the destination and
- * returns the updated game state. If anything is wrong, it returns null.
+ * returns the updated game state. If anything is wrong, it returns `null`.
  * 
  * Possible errors:
  * - the game is already over
@@ -93,7 +93,7 @@ export function getMoves(gameState: IGameState, pawnsIndex: number): IPosition[]
  * - destination is not reachable by the pawn
  * 
  * @param gameState   the current game state
- * @param pawnsIndex  the index of the pawn in `gameState.pawns`
+ * @param pawnsIndex  the index of the pawn in {@link IGameState.pawns}
  * @param destination the position where the pawn should go to
  * @returns the updated game state or null if the move could not be made
  */
@@ -115,9 +115,9 @@ export function makeMove(gameState: IGameState, pawnsIndex: number, destination:
  * 
  * _Note:_ This library does not handle, which of the players are human ones and
  * which are computer players. So, this is an information you need to implement
- * in your app. You can call the function `makeComputerMove` for any game state,
- * no matter which player is on turn. The responsibility to handle that lies
- * with you in your specific app.
+ * in your app. You can call the function {@link makeComputerMove} for any game
+ * state, no matter which player is on turn. The responsibility to handle that
+ * lies with you in your specific app.
  * 
  * @param gameState the current game state, where the computer should calculate the next move for.
  * @returns a promise that resolves when the calculation is done
@@ -136,7 +136,7 @@ export function isGameOver(gameState: IGameState): boolean {
 }
 
 /**
- * TypeGuard for the `IGameState` type.
+ * TypeGuard for the {@link IGameState} type.
  * 
  * Checks if a given game state really is a game state. All keys have to be 
  * present and the corresponding types need to be correct.

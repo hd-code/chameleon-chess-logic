@@ -7,22 +7,12 @@ import { EPlayer } from '../../src/types';
 import { getStartLimits, calcLimits } from '../../src/models/limits';
 import { getMoves } from '../../src/models/pawn';
 
-import { dec2binArray } from '../../lib/math';
 import { flattenArray, deepClone } from '../../lib/obray';
 
 // -----------------------------------------------------------------------------
 
 describe('models/game-state', () => {
     describe('isGameState()', () => {
-        it('should return true for all kinds of starting game states (except no players)', () => {
-            for (let i = 1, ie = 16; i < ie; i++) {
-                const configTmp = dec2binArray(i, 4);
-                const config = configTmp.map(x => x === 1);
-                const gs = GS.getStartGameState(config as any);
-                assert(GS.isGameState(gs));
-            }
-        });
-
         it('should return false, when there are no pawns', () => {
             const gs = GS.getStartGameState([false, false, false, false]);
             assert(!GS.isGameState(gs));
