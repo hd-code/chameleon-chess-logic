@@ -1,5 +1,4 @@
 import { IGameState, ERole } from '../types';
-
 import { TPlayerScore, normalizeScore, getZeroScore } from './player-score';
 import { getFieldColor } from '../models/board';
 import { isGameOver, getNextGameStates } from '../models/game-state';
@@ -8,8 +7,7 @@ import { isGameOver, getNextGameStates } from '../models/game-state';
 
 export function maxNIS(gameState: IGameState, depth: number, parentsBestScore = 0): TPlayerScore {
     if (isGameOver(gameState) || depth <= 0) {
-        const score = evalFunc(gameState);
-        return normalizeScore(score);
+        return evalFunc(gameState);
     }
     
     const player = gameState.player;
@@ -34,7 +32,7 @@ export function maxNIS(gameState: IGameState, depth: number, parentsBestScore = 
 
 const MAX_SCORE = 1
 
-const MRoleScore100 = {
+const MRoleScore = {
     [ERole.KNIGHT]: 101,
     [ERole.BISHOP]: 102,
     [ERole.ROOK]:   103,
@@ -48,8 +46,8 @@ function evalFunc(gameState: IGameState): TPlayerScore {
         const pawn = gameState.pawns[i];
         const fieldColor = getFieldColor(pawn.position);
         const role = pawn.roles[fieldColor];
-        result[pawn.player] += MRoleScore100[role];
+        result[pawn.player] += MRoleScore[role];
     }
 
-    return result;
+    return normalizeScore(result);
 }

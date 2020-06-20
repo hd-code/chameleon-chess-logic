@@ -1,6 +1,6 @@
-import { EFieldColor, ERole, MRoles } from '../types';
-
 import { deepClone, hasKey } from '../../lib/obray';
+
+import { EFieldColor, ERole, MRoles } from '../types';
 
 // -----------------------------------------------------------------------------
 

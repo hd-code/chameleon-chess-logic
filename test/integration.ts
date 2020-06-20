@@ -8,6 +8,8 @@
  * available in this case.
  */
 
+// -----------------------------------------------------------------------------
+
 import assert from 'assert';
 import * as ccl from '../dist';
 

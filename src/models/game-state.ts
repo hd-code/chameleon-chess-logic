@@ -1,11 +1,10 @@
-import { IGameState, IPawn, EPlayer, IPosition } from '../types';
+import { deepClone, hasKey, isArray } from '../../lib/obray';
 
+import { IGameState, IPawn, EPlayer, IPosition } from '../types';
 import { isLimits, isWithinLimits, calcLimits, getStartLimits } from './limits';
 import * as Pawn from './pawn';
 import { isPlayer, isPlayerAlive, getNextPlayer } from './player';
 import { isInPositions, sortPositions, isSamePosition } from './position';
-
-import { deepClone, hasKey, isArray } from '../../lib/obray';
 
 // -----------------------------------------------------------------------------
 

@@ -1,6 +1,6 @@
-import { TBoard, EFieldColor, IPosition } from '../types';
-
 import { deepClone } from '../../lib/obray';
+
+import { TBoard, EFieldColor, IPosition } from '../types';
 
 // -----------------------------------------------------------------------------
 

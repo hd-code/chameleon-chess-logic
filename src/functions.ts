@@ -12,7 +12,6 @@
 // -----------------------------------------------------------------------------
 
 import { TBoard, IGameState, EPlayer, IPosition } from './types';
-
 import { makeComputerMove as makeComputerMoveAI } from './ai';
 import { getBoard as getBoardModel } from './models/board';
 import * as GS from './models/game-state';

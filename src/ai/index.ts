@@ -1,11 +1,10 @@
-import { IGameState, EPlayer } from '../types';
+import { splitEqual } from '../../lib/obray';
 
+import { IGameState, EPlayer } from '../types';
 import { maxNIS } from './max-n-is';
 import { findMaxScoreIndex } from './player-score';
 import { WorkerInput, WorkerOutput, initWorker } from './worker';
 import { getNextGameStates } from '../models/game-state';
-
-import { splitEqual } from '../../lib/obray';
 
 // -----------------------------------------------------------------------------
 
@@ -38,14 +37,13 @@ async function computerMoveParallel(gameState: IGameState, time: number, _numOfW
         // creates the worker threads and makes them ready for execution
         const { startWorkers, destroyWorkers } = initWorkers(numOfWorkers, workerInputs, callback);
 
-        // this is executed, when the normal time for a move has run out
+        // this is executed, when the time for a move has run out
         const done = () => {
             const bestIndex = findMaxScoreIndex(scores, player);
             const result = nextGSs[bestIndex];
             resolve(result);
 
             destroyWorkers();
-
             clearTimeout(errorHandle);
         };
 

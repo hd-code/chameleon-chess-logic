@@ -1,8 +1,7 @@
-import { IPosition } from '../types';
-
-import { getBoardSize } from './board';
-
 import { hasKey } from '../../lib/obray';
+
+import { IPosition } from '../types';
+import { getBoardSize } from './board';
 
 // -----------------------------------------------------------------------------
 

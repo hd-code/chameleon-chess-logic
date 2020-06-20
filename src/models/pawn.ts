@@ -1,12 +1,11 @@
-import { IPawn, EFieldColor, ILimits, EPlayer, IPosition, ERole } from '../types';
+import { deepClone, hasKey } from '../../lib/obray';
 
+import { IPawn, EFieldColor, ILimits, EPlayer, IPosition, ERole } from '../types';
 import { getFieldColor } from './board';
 import { isWithinLimits, isSmallestLimits } from './limits';
 import { isPlayer } from './player';
 import { isPosition, isSamePosition } from './position';
 import { isRoles, getRoles } from './roles';
-
-import { deepClone, hasKey } from '../../lib/obray';
 
 // -----------------------------------------------------------------------------
 

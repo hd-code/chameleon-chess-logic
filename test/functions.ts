@@ -3,6 +3,8 @@
  * This file contains unit tests for all functions in the public API.
  */
 
+// -----------------------------------------------------------------------------
+
 import assert from 'assert';
 import * as API from '../src/functions';
 import { TestData, TestMoves } from './test-data';

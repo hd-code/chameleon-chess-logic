@@ -1,7 +1,6 @@
 import { isMainThread, parentPort, Worker } from 'worker_threads';
 
 import { IGameState, EPlayer } from '../types';
-
 import { maxNIS } from './max-n-is';
 import { TPlayerScore } from './player-score';
 
@@ -23,7 +22,9 @@ export interface WorkerOutput {
 }
 
 /**
- * Initializes a new worker thread to calculate scores for a list game states.
+ * Initializes a new worker thread to calculate scores for a list of game states.
+ * The workers are not started yet. To start them use the `postMessage` method.
+ * Make sure to `terminate` them once you are done.
  */
 export function initWorker(callback: (data: WorkerOutput) => void): Worker {
     const worker = new Worker(__filename);
