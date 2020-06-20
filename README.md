@@ -59,13 +59,13 @@ npm run setup
 
 ### Project structure
 
-This project is written in TypeScript. So, the shipped code has to be transpieled to JavaScript. The TypeScript compiler will also create declaration files (`*.d.ts`) for the JavaScript code automatically. The targeted version of JavaScript is ES6.
+This project is written in TypeScript. So, the shipped code has to be transpieled to JavaScript. The TypeScript compiler will also create declaration files (`*.d.ts`) for the JavaScript code automatically. The targeted JavaScript version is ES6.
 
 - `dist/` holds the transpieled JavaScript code. This is generate by the TypeScript compiler and overwritten on every build. So, do not alter anything here directly.
 - `docs/` contains the documentation. Here you find the api documentation, as well as a description of the game rules in different languages.
 - `lib/` holds some external libraries, that are not managed by NPM.
 - `src/` contains all the TypeScript source code. Everything in here is transpieled and will be part of the build in `dist/`.
-- `test/` holds unit and integration tests. Unit tests use the Mocha test framework and ts-node. That means that unit tests are done using the source code in `src/`. Integration tests however test the transpieled code in `dist/`. So, you have to build the project first before running the integration tests.
+- `test/` holds unit and integration tests. Unit tests use the Mocha test framework and ts-node. That means that unit tests are performed using the source code in `src/` directly. Integration tests however test the transpieled code in `dist/`. So, you have to build the project first before running the integration tests.
 
 ### NPM Scripts
 
@@ -78,9 +78,9 @@ To make make development easier, there are several npm scripts available to be r
 
 More sophisticated npm scripts:
 
-- `npm run build` transpieles the source code. It will also minify the generated code.
-- `npm run build:fast` transpieles the source code very fast. It omits several steps in the build pipeline. This is useful for quick testing during development.
-- `npm run clear` deletes the `dist/` directory for a clean start. This is usually run automatically during the build process.
+- `npm run build` builds the project by executing a build pipeline.
+- `npm run build:fast` does a fast build. It omits several steps in the build pipeline. This is useful for quick testing during development.
+- `npm run clear` deletes the `dist/` directory for a new clean build. This is usually run automatically during the build process.
 - `npm run minify` will minify all the generated JavaScript files in `dist/`. This is usually run automatically during the build process.
 - `npm run docs` will open the api documentation in the browser. If the documentation does not exist yet, it is generated first. However, once generated you have to run `npm run docs:make` to generate it again and overwrite the older version.
 - `npm run setup` will install npm dependencies, generate the docs and build the project. Use this after cloning the repo to get started quickly.
@@ -110,7 +110,7 @@ Additional conventions:
 - prefix user-specified types with a capital letter of their kind (`I` for interfaces, `E` for enums, `M` for maps, etc.)
 - source filenames only use lowercase letters, words are separated by hyphens
 - try to avoid exporting constants
-- use traditional declaration of functions with `function` keyword
+- use traditional declaration of functions with `function` keyword on package level, within code blocks fat arrow functions are fine
 
 Source file structure:
 
@@ -147,8 +147,8 @@ export interface IPerson {
     age: number;
 }
 
-export function add(a: number, b: number): number {
-    return a + b;
+export function sum(n: number[]): number {
+    return n.reduce((a, b) => a + b, 0);
 }
 
 // -----------------------------------------------------------------------------

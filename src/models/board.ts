@@ -4,7 +4,7 @@ import { TBoard, EFieldColor, IPosition } from '../types';
 
 // -----------------------------------------------------------------------------
 
-/** Type guard for `EPlayer`. */
+/** Type guard for `EFieldColor`. */
 export function isFieldColor(fieldColor: any): fieldColor is EFieldColor {
     return typeof fieldColor === 'number' && EFieldColor[fieldColor] !== undefined;
 }
