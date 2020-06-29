@@ -1,29 +1,13 @@
-import { IPawn } from './pawn';
-
-import { isInteger } from '../../lib/type-guards';
+import { EPlayer, IPawn } from '../types';
 
 // -----------------------------------------------------------------------------
 
-/**
- * An enum which represents the four different players.
- * - RED: 0
- * - GREEN: 1
- * - YELLOW: 2
- * - BLUE: 3
- */
-export enum EPlayer { RED, GREEN, YELLOW, BLUE }
-
 /** Type guard for `EPlayer`. */
 export function isPlayer(player: any): player is EPlayer {
-    return isInteger(player) && EPlayer[player] !== undefined;
+    return typeof player === 'number' && EPlayer[player] !== undefined;
 }
 
-/**
- * Returns true if a player still has pawns on the board and is therefore still
- * alive and taking part in the game.
- * 
- * If you need to check the alive status of all players, use `isPlayersAlive()`.
- */
+/** If you need to check the alive status of all players, use `isPlayersAlive()`. */
 export function isPlayerAlive(player: EPlayer, pawns: IPawn[]): boolean {
     return isPlayersAlive(pawns)[player];
 }
