@@ -15,10 +15,10 @@ The easiest way to use this library in your project, is by using NPM.
 So, if you have the current version of NPM installed, just run this in the terminal in the folder of your project:
 
 ``` shell
-npm install git+https://github.com/hd-code/chameleon-chess-logic.git#v1
+npm install git+https://github.com/hd-code/chameleon-chess-logic.git#legacy
 ```
 
-**`#v1`** specifies that we want to pull the branch called 'v1'. Branch 'v1' contains the current stable release of this library.
+**`#legacy`** specifies that we want to pull the legacy release, that was used by the first version of the app
 
 Now you can use this module in your app by simply requiring...
 
