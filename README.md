@@ -91,6 +91,8 @@ Do not work directly on `master` branch. Work on a separate branch and do a pull
 
 Git tags are used to mark different release versions of this package. Releases tags follow the NPM semver format.
 
+There is one tag called 'legacy' which references the legacy version of the game logic, that was used in the very first version of the chameleon-chess-app.
+
 ### Coding Conventions
 
 The most important ones first:
