@@ -69,7 +69,7 @@ This project is written in TypeScript. So, the shipped code has to be transpiele
 
 ### NPM Scripts
 
-To make make development easier, there are several npm scripts available to be run:
+To make development easier, there are several npm scripts available to be run:
 
 - `npm install` installs the npm dependencies.
 - `npm pack` builds the project and packs it into a tarball archive.
@@ -138,7 +138,7 @@ Example:
 
 // -----------------------------------------------------------------------------
 
-import * as fs from "fs";
+import * as fs from 'fs';
 
 // -----------------------------------------------------------------------------
 

@@ -1,5 +1,7 @@
 import { IGameState, IPosition } from '../src/types';
 
+// -----------------------------------------------------------------------------
+
 /**
  * The standard test case. Provides a game state with pawns in all possible
  * roles. It can be used to test if the role movement patterns are correct.

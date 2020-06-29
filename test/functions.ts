@@ -9,14 +9,13 @@ import assert from 'assert';
 import * as API from '../src/functions';
 import { TestData, TestMoves } from './test-data';
 
-import { EFieldColor, EPlayer, IGameState, IPosition } from '../src/types';
+import { deepClone, isArray } from '../lib/obray';
 
+import { EFieldColor, EPlayer, IGameState, IPosition } from '../src/types';
 import { isFieldColor } from '../src/models/board';
 import { isGameState } from '../src/models/game-state';
 import { isSmallestLimits } from '../src/models/limits';
 import { isInPositions } from '../src/models/position';
-
-import { deepClone, isArray } from '../lib/obray';
 
 // -----------------------------------------------------------------------------
 
