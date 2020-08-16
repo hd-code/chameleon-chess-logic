@@ -1,4 +1,4 @@
-![logo](pics/logo-de.png)
+![Das Logo von Chamäleon Schach](img/logo-de.png)
 
 # Chamäleon Schach
 
@@ -20,18 +20,15 @@ Jeder Spieler beginnt mit 4 Spielfiguren, die in schachähnlichen Zügen über d
 
 Das Spielbrett mit 8x8 bunten Feldern wird in die Mitte gelegt. Die Felder des Spielbretts haben jeweils eine von vier Farben (rot, grün, gelb, blau). Die Anordnung der Farben ist vorgegeben.
 
-![Das Spielbrett](./pics/board.png)
-*Das farbenfrohe Spielbrett*
+![Das farbenfrohe Spielbrett](img/board.png)
 
 Die Spieler wählen sich jeweils eine von insgesamt vier Farben (rot, grün, gelb oder blau). Je nach Farbe setzen sich die Spieler entsprechend um das Spielbrett. Dabei gehört immer die Seite zu einem Spieler, bei der das linke Eckfeld der Farbe des Spielers entspricht.
 
-![Spielbrett mit den Spielern an den Seiten](./pics/board-players.png)
-*Spielbrett mit den Seiten, an denen die Spieler sitzen*
+![Das Spielbrett mit den Spielern an den Seiten](img/board-players.png)
 
 Nun nehmen die Spieler sich die vier Spielfiguren in ihrer Farbe und platzieren sie auf den vier linken Feldern, beginnend beim linken Eckfeld. Dabei sind die Figuren so zu setzen, dass alle Figuren zu Beginn die Rolle "Springer" haben.
 
-![Das Spielbrett in Startaufstellung](./pics/board-start.png)
-*Spielbrett mit den Figuren aller Spieler in der Startaufstellung*
+![Das Spielbrett mit den Figuren in Startaufstellung](img/board-start.png)
 
 ### Spielfiguren
 
@@ -41,8 +38,7 @@ Jede Figur hat eine Farbe-Rolle-Zuordnung. Heißt, zu jedem der vier verschieden
 
 Um nun zu ermitteln, welche Rolle eine Figur zur Zeit inne hat (ergo, wie sie sich bewegen kann), wird das Feld betrachtet, auf der sich die Figur gerade befindet. Anschließend wird der Farbe-Rolle-Zuordnung entnommen, welche Rolle die Figur auf einem Feld der entsprechenden Farbe hat.
 
-![Figuren eines Spieler](./pics/pawns-red.png)
-*Die verschiedenen Figuren mit den jeweiligen Farbe-Rolle Zuordnungen*
+![Die Figuren eines Spielers mit den jeweiligen Farbe-Rolle Zuordnungen](img/pawns-red.png)
 
 Sobald sich eine Figur bewegt hat, befindet sie sich im nächsten Zug auf einem anderen Feld mit einer anderen Farbe. Folglich hat sie nun auch eine andere Rolle, die wieder der Zuordnung zu entnehmen ist.
 
@@ -64,8 +60,7 @@ Das Spielfeld darf allerdings nicht kleiner als 3x3 Felder werden.
 
 Nach der Einengung ist der nächste Spieler an der Reihe.
 
-![Einengung des Spielbretts](./pics/shrinking.png)
-*Einengung des Spielfeldes. In rot: die bisherige Brettgröße, in hellrot: die geschrumpfte Brettgröße nach dem Zug der Figur*
+![Einengung des Spielbretts](img/shrinking.png)
 
 ## Spielende
 
@@ -79,8 +74,7 @@ Je nachdem welche Farbe das Feld hat, auf dem sich eine Figur befindet, hat dies
 
 Der Springer bewegt sich entweder zwei Felder horizontal plus ein Feld vertikal oder zwei Felder vertikal plus ein Feld horizontal. Anders als die anderen Figuren, wird er durch im Weg stehende Figuren nicht behindert. Er "springt" auf sein Zielfeld.
 
-![Züge eines Springers](./pics/moves-knight.png)
-*Züge eines Springers*
+![Züge eines Springers](img/moves-knight.png)
 
 ### Läufer
 
@@ -88,8 +82,7 @@ Der Läufer kann sich eine beliebige Anzahl von freien Feldern diagonal von sein
 
 Steht ihm eine gegnerische Figur im Weg, so kann er diese schlagen. Allerdings endet sein Zug dann auf dem entsprechenden Feld. Eine eigene Figur blockiert sein Fortkommen und kann natürlich nicht geschlagen werden.
 
-![Züge eines Läufers](./pics/moves-bishop.png)
-*Züge eines Läufers*
+![Züge eines Läufers](img/moves-bishop.png)
 
 ### Turm
 
@@ -97,15 +90,13 @@ Der Turm kann sich eine beliebige Anzahl von freien Feldern horizontal bzw. vert
 
 Steht ihm eine gegnerische Figur im Weg, so kann er diese schlagen. Allerdings endet sein Zug dann auf dem entsprechenden Feld. Eine eigene Figur blockiert sein Fortkommen und kann natürlich nicht geschlagen werden.
 
-![Züge eines Turms](./pics/moves-rook.png)
-*Züge eines Turms*
+![Züge eines Turms](img/moves-rook.png)
 
 ### Dame
 
 Die Dame ist die stärkste Figur im Spiel. Sie kombiniert die beiden Rollen Läufer und Turm in sich. Eine Dame kann sich also beliebig viele freie Felder horizontal, vertikal oder diagonal von ihrem Startfeld aus bewegen. Gegnerische Figuren können geschlagen werden, stoppen aber die Fortbewegung. Eigene Figuren blockieren das weitere Fortkommen.
 
-![Züge einer Dame](./pics/moves-queen.png)
-*Züge einer Dame*
+![Züge einer Dame](img/moves-queen.png)
 
 ## Spezialfall
 

@@ -1,4 +1,4 @@
-![logo](pics/logo-en.png)
+![logo](img/logo-en.png)
 
 # Chameleon Chess
 
@@ -20,18 +20,15 @@ Every player starts with four pawns. Pawns wander over the board in chess-like m
 
 The game board of 8x8 colorful fields is placed in the center. The fields have either one of four different colors (red, green, yellow, blue). The board layout is predetermined.
 
-![Game Board](./pics/board.png)
-*The Colorful Game Board*
+![The colorful game board](img/board.png)
 
 The players chose one of four colors (red, green, yellow, blue). Depending on the chosen color, the players are seated accordingly around the board. A side belongs to a player, if the left-most corner field matches the chosen color of the player.
 
-![Game board with the players at the sides](./pics/board-players.png)
-*Game board with markings for the player's sides*
+![Game board with the players at the sides](img/board-players.png)
 
 Now, each player gets the four pawns matching his color. The pawns are placed on the four left-most fields. The pawns have to be placed, such that all pawns initially have the role "Knight".
 
-![Game board with all pawns in starting position](./pics/board-start.png)
-*Game board with all pawns in starting position*
+![Game board with the pawns in starting position](img/board-start.png)
 
 ### The Pawns
 
@@ -41,8 +38,7 @@ Each pawn has a color-role-map. So, all four colors in the game board (red, gree
 
 To determine which role a pawn currently has (so, how it can be moved), you need to look at the field, the pawn currently stands on. Now, use the color-role-map to map the current field color to the corresponding role.
 
-![One Player's Pawns](./pics/pawns-red.png)
-*Different pawns with different color-role-maps*
+![One player's pawns with its different color-role-maps](img/pawns-red.png)
 
 When a pawn is moved, it is on a different field in the next turn. Therefore, its role likely has changed as well and has to be determined again as described above.
 
@@ -64,8 +60,7 @@ However, the board must not become smaller than 3x3 fields. So, it won't shrink 
 
 Now, it is the next players turn.
 
-![Shrinking](./pics/shrinking.png)
-*Shows the shrinking. red: the current board size before the move, light red: the shrunken board after the move.*
+![Shrinking](img/shrinking.png)
 
 ## End of Game
 
@@ -79,8 +74,7 @@ Depending on the color of the field, a pawn is standing on, the pawn assumes a d
 
 The Knight either moves two field horizontal plus one vertical or two fields vertical plus one horizontal. As opposed to the other roles, a knight is not hindered by any pawns, blocking his way. He just "jumps" to his new location.
 
-![Knight moves](./pics/moves-knight.png)
-*Knight Moves*
+![Knight moves](img/moves-knight.png)
 
 ### Bishop
 
@@ -88,8 +82,7 @@ The bishop can move any number of free fields diagonally from its staring positi
 
 Is there an opponents pawn blocking the way, the opposing pawn is beaten. However, the bishops move then ends on that field. Is there one of the players own pawns blocking the way, that pawn cannot be beaten and simply blocks the movement.
 
-![Bishop moves](./pics/moves-bishop.png)
-*Bishop moves*
+![Bishop moves](img/moves-bishop.png)
 
 ### Rook
 
@@ -97,15 +90,13 @@ The rook can move any number of free fields horizontally or vertically from its 
 
 Is there an opponents pawn blocking the way, the opposing pawn is beaten. However, the rooks move then ends on that field. Is there one of the players own pawns blocking the way, that pawn cannot be beaten and simply blocks the movement.
 
-![Rook moves](./pics/moves-rook.png)
-*Rook moves*
+![Rook moves](img/moves-rook.png)
 
 ### Queen
 
 The queen is the most powerful role in the game. She combines the roles of bishop and rook. So, a queen can move any number of free fields diagonally, horizontally or vertically from her starting position. Opponent's pawns can be beaten, but stop her movement. Own pawns simply block the way.
 
-![Queen moves](./pics/moves-queen.png)
-*Queen Moves*
+![Queen moves](img/moves-queen.png)
 
 ## Special Case
 
