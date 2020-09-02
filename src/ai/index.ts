@@ -1,16 +1,16 @@
-import { splitEqual } from '../../lib/obray';
+// import { splitEqual } from '../../lib/obray';
 
 import { IGameState, EPlayer } from '../types';
 import { maxNIS } from './max-n-is';
 import { findMaxScoreIndex } from './player-score';
-import { WorkerInput, WorkerOutput, initWorker } from './worker';
+// import { WorkerInput, WorkerOutput, initWorker } from './worker';
 import { getNextGameStates } from '../models/game-state';
 
 // -----------------------------------------------------------------------------
 
 export async function makeComputerMove(gameState: IGameState): Promise<IGameState> {
-    return computerMoveParallel(gameState, 1000, 3);
-    // return computerMove(gameState, 1000);
+    // return computerMoveParallel(gameState, 1000, 3);
+    return computerMove(gameState, 1000);
 }
 
 // -----------------------------------------------------------------------------
@@ -71,7 +71,7 @@ async function computerMove(gameState: IGameState, _time: number): Promise<IGame
 
 const TIMEOUT = 5000;
 
-//* Disable for react native
+/* Disable for react native
 
 async function computerMoveParallel(gameState: IGameState, time: number, _numOfWorkers: number): Promise<IGameState> {
     return new Promise((resolve, reject) => {
