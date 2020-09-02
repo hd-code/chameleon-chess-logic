@@ -10,11 +10,68 @@ import { getNextGameStates } from '../models/game-state';
 
 export async function makeComputerMove(gameState: IGameState): Promise<IGameState> {
     return computerMoveParallel(gameState, 1000, 3);
+    // return computerMove(gameState, 1000);
+}
+
+// -----------------------------------------------------------------------------
+
+async function computerMove(gameState: IGameState, _time: number): Promise<IGameState> {
+    return new Promise<IGameState>((resolve, reject) => {
+        // set timer for timeout error
+        const error = () => reject('calculation took too long');
+        const errorHandle = setTimeout(error, TIMEOUT);
+
+        // init time vars
+        const time = _time * 0.8;
+        const begin = Date.now();
+
+        // init needed values
+        const player = gameState.player;
+        const nextGSs = getNextGameStates(gameState);
+
+        // init scores
+        let scores = nextGSs.map(gs => maxNIS(gs, 0));
+
+        // define done function
+        const done = () => {
+            const bestMoveI = findMaxScoreIndex(scores, player);
+            const bestGS = nextGSs[bestMoveI];
+            resolve(bestGS);
+            clearTimeout(errorHandle);
+        };
+
+        // prepare var for depth and move tracking
+        let depth = 1;
+        let move = 0;
+        const numOfMoves = nextGSs.length;
+
+        // runs calculation again and again, as long within time
+        const calc = function calc() {
+            scores[move] = maxNIS(nextGSs[move], depth);
+            move++;
+
+            if (move >= numOfMoves) {
+                move = 0;
+                depth++;
+            }
+
+            if (Date.now() - begin < time) {
+                setImmediate(calc);
+            } else {
+                done()
+            }
+        }
+
+        // start calculation
+        calc();
+    });
 }
 
 // -----------------------------------------------------------------------------
 
 const TIMEOUT = 5000;
+
+//* Disable for react native
 
 async function computerMoveParallel(gameState: IGameState, time: number, _numOfWorkers: number): Promise<IGameState> {
     return new Promise((resolve, reject) => {
@@ -84,3 +141,5 @@ function makeWorkerInputs(player: EPlayer, gameStates: IGameState[], numOfWorker
     const gsIndexPerWorker = splitEqual(gsIndex, numOfWorkers);
     return gsIndexPerWorker.map(gameStates => ({ player, gameStates: gameStates }));
 }
+
+//*/
