@@ -63,7 +63,7 @@ async function computerMove(gameState: IGameState, _time: number): Promise<IGame
         }
 
         // start calculation
-        calc();
+        setImmediate(calc);
     });
 }
 
