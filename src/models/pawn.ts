@@ -34,18 +34,18 @@ export function getMoves(pawnIndex: number, pawns: IPawn[], limits: ILimits): IP
     const fieldColor = getFieldColor(pawn.position);
 
     switch (pawn.roles[fieldColor]) {
-        case ERole.KNIGHT:
-            return getKnightMoves(pawns, pawnIndex, limits);
+    case ERole.KNIGHT:
+        return getKnightMoves(pawns, pawnIndex, limits);
 
-        case ERole.QUEEN:
-            return getBishopMoves(pawns, pawnIndex, limits)
-                .concat(getRookMoves(pawns, pawnIndex, limits));
+    case ERole.QUEEN:
+        return getBishopMoves(pawns, pawnIndex, limits)
+            .concat(getRookMoves(pawns, pawnIndex, limits));
 
-        case ERole.BISHOP:
-            return getBishopMoves(pawns, pawnIndex, limits);
+    case ERole.BISHOP:
+        return getBishopMoves(pawns, pawnIndex, limits);
 
-        case ERole.ROOK:
-            return getRookMoves(pawns, pawnIndex, limits);
+    case ERole.ROOK:
+        return getRookMoves(pawns, pawnIndex, limits);
     }
 }
 
@@ -156,13 +156,13 @@ function getRookMoves(pawns: IPawn[], pawnI: number, limits: ILimits): IPosition
 function moveGenerator(pawns: IPawn[], pawnI: number, limits: ILimits, offset: IPosition): IPosition[] {
     const startingPos = pawns[pawnI].position;
 
-    let result :IPosition[] = [];
-    let currentPos :IPosition = {...startingPos};
+    const result: IPosition[] = [];
+    const currentPos: IPosition = { ...startingPos };
 
-    while (true) {
+    while (true) { // eslint-disable-line
         currentPos.row += offset.row;
         currentPos.col += offset.col;
-        let moveType = getMoveType(pawns, pawnI, currentPos, limits);
+        const moveType = getMoveType(pawns, pawnI, currentPos, limits);
 
         // don't add move if it's invalid
         if (moveType !== MoveType.INVALID) result.push({...currentPos});

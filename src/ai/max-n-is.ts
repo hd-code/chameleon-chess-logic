@@ -30,7 +30,7 @@ export function maxNIS(gameState: IGameState, depth: number, parentsBestScore = 
 
 // -----------------------------------------------------------------------------
 
-const MAX_SCORE = 1
+const MAX_SCORE = 1;
 
 const MRoleScore = {
     [ERole.KNIGHT]: 101,
@@ -40,7 +40,7 @@ const MRoleScore = {
 };
 
 function evalFunc(gameState: IGameState): TPlayerScore {
-    let result = getZeroScore();
+    const result = getZeroScore();
 
     for (let i = 0, ie = gameState.pawns.length; i < ie; i++) {
         const pawn = gameState.pawns[i];

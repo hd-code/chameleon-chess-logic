@@ -16,7 +16,7 @@ export function isPlayerAlive(player: EPlayer, pawns: IPawn[]): boolean {
  * boolean value. That boolean indicates, if the player is alive (true) or not
  * (false). */
 export function isPlayersAlive(pawns: IPawn[]): {[p in EPlayer]: boolean} {
-    let result = { 0: false, 1: false, 2: false, 3: false };
+    const result = { 0: false, 1: false, 2: false, 3: false };
     for (let i = 0, ie = pawns.length; i < ie; i++) {
         result[pawns[i].player] = true;
     }

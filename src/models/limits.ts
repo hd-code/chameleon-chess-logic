@@ -12,10 +12,10 @@ export function isLimits(limits: any): limits is ILimits {
         && hasKey(limits, 'minCol')
         && hasKey(limits, 'maxCol')
         && !isLimitsSmallerThanAllowed(limits)
-        && !isLimitsGreaterThanAllowed(limits)
+        && !isLimitsGreaterThanAllowed(limits);
 }
 
-export function isWithinLimits(position: IPosition, limits: ILimits) {
+export function isWithinLimits(position: IPosition, limits: ILimits): boolean {
     return limits.minRow <= position.row && position.row <= limits.maxRow
         && limits.minCol <= position.col && position.col <= limits.maxCol;
 }
@@ -66,7 +66,7 @@ function isColsSmallerThanAllowed(limits: ILimits): boolean {
 }
 
 function calcPureLimits(pawns: IPawn[]): ILimits {
-    let result = {
+    const result = {
         minRow: pawns[0].position.row, maxRow: pawns[0].position.row,
         minCol: pawns[0].position.col, maxCol: pawns[0].position.col,
     };

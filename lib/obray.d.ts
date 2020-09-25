@@ -45,7 +45,7 @@ export declare function getPermutations<T>(array: T[], noDuplicates?: boolean): 
  * the given key is found, the value associated with that key is then
  * type-checked by the TypeGuard.
  */
-export declare function hasKey<T, U>(object: any, key: PropertyKey, typeGuard?: (k: any) => k is U): key is keyof T;
+export declare function hasKey<T, U>(object: unknown, key: PropertyKey, typeGuard?: (k: any) => k is U): key is keyof T;
 /**
  * TypeGuard to check if a value is an `array`.
  *
@@ -53,7 +53,7 @@ export declare function hasKey<T, U>(object: any, key: PropertyKey, typeGuard?: 
  * will perform a type check on each element of the array. If the type check
  * fails on any element, the function will return false;
  */
-export declare function isArray<T>(array: any, typeGuard?: (e: any) => e is T): array is T[];
+export declare function isArray<T>(array: unknown, typeGuard?: (e: any) => e is T): array is T[];
 /**
  * Basically does the same as `[].some()`. So, it determines whether any element
  * in the array satisfies the given callback function. However, this
@@ -74,7 +74,7 @@ export declare function isInArray<T>(array: T[], callback: (e: T) => boolean): b
  *
  * If you want to check the object for specific keys, use `hasKey()`.
  */
-export declare function isObject(object: any): object is object;
+export declare function isObject(object: unknown): object is object;
 /** Distributes the elements of an array into bins of equal size. If the number
  * of elements is not clearly dividable, the first bins will contain one more
  * element then the rest. */
