@@ -30,7 +30,7 @@ async function computerMove(gameState: IGameState, _time: number): Promise<IGame
         const nextGSs = getNextGameStates(gameState);
 
         // init scores
-        let scores = nextGSs.map(gs => maxNIS(gs, 0));
+        const scores = nextGSs.map(gs => maxNIS(gs, 0));
 
         // define done function
         const done = () => {
@@ -58,9 +58,9 @@ async function computerMove(gameState: IGameState, _time: number): Promise<IGame
             if (Date.now() - begin < time) {
                 setImmediate(calc);
             } else {
-                done()
+                done();
             }
-        }
+        };
 
         // start calculation
         setImmediate(calc);
@@ -86,7 +86,7 @@ async function computerMoveParallel(gameState: IGameState, time: number, _numOfW
         const workerInputs = makeWorkerInputs(player, nextGSs, numOfWorkers);
 
         // calc scores for each next game state to have a baseline
-        let scores = nextGSs.map(gs => maxNIS(gs, 0));
+        const scores = nextGSs.map(gs => maxNIS(gs, 0));
         const callback = ({index, score}: WorkerOutput) => {
             scores[index] = score;
         };
@@ -111,7 +111,7 @@ async function computerMoveParallel(gameState: IGameState, time: number, _numOfW
 }
 
 function initWorkers(numOfWorkers: number, workerInputs: WorkerInput[], callback: (data: WorkerOutput) => void) {
-    let workers = createWorkers(numOfWorkers, callback);
+    const workers = createWorkers(numOfWorkers, callback);
 
     const startWorkers = () => {
         for (let i = 0, ie = workers.length; i < ie; i++) {
@@ -129,7 +129,7 @@ function initWorkers(numOfWorkers: number, workerInputs: WorkerInput[], callback
 }
 
 function createWorkers(numOfWorkers: number, callback: (data: WorkerOutput) => void) {
-    let workers = [];
+    const workers = [];
     for (let i = 0; i < numOfWorkers; i++) {
         workers[i] = initWorker(callback);
     }

@@ -51,7 +51,7 @@ export function isValidMove(gs: IGameState, pawnI: number, destination: IPositio
 export function updateGameState(gs: IGameState, pawnI: number, destination: IPosition): IGameState {
     const beatenPawnIndex = Pawn.getPawnsIAtPosition(gs.pawns, destination);
 
-    let pawns = deepClone(gs.pawns);
+    const pawns = deepClone(gs.pawns);
     pawns[pawnI].position = destination;
     if (beatenPawnIndex >= 0) pawns.splice(beatenPawnIndex, 1);
 
@@ -98,7 +98,7 @@ export function getNextGameStates(gs: IGameState): IGameState[] {
 // -----------------------------------------------------------------------------
 
 function noPawnsOutsideOfLimits({pawns, limits}: IGameState): boolean {
-for (let i = 0, ie = pawns.length; i < ie; i++) {
+    for (let i = 0, ie = pawns.length; i < ie; i++) {
         if (!isWithinLimits(pawns[i].position, limits)) {
             return false;
         }
@@ -107,7 +107,7 @@ for (let i = 0, ie = pawns.length; i < ie; i++) {
 }
 
 function noPawnsOnSameField({pawns}: IGameState): boolean {
-    let positions = pawns.map(pawn => pawn.position);
+    const positions = pawns.map(pawn => pawn.position);
     positions.sort(sortPositions);
 
     for (let i = 1, ie = positions.length; i < ie; i++) {

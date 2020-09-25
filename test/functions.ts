@@ -85,7 +85,7 @@ describe('API', () => {
                 [ false, true, false, false ],
                 [ true, false, false, false ],
             ];
-            testData.forEach(([a,b,c,d], i) => {
+            testData.forEach(([a, b, c, d]) => {
                 const gs = API.beginGame(a,b,c,d);
                 assert.strictEqual(gs, null);
             });
@@ -233,7 +233,7 @@ describe('API', () => {
 
         it('should return true for any game state when there are just pawns of a single player left', () => {
             const testData = TestMoves.allMoves.map(move => {
-                let gs = deepClone(move.gameState);
+                const gs = deepClone(move.gameState);
                 gs.pawns = gs.pawns.filter(pawn => pawn.player === gs.player);
                 return gs;
             });
@@ -243,7 +243,7 @@ describe('API', () => {
     
     describe('isGameState()', () => {
         it('should return true for all kinds of starting game states', () => {
-            let testData = playerConfigs;
+            const testData = playerConfigs;
             testData.forEach(([a,b,c,d], i) => {
                 const gs = API.beginGame(a,b,c,d);
                 if (gs === null) throw new Error('unexpected null at: '+i);
@@ -256,31 +256,31 @@ describe('API', () => {
         });
 
         it('should return false, when there are no pawns', () => {
-            let gs = deepClone(TestData.gameState);
+            const gs = deepClone(TestData.gameState);
             gs.pawns = [];
             assert(!API.isGameState(gs));
         });
 
         it('should return false, when there are two pawns on the same field', () => {
-            let gs = deepClone(TestData.gameState);
+            const gs = deepClone(TestData.gameState);
             gs.pawns[0].position = gs.pawns[1].position;
             assert(!API.isGameState(gs));
         });
 
         it('should return false, when there is a pawn outside the global limits (9,9)', () => {
-            let gs = deepClone(TestData.gameState);
+            const gs = deepClone(TestData.gameState);
             gs.pawns[0].position = { row: 9, col: 9 };
             assert(!API.isGameState(gs));
         });
 
         it('should return false, when there is a pawn outside the limits of a shrunken field', () => {
-            let gs = deepClone(TestData.gameState);
+            const gs = deepClone(TestData.gameState);
             gs.pawns[0].position = { row: 0, col: 0 };
             assert(!API.isGameState(gs));
         });
 
         it('should return false, when the player on turn is no longer alive', () => {
-            let gs = deepClone(TestData.gameState);
+            const gs = deepClone(TestData.gameState);
             gs.player = EPlayer.BLUE;
             assert(!API.isGameState(gs));
         });

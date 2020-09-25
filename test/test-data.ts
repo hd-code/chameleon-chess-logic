@@ -6,7 +6,7 @@ import { IGameState, IPosition } from '../src/types';
  * The standard test case. Provides a game state with pawns in all possible
  * roles. It can be used to test if the role movement patterns are correct.
  */
-export namespace TestData {
+export namespace TestData { // eslint-disable-line
     export const gameState = <IGameState>{
         limits: { minRow: 1, maxRow: 5, minCol: 0, maxCol: 6 },
         pawns: [
@@ -19,7 +19,7 @@ export namespace TestData {
             { player: 2, position: { row: 1, col: 6 }, roles: { 0:0, 1:1, 2:2, 3:3 } }, // yellow corner pawn
         ],
         player: 0,
-    }
+    };
     
     export const knightIndex = 0;
     export const knightMoves = <IPosition[]>[
@@ -121,7 +121,7 @@ export namespace TestData {
         { row: 1, col: 5 },
         // { row: 0, col: 5 }, // outside of limits
     ];
-};
+}
 
 /**
  * Very specific test moves. There are tests for many different kinds of moves:
@@ -134,7 +134,7 @@ export namespace TestData {
  * If you just want to bulk test all moves, there is an array named `allMoves`
  * that holds all test cases to be run conveniently in a loop.
  */
-export namespace TestMoves {
+export namespace TestMoves { // eslint-disable-line
     /** Interface holding all properties that are needed for a test case. */
     export interface IMove {
         gameState: IGameState;
@@ -402,7 +402,7 @@ export namespace TestMoves {
             ],
             player: 0
         }
-    }
+    };
 
     export const deadlockMoveWinning: IMove = {
         gameState: {

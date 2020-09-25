@@ -13,7 +13,7 @@ export function getBoard(): TBoard {
     return deepClone(BOARD);
 }
 
-export function getBoardSize() {
+export function getBoardSize(): { numOfRows: number, numOfCols: number } {
     return {
         numOfRows: BOARD.length,
         numOfCols: BOARD[0].length
@@ -27,7 +27,7 @@ export function getFieldColor(position: IPosition): EFieldColor {
 
 // -----------------------------------------------------------------------------
 
-const [R,G,Y,B] = [EFieldColor.RED, EFieldColor.GREEN, EFieldColor.YELLOW, EFieldColor.BLUE]
+const [R, G, Y, B] = [EFieldColor.RED, EFieldColor.GREEN, EFieldColor.YELLOW, EFieldColor.BLUE];
 const BOARD: TBoard = [
     [B, R, B, Y, G, R, B, Y],
     [R, G, R, B, Y, G, R, B],
