@@ -1,3 +1,9 @@
+# !!! Important !!!
+
+**All separate repositories for the game Chameleon Chess were moved to a single project! It can be found here: <https://github.com/hd-code/chameleon-chess>**
+
+---
+
 # Chameleon Chess Logic
 
 This node module contains the game logic for the board game "Chameleon Chess".
